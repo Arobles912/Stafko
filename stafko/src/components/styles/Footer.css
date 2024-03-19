@@ -1,0 +1,14 @@
+
+footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    background: linear-gradient(to bottom, #81440a, #cc6626);
+  }
+
+footer h2{
+    color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
