@@ -24,7 +24,6 @@ export class StaffService {
     return this.staffRepository.findOne({ where: { staff_id: id } });
   }
   
-
   async update(id: number, staffDto: StaffDto): Promise<StaffEntity> {
     await this.staffRepository.update(id, staffDto);
     return this.findOne(id);
@@ -32,5 +31,9 @@ export class StaffService {
 
   async remove(id: number): Promise<void> {
     await this.staffRepository.delete(id);
+  }
+
+  async findOneByUserName(username: string): Promise<StaffEntity> {
+    return this.staffRepository.findOneBy({username});
   }
 }

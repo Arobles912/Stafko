@@ -35,6 +35,9 @@ let StaffController = class StaffController {
     async remove(id) {
         return this.staffService.remove(+id);
     }
+    async findOneByUserName(username) {
+        return this.staffService.findOneByUserName(username);
+    }
 };
 exports.StaffController = StaffController;
 __decorate([
@@ -72,8 +75,15 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], StaffController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Get)('username/:username'),
+    __param(0, (0, common_1.Param)('username')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], StaffController.prototype, "findOneByUserName", null);
 exports.StaffController = StaffController = __decorate([
-    (0, common_1.Controller)('staff'),
+    (0, common_1.Controller)('api/staff'),
     __metadata("design:paramtypes", [staff_service_1.StaffService])
 ], StaffController);
 //# sourceMappingURL=staff.controller.js.map

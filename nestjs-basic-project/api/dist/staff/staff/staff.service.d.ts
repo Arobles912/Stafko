@@ -9,4 +9,5 @@ export declare class StaffService {
     findOne(id: number): Promise<StaffEntity>;
     update(id: number, staffDto: StaffDto): Promise<StaffEntity>;
     remove(id: number): Promise<void>;
+    findOneByUserName(username: string): Promise<StaffEntity>;
 }

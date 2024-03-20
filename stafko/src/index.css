@@ -1,82 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Anek+Gurmukhi:wght@100..800&family=Fira+Code:wght@300..700&family=Orbitron:wght@400..900&display=swap');
-
-html, body {
+html,
+body {
   margin: 0;
-  height: 100%; 
+  height: 100%;
 }
 
 body {
-  background-image: url('src/assets/bg-image.jpg'); 
-  background-size: cover; 
+  background-image: url("src/assets/bg-image.jpg");
+  background-size: cover;
   background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
-}
-
-.main-div {
-  font-size: larger;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-form {
-  justify-content: center;
-  background: linear-gradient(to bottom, #ffffe6 0%, #eeddb3 100%);
-  padding: 0px 20px 20px 20px;
-  border: 2px solid #ce7420;
-  border-radius: 10px;
-}
-
-input {
-  width: 95%;
-  border: 1px solid #ce7420;
-  border-radius: 5px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding: 5px;
-}
-
-.submit {
-  width: 50%;
-  font-family: "Courier New", Courier, monospace;
-  font-weight: bold;
-  background-color: #ffcc00;
-  border: 2px solid #ce7420;
-  border-radius: 5px;
-  color: white;
-  font-size: 20px;
-  display: block;
-  margin: 10px auto;
-  margin-top: 20px;
-}
-
-label {
-  font-family: "Anek Gurmukhi", sans-serif;
-}
-
-form p {
-  font-family: "Anek Gurmukhi", sans-serif;
-  font-size: 20px;
-  text-align: center;
-}
-
-form a {
-  text-decoration: none;
-  font-weight: 600;
-  text-align: center;
-  color: #ffcc00;
-}
-
-form h2 {
-  text-align: center;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  color: #ffcc00;
-}
-
-.icon-img{
-  margin-bottom: -5px;
-  margin-right: 5px;
-  width: 28px;
-  height: 28px;
 }

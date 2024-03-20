@@ -19,7 +19,8 @@ exports.StaffModule = StaffModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([staff_entity_1.StaffEntity])],
         controllers: [staff_controller_1.StaffController],
-        providers: [staff_service_1.StaffService]
+        providers: [staff_service_1.StaffService],
+        exports: [staff_service_1.StaffService]
     })
 ], StaffModule);
 //# sourceMappingURL=staff.module.js.map

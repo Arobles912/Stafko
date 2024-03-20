@@ -3,10 +3,11 @@ import { StaffService } from './staff.service';
 import { StaffDto } from '../dto/staff.dto/staff.dto';
 import { StaffEntity } from '../entity/staff.entity/staff.entity';
 
-
-@Controller('staff')
+@Controller('api/staff')
 export class StaffController {
-  constructor(private readonly staffService: StaffService) {}
+  constructor(
+    private readonly staffService: StaffService,
+  ) {}
 
   @Post()
   async create(@Body() staffDto: StaffDto): Promise<StaffEntity> {
@@ -31,5 +32,10 @@ export class StaffController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     return this.staffService.remove(+id);
+  }
+
+  @Get('username/:username')
+  async findOneByUserName(@Param('username') username: string): Promise<StaffEntity> {
+    return this.staffService.findOneByUserName(username);
   }
 }

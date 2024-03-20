@@ -37,6 +37,9 @@ let StaffService = class StaffService {
     async remove(id) {
         await this.staffRepository.delete(id);
     }
+    async findOneByUserName(username) {
+        return this.staffRepository.findOneBy({ username });
+    }
 };
 exports.StaffService = StaffService;
 exports.StaffService = StaffService = __decorate([

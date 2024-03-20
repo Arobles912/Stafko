@@ -9,4 +9,5 @@ export declare class StaffController {
     findOne(id: string): Promise<StaffEntity>;
     update(id: string, staffDto: StaffDto): Promise<StaffEntity>;
     remove(id: string): Promise<void>;
+    findOneByUserName(username: string): Promise<StaffEntity>;
 }

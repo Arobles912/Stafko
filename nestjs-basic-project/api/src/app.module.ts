@@ -4,11 +4,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProjectsModule } from './projects/projects.module';
 import { StaffModule } from './staff/staff.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ProjectsModule, 
     StaffModule,
+    AuthModule,
     TypeOrmModule.forRoot({
 
       type: 'postgres',
