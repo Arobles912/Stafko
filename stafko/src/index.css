@@ -3,11 +3,3 @@ body {
   margin: 0;
   height: 100%;
 }
-
-body {
-  background-image: url("src/assets/bg-image.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  display: flex;
-  flex-direction: column;
-}

@@ -20,7 +20,7 @@ __decorate([
     __metadata("design:type", Number)
 ], StaffEntity.prototype, "staff_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 50, nullable: false }),
+    (0, typeorm_1.Column)({ length: 30, nullable: false }),
     __metadata("design:type", String)
 ], StaffEntity.prototype, "username", void 0);
 __decorate([
@@ -28,7 +28,7 @@ __decorate([
     __metadata("design:type", String)
 ], StaffEntity.prototype, "pass", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 100, nullable: false }),
+    (0, typeorm_1.Column)({ length: 50, nullable: false }),
     __metadata("design:type", String)
 ], StaffEntity.prototype, "email", void 0);
 __decorate([
@@ -36,7 +36,7 @@ __decorate([
     __metadata("design:type", Number)
 ], StaffEntity.prototype, "project_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: 'Usuario', length: 50 }),
+    (0, typeorm_1.Column)({ default: 'Usuario', length: 30 }),
     __metadata("design:type", String)
 ], StaffEntity.prototype, "user_role", void 0);
 __decorate([

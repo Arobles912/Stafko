@@ -73,7 +73,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProjectsController.prototype, "remove", null);
 exports.ProjectsController = ProjectsController = __decorate([
-    (0, common_1.Controller)('projects'),
+    (0, common_1.Controller)('api/projects'),
     __metadata("design:paramtypes", [projects_service_1.ProjectsService])
 ], ProjectsController);
 //# sourceMappingURL=projects.controller.js.map

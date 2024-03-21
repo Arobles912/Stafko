@@ -17,7 +17,7 @@ export class AuthService {
     const user = await this.staffService.findOneByUserName(username);
 
     if (user) {
-      throw new BadRequestException("Username already exists");
+      throw new BadRequestException("Username already exists.");
     }
 
     const hashedPassword = await bcryptjs.hash(pass, 10);
@@ -29,7 +29,7 @@ export class AuthService {
     });
 
     return {
-      message: "User created successfully",
+      message: "User created successfully.",
     };
   }
 

@@ -1,0 +1,12 @@
+.bg-div-home {
+    width: 100vw; 
+    height: 100vh; 
+    position: fixed; 
+    top: 0; 
+    left: 0;
+    background-image: url("src/assets/bg-image-home.jpg");
+    background-repeat: no-repeat;
+    background-size: cover; 
+    background-position: center center; 
+  }
+  

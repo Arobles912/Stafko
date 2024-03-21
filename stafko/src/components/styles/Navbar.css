@@ -1,0 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Orbitron:wght@400..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Anek+Gurmukhi:wght@100..800&family=Fira+Code:wght@300..700&family=Orbitron:wght@400..900&display=swap');
+
+nav{
+    display: flex;
+    width: 100%;
+    justify-content: left;
+    bottom: 0;
+    background: linear-gradient(to left, #eee4cc 0%,  #eeddb3 20%, #ffc400 100%);
+    height: auto;
+}
+
+.nav-link{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-weight: 600;
+    font-family:"Anek Gurmukhi", sans-serif;
+    color: white;
+    font-size: 22px;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding: 0;
+    text-decoration: none;
+}
+
+.nav-link:hover{
+    text-decoration: underline 2px solid;
+}
+
+nav img{
+    margin: 0;
+    width: 80px;
+    height: 80px;
+}
+
+nav h3{
+    padding: 16px;
+    padding-right: 0;
+    padding-left: 0;
+    margin: 0;
+    font-family: "Orbitron", sans-serif;
+    font-size: 35px;
+    color: white;
+    -webkit-text-stroke: 2px black;
+    text-stroke: 2px black;
+}
+
+.right-side-div {
+    display: flex;
+    margin-left: auto;
+}
+
+.right-side-div button{
+    font-family: "Courier New", Courier, monospace;
+    width: 120px;
+    box-shadow: 1px 1px #98480f;
+    color: white;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 20px;
+    margin-left: auto;
+    margin-top: 18px;
+    margin-right: 20px;
+    height: 40px;
+    border: 2px solid #98480f;
+    border-radius: 15px;
+    background-color: #ce8520;
+    font-weight: bold;
+    outline: none;
+}
+
+.right-side-div button:hover{
+    border-color: #da620d;
+    background-color: #ff9500;
+    transition: 0.3s;
+}
+
+.separation-div{
+    border-radius: 3px;
+    border: 1px solid black;
+    margin: 5px;
+    margin-left: 25px;
+    height: auto;
+    width: 6px;
+    background-color: white;
+}
+
+.right-side-div p{
+    font-family: "Anek Gurmukhi", sans-serif;
+    color: #ff9500;
+    font-weight: 600;
+    font-size: 20px;
+    margin-top: 30px;
+    margin-right: 40px;
+}

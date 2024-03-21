@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./styles/Login.css";
+import Header from "./Header.jsx";
+import Footer from "./Footer.jsx";
 
 export default function Register() {
   const [username, setUsername] = useState("");
   const [pass, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (event) => {
     event.preventDefault();
@@ -25,6 +28,7 @@ export default function Register() {
 
       if (response.ok) {
         console.log("User registered successfully");
+        navigate('/');
       } else {
         const data = await response.json();
         setError(data.message || "Failed to register user");
@@ -36,6 +40,8 @@ export default function Register() {
   };
 
   return (
+    <div className="bg-div">
+      <Header/>
     <div className="main-div">
       <form onSubmit={handleRegister}>
         <h2>Sign Up</h2>
@@ -97,6 +103,8 @@ export default function Register() {
           </Link>
         </p>
       </form>
+    </div>
+    <Footer/>
     </div>
   );
 }

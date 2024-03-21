@@ -22,7 +22,7 @@ let AuthService = class AuthService {
     async register({ username, pass, email }) {
         const user = await this.staffService.findOneByUserName(username);
         if (user) {
-            throw new common_1.BadRequestException("Username already exists");
+            throw new common_1.BadRequestException("Username already exists.");
         }
         const hashedPassword = await bcryptjs.hash(pass, 10);
         await this.staffService.create({
@@ -31,7 +31,7 @@ let AuthService = class AuthService {
             email
         });
         return {
-            message: "User created successfully",
+            message: "User created successfully.",
         };
     }
     async login({ username, pass }) {

@@ -4,7 +4,7 @@ import { ProjectsDto } from '../dto/projects.dto/projects.dto';
 import { ProjectsEntity } from '../entity/projects.entity/projects.entity';
 
 
-@Controller('projects')
+@Controller('api/projects')
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 

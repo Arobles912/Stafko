@@ -1,99 +1,113 @@
-@import url('https://fonts.googleapis.com/css2?family=Anek+Gurmukhi:wght@100..800&family=Fira+Code:wght@300..700&family=Orbitron:wght@400..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Anek+Gurmukhi:wght@100..800&family=Fira+Code:wght@300..700&family=Orbitron:wght@400..900&display=swap");
+
+.bg-div {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-image: url("src/assets/bg-image.jpg");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
 
 .main-div {
-    font-size: larger;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  form {
-    width: 350px;
-    justify-content: center;
-    background: linear-gradient(to bottom, #ffffe6 0%, #eeddb3 100%);
-    padding: 0px 20px 20px 20px;
-    border: 2px solid #ce7420;
-    border-radius: 10px;
-  }
-  
-  input {
-    width: 95%;
-    border: 1px solid #ce7420;
-    border-radius: 5px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 5px;
-  }
-  
-  .submit {
-    width: 50%;
-    font-family: "Courier New", Courier, monospace;
-    font-weight: bold;
-    background-color: #ffcc00;
-    border: 2px solid #ce7420;
-    border-radius: 5px;
-    color: white;
-    font-size: 20px;
-    display: block;
-    margin: 10px auto;
-    margin-top: 20px;
-  }
+  font-size: larger;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .submit:hover{
-    background-color: #ff9900;
-    transition: 0.3s;
-  }
+form {
+  width: 350px;
+  justify-content: center;
+  background: linear-gradient(to bottom, #ffffe6 0%, #eeddb3 100%);
+  padding: 0px 20px 20px 20px;
+  border: 2px solid #ce7420;
+  border-radius: 15px;
+}
 
-  .register-submit {
-    width: 70%;
-    font-family: "Courier New", Courier, monospace;
-    font-weight: bold;
-    background-color: #ffcc00;
-    border: 2px solid #ce7420;
-    border-radius: 5px;
-    color: white;
-    font-size: 20px;
-    display: block;
-    margin: 10px auto;
-    margin-top: 20px;
-  }
+input {
+  width: 95%;
+  border: 1px solid #ce9720;
+  border-radius: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
 
-  .register-submit:hover{
-    background-color: #ff9900;
-    transition: 0.3s;
-  }
-  
-  label {
-    font-family: "Anek Gurmukhi", sans-serif;
-  }
-  
-  form p {
-    font-family: "Anek Gurmukhi", sans-serif;
-    font-size: 20px;
-    text-align: center;
-  }
-  
-  .register-link {
-    text-decoration: none;
-    font-weight: 700;
-    text-align: center;
-    color: #ffcc00;
-  }
+.submit {
+  width: 50%;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  background-color: #ffcc00;
+  border: 2px solid #ce9720;
+  border-radius: 15px;
+  color: white;
+  font-size: 20px;
+  display: block;
+  margin: 10px auto;
+  margin-top: 20px;
+}
 
-  .register-link:hover {
-    color: #ff9900;
-    transition: 0.3s;
-  }
-  
-  form h2 {
-    text-align: center;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    color: #ffcc00;
-  }
-  
-  .icon-img{
-    margin-bottom: -6px;
-    margin-right: 5px;
-    width: 28px;
-    height: 28px;
-  }
+.submit:hover {
+  border-color: #e97e19;
+  background-color: #ff9d00;
+  transition: 0.3s;
+}
+
+.register-submit {
+  width: 70%;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  background-color: #ffcc00;
+  border: 2px solid #ce9720;
+  border-radius: 15px;
+  color: white;
+  font-size: 20px;
+  display: block;
+  margin: 10px auto;
+  margin-top: 20px;
+}
+
+.register-submit:hover {
+  border-color: #e97e19;
+  background-color: #ff9900;
+  transition: 0.3s;
+}
+
+label {
+  font-family: "Anek Gurmukhi", sans-serif;
+}
+
+form p {
+  font-family: "Anek Gurmukhi", sans-serif;
+  font-size: 20px;
+  text-align: center;
+}
+
+.register-link {
+  text-decoration: none;
+  font-weight: 700;
+  text-align: center;
+  color: #ffcc00;
+}
+
+.register-link:hover {
+  color: #ff9900;
+  transition: 0.3s;
+}
+
+form h2 {
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #ffcc00;
+}
+
+.icon-img {
+  margin-bottom: -6px;
+  margin-right: 5px;
+  width: 28px;
+  height: 28px;
+}

@@ -1,0 +1,87 @@
+.main-add-div {
+  width: 95%;
+  margin-top: 40px;
+  margin-left: 50px;
+  justify-content: center;
+  font-size: larger;
+  display: flex;
+  z-index: 2;
+  align-items: center;
+}
+
+.add-form {
+  box-shadow: 0px 0px 8px 8px lightgray;
+  padding: 30px;
+  width: 100%;
+  border: none;
+  background: white;
+}
+
+.add-form label {
+  font-size: 30px;
+  text-decoration: underline 2px solid;
+}
+
+.add-form input {
+  margin-bottom: 20px;
+  margin-left: 0;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid gray;
+}
+
+.add-form .project-name-input {
+  padding: 7.5px;
+}
+
+.select-user {
+  background-color: rgb(245, 245, 245);
+  padding: 6px;
+  font-size: 15px;
+  width: 90%;
+  border: 1px solid gray;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  border-radius: 10px;
+}
+
+.add-user-button {
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  border-radius: 5px;
+  background-color: #ffcc00;
+  border: 2px solid #ce9720;
+  outline: none;
+  padding: 4px;
+  font-size: 18px;
+  width: 8%;
+  border-radius: 10px;
+}
+
+.add-user-button:hover {
+  border-color: #e97e19;
+  background-color: #ff9900;
+  transition: 0.3s;
+}
+
+.add-form .add-project-input {
+  width: 30%;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  background-color: #ffcc00;
+  border: 2px solid #ce9720;
+  border-radius: 15px;
+  color: white;
+  font-size: 20px;
+  display: block;
+  margin: 10px auto;
+  margin-top: 20px;
+}
+
+.add-form .add-project-input:hover {
+  border-color: #e97e19;
+  background-color: #ff9900;
+  transition: 0.3s;
+}
