@@ -37,11 +37,11 @@ let AuthService = class AuthService {
     async login({ username, pass }) {
         const user = await this.staffService.findOneByUserName(username);
         if (!user) {
-            throw new common_1.UnauthorizedException("Invalid user");
+            throw new common_1.UnauthorizedException("Invalid username.");
         }
         const isPasswordValid = await bcryptjs.compare(pass, user.pass);
         if (!isPasswordValid) {
-            throw new common_1.UnauthorizedException("Invalid password");
+            throw new common_1.UnauthorizedException("Invalid password.");
         }
         const payload = { username: user.username };
         const token = await this.jwtService.signAsync(payload);

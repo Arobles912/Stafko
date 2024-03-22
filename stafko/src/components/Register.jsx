@@ -4,8 +4,7 @@ import "./styles/Login.css";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 
-export default function Register() {
-  const [username, setUsername] = useState("");
+export default function Register({username, setUsername}) {
   const [pass, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -13,6 +12,12 @@ export default function Register() {
 
   const handleRegister = async (event) => {
     event.preventDefault();
+
+    if (!username || !pass || !email) {
+      setError("All fields are required.");
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:4000/api/auth/register', {
         method: 'POST',

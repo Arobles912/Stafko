@@ -23,10 +23,17 @@ __decorate([
     __metadata("design:type", String)
 ], ProjectsEntity.prototype, "project_name", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' }),
+    (0, typeorm_1.Column)({ length: 1000, nullable: true }),
+    __metadata("design:type", String)
+], ProjectsEntity.prototype, "description", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: "timestamp with time zone",
+        default: () => "CURRENT_TIMESTAMP",
+    }),
     __metadata("design:type", Date)
 ], ProjectsEntity.prototype, "creation_date", void 0);
 exports.ProjectsEntity = ProjectsEntity = __decorate([
-    (0, typeorm_1.Entity)({ name: 'projects' })
+    (0, typeorm_1.Entity)({ name: "projects" })
 ], ProjectsEntity);
 //# sourceMappingURL=projects.entity.js.map

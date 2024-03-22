@@ -1,12 +1,15 @@
 .main-add-div {
-  width: 95%;
-  margin-top: 40px;
-  margin-left: 50px;
+  position: absolute;
+  width: 100%;
+  margin-top: 20px;
+  padding-right: 50px;
+  padding-left: 50px;
   justify-content: center;
   font-size: larger;
   display: flex;
   z-index: 2;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .add-form {
@@ -50,7 +53,7 @@
   color: white;
   font-family: "Courier New", Courier, monospace;
   font-weight: bold;
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: #ffcc00;
   border: 2px solid #ce9720;
   outline: none;
@@ -72,7 +75,7 @@
   font-weight: bold;
   background-color: #ffcc00;
   border: 2px solid #ce9720;
-  border-radius: 15px;
+  border-radius: 10px;
   color: white;
   font-size: 20px;
   display: block;
@@ -84,4 +87,12 @@
   border-color: #e97e19;
   background-color: #ff9900;
   transition: 0.3s;
+}
+.add-form .project-desc-input{
+  margin-bottom: 20px;
+  margin-left: 0;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid gray;
+  height: 200px;
 }

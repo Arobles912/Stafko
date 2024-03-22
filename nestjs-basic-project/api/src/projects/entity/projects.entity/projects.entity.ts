@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-@Entity({name: 'projects'})
+@Entity({ name: "projects" })
 export class ProjectsEntity {
   @PrimaryGeneratedColumn()
   project_id: number;
@@ -8,6 +8,12 @@ export class ProjectsEntity {
   @Column({ length: 255, nullable: false })
   project_name: string;
 
-  @Column({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ length: 1000, nullable: true })
+  description: string;
+
+  @Column({
+    type: "timestamp with time zone",
+    default: () => "CURRENT_TIMESTAMP",
+  })
   creation_date: Date;
 }

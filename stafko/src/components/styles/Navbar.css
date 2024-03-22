@@ -5,6 +5,7 @@ nav{
     display: flex;
     width: 100%;
     justify-content: left;
+    margin-bottom: 10px;
     bottom: 0;
     background: linear-gradient(to left, #eee4cc 0%,  #eeddb3 20%, #ffc400 100%);
     height: auto;
@@ -18,7 +19,7 @@ nav{
     font-family:"Anek Gurmukhi", sans-serif;
     color: white;
     font-size: 22px;
-    margin-top: 10px;
+    margin-top: 7px;
     margin-left: 10px;
     padding: 0;
     text-decoration: none;
@@ -49,6 +50,14 @@ nav h3{
 .right-side-div {
     display: flex;
     margin-left: auto;
+}
+
+.right-side-div img{
+    width: 30px;
+    height: 30px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 10px;
 }
 
 .right-side-div button{
@@ -88,7 +97,7 @@ nav h3{
 
 .right-side-div p{
     font-family: "Anek Gurmukhi", sans-serif;
-    color: #ff9500;
+    color: #da620d;
     font-weight: 600;
     font-size: 20px;
     margin-top: 30px;

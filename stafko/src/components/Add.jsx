@@ -15,8 +15,17 @@ export default function Add() {
         <br />
         <img
           className="icon-img"
-          src="src/assets/staff-icon.png"
+          src="src/assets/description-icon.png"
           alt="user-icon"
+        />
+        <label htmlFor="projectDesc">Project Description:</label>
+        <br />
+        <textarea id="projectdesc" name="projectdesc" className="project-desc-input"/>
+        <br />
+        <img
+          className="icon-img"
+          src="src/assets/staff-icon.png"
+          alt="desc-icon"
         />
         <label htmlFor="projectStaff">Project Staff:</label>
         <br />

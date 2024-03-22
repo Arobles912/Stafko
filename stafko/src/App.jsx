@@ -26,8 +26,8 @@ function App() {
             )
           }
         />
-        <Route path="/register" element={<Register />} />
-        <Route path="/home" element={<Home username={username}/>} />
+        <Route path="/register" element={<Register username={username} setUsername={setUsername} />} />
+        <Route path="/home" element={<Home username={username} setIsLoggedIn={setIsLoggedIn}/>} />
         <Route path="/add" element={<Add />} />
       </Routes>
     </Router>

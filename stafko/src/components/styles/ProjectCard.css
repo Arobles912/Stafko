@@ -1,0 +1,200 @@
+.main-container-div {
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: white;
+}
+
+.container-div {
+  width: 100%;
+  justify-content: left;
+  border: 2px solid black;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.project-card-main-div {
+  display: flex;
+}
+
+.project-card-main-div img {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 10px;
+  width: 70px;
+  height: 70px;
+}
+
+.project-card-main-div h1 {
+  font-size: 30px;
+  font-family: "Anek Gurmukhi", sans-serif;
+  margin-left: 10px;
+  padding-top: 5px;
+}
+
+.info-div {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  margin-left: auto;
+  margin-right: 30px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.edit-button {
+  margin-right: 30px;
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  background-color: #ffcc00;
+  border: 2px solid #ce9720;
+  outline: none;
+  font-size: 18px;
+  max-width: 100%;
+  width: auto;
+  border-radius: 10px;
+}
+
+.edit-button:hover {
+  border-color: #e97e19;
+  background-color: #ff9900;
+  transition: 0.3s;
+}
+
+.download-button {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-right: 10px;
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 40px;
+  border-radius: 10px;
+  background-color: #ffcc00;
+  border: 2px solid #ce9720;
+  outline: none;
+  font-size: 18px;
+  max-width: 100%;
+  width: auto;
+  border-radius: 10px;
+}
+
+.download-button:hover {
+  border-color: #e97e19;
+  background-color: #ff9900;
+  transition: 0.3s;
+}
+
+/** Extended card **/
+
+.project-cardEx-main-div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-height: 0;
+  overflow: hidden;
+  align-items: flex-start;
+  transition: 0.5s ease-in-out;
+}
+
+.project-cardEx-main-div.extended {
+  overflow-y: auto;
+  max-height: 600px;
+}
+
+.description-div {
+  flex-basis: 65%;
+  margin-left: 10px;
+  margin-bottom: 20px;
+}
+
+.description-div p {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-size: 18px;
+  font-weight: bolder;
+}
+
+.description-div p > span {
+  font-weight: 400;
+}
+
+.user-list {
+    margin-top: 18px;
+  box-shadow: 0px 3px 3px 3px lightgray;
+  background-color: rgb(232, 232, 232);
+  border-radius: 10px;
+  flex-basis: 30%;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+.user-list hr {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.user-list h3 {
+  text-shadow: 2px 2px 1px rgb(137, 137, 137);
+  font-family: "Anek Gurmukhi", sans-serif;
+  color: #ffcc00;
+  font-weight: 600;
+  margin-top: 20px;
+  font-size: 30px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.user-card {
+  display: flex;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.user-card span {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  margin-left: 10px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.user-card img {
+  width: 50px;
+  height: 50px;
+}
+
+.delete-button {
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  height: 40px;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  background-color: #ff0000;
+  border: 2px solid #ce2020;
+  outline: none;
+  font-size: 20px;
+  max-width: 100%;
+  width: auto;
+  border-radius: 10px;
+}
+
+.delete-button:hover{
+    background-color: #ff7300;
+    border: 2px solid #d24613;
+    transition: 0.3s;
+}

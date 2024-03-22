@@ -4,8 +4,9 @@ footer {
     width: 100%;
     display: flex;
     justify-content:center;
-    position: absolute;
-    bottom: 0;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0; 
     background: linear-gradient(to top, #81440a, #cc6626);
   }
 

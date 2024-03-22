@@ -37,13 +37,13 @@ export class AuthService {
     const user = await this.staffService.findOneByUserName(username);
 
     if (!user) {
-      throw new UnauthorizedException("Invalid user");
+      throw new UnauthorizedException("Invalid username.");
     }
 
     const isPasswordValid = await bcryptjs.compare(pass, user.pass);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException("Invalid password");
+      throw new UnauthorizedException("Invalid password.");
     }
     const payload = { username: user.username };
 
