@@ -1,9 +1,11 @@
 .main-add-div {
   position: absolute;
   width: 100%;
-  margin-top: 20px;
+  min-height: 700px;
+  padding-top: 10px;
   padding-right: 50px;
   padding-left: 50px;
+  padding-bottom: 40px;
   justify-content: center;
   font-size: larger;
   display: flex;

@@ -16,4 +16,7 @@ export class ProjectsEntity {
     default: () => "CURRENT_TIMESTAMP",
   })
   creation_date: Date;
+
+  @Column("bytea", { nullable: true })
+  project_file: Buffer; 
 }

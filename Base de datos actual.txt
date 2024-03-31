@@ -1,0 +1,26 @@
+CREATE TABLE staff (
+    staff_id SERIAL PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    pass VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    project_id INTEGER,
+    user_role VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE project (
+    project_id SERIAL PRIMARY KEY,
+    project_name VARCHAR(100) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    creation_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    project_file BYTEA
+);
+
+
+CREATE TABLE staff_project (
+    staff_id INTEGER REFERENCES staff(staff_id),
+    project_id INTEGER REFERENCES projects(project_id),
+    PRIMARY KEY (staff_id, project_id)
+);
+
+ALTER TABLE staff
+DROP COLUMN project_id;

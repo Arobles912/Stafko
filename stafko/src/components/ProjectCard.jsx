@@ -1,7 +1,7 @@
 import "./styles/ProjectCard.css";
 import { useState } from "react";
 
-export default function ProjectCard() {
+export default function ProjectCard({key, project}) {
   const [extendedCard, setExtendedCard] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
 

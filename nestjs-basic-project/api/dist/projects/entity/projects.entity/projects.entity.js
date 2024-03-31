@@ -33,6 +33,10 @@ __decorate([
     }),
     __metadata("design:type", Date)
 ], ProjectsEntity.prototype, "creation_date", void 0);
+__decorate([
+    (0, typeorm_1.Column)("bytea", { nullable: true }),
+    __metadata("design:type", Buffer)
+], ProjectsEntity.prototype, "project_file", void 0);
 exports.ProjectsEntity = ProjectsEntity = __decorate([
     (0, typeorm_1.Entity)({ name: "projects" })
 ], ProjectsEntity);
