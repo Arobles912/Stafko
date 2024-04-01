@@ -15,6 +15,7 @@
 
 .project-card-main-div {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .project-card-main-div img {

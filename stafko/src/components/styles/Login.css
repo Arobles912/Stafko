@@ -1,11 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Anek+Gurmukhi:wght@100..800&family=Fira+Code:wght@300..700&family=Orbitron:wght@400..900&display=swap");
 
 .bg-div {
+  overflow-y: auto;
   width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
+  min-height: 100vh;
   background-image: url("src/assets/bg-image.jpg");
   background-size: cover;
   background-position: center center;

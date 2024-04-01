@@ -1,16 +1,19 @@
+DROP TABLE IF EXISTS staff_project;
+DROP TABLE IF EXISTS staff;
+DROP TABLE IF EXISTS projects;
+
 CREATE TABLE staff (
     staff_id SERIAL PRIMARY KEY,
     username VARCHAR(100) NOT NULL,
     pass VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    project_id INTEGER,
-    user_role VARCHAR(50) NOT NULL
+    user_role VARCHAR(50)
 );
 
-CREATE TABLE project (
+CREATE TABLE projects (
     project_id SERIAL PRIMARY KEY,
     project_name VARCHAR(100) NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
     creation_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     project_file BYTEA
 );
@@ -22,5 +25,24 @@ CREATE TABLE staff_project (
     PRIMARY KEY (staff_id, project_id)
 );
 
-ALTER TABLE staff
-DROP COLUMN project_id;
+
+ALTER TABLE staff_project
+ADD CONSTRAINT fk_staff_project_staff_id
+FOREIGN KEY (staff_id)
+REFERENCES staff(staff_id)
+ON DELETE CASCADE;
+
+ALTER TABLE staff_project
+ADD CONSTRAINT fk_staff_project_project_id
+FOREIGN KEY (project_id)
+REFERENCES projects(project_id)
+ON DELETE CASCADE;
+
+INSERT INTO projects (project_name, description, project_file)
+VALUES ('Proyecto 1', 'Descripción del proyecto 1', 'contenido del archivo 1'),
+       ('Proyecto 2', 'Descripción del proyecto 2', 'contenido del archivo 2');
+
+INSERT INTO staff_project (staff_id, project_id)
+VALUES (1, 1),
+       (2, 1),
+       (2, 2);

@@ -10,7 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StaffEntity = void 0;
-const projects_entity_1 = require("../../../projects/entity/projects.entity/projects.entity");
 const typeorm_1 = require("typeorm");
 let StaffEntity = class StaffEntity {
 };
@@ -32,18 +31,9 @@ __decorate([
     __metadata("design:type", String)
 ], StaffEntity.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", Number)
-], StaffEntity.prototype, "project_id", void 0);
-__decorate([
     (0, typeorm_1.Column)({ default: 'Usuario', length: 30 }),
     __metadata("design:type", String)
 ], StaffEntity.prototype, "user_role", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => projects_entity_1.ProjectsEntity, { onDelete: 'SET NULL' }),
-    (0, typeorm_1.JoinColumn)({ name: 'project_id' }),
-    __metadata("design:type", projects_entity_1.ProjectsEntity)
-], StaffEntity.prototype, "project", void 0);
 exports.StaffEntity = StaffEntity = __decorate([
     (0, typeorm_1.Entity)({ name: 'staff' })
 ], StaffEntity);

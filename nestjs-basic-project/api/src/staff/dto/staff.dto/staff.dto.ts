@@ -12,8 +12,5 @@ export class StaffDto {
   email: string;
 
   @IsOptional()
-  project_id?: number;
-
-  @IsOptional()
   user_role?: string;
 }

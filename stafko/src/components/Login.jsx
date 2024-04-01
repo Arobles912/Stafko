@@ -36,7 +36,6 @@ export default function Login({ setIsLoggedIn, username, setUsername }) {
   };
 
   return (
-    <div className="wrapper-div">
       <div className="bg-div">
         <Header />
         <div className="main-div">
@@ -84,6 +83,5 @@ export default function Login({ setIsLoggedIn, username, setUsername }) {
         </div>
         <Footer />
       </div>
-    </div>
   );
 }

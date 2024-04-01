@@ -14,6 +14,7 @@ const app_service_1 = require("./app.service");
 const projects_module_1 = require("./projects/projects.module");
 const staff_module_1 = require("./staff/staff.module");
 const auth_module_1 = require("./auth/auth.module");
+const staff_project_module_1 = require("./staff_project/staff_project.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -23,13 +24,14 @@ exports.AppModule = AppModule = __decorate([
             projects_module_1.ProjectsModule,
             staff_module_1.StaffModule,
             auth_module_1.AuthModule,
+            staff_project_module_1.StaffProjectModule,
             typeorm_1.TypeOrmModule.forRoot({
-                type: 'postgres',
-                host: 'localhost',
+                type: "postgres",
+                host: "localhost",
                 port: 5432,
-                username: 'user',
-                password: 'password',
-                database: 'dbname',
+                username: "user",
+                password: "password",
+                database: "dbname",
                 autoLoadEntities: true,
                 synchronize: true,
             }),
