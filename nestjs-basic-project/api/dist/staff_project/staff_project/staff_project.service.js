@@ -44,6 +44,9 @@ let StaffProjectService = class StaffProjectService {
     async remove(staffId, projectId) {
         await this.staffProjectRepository.delete({ staff_id: staffId, project_id: projectId });
     }
+    async removeByProjectId(projectId) {
+        await this.staffProjectRepository.delete({ project_id: projectId });
+    }
     async findUserById(userId) {
         const user = await this.staffProjectRepository.query(`SELECT username FROM staff WHERE staff_id = $1`, [userId]);
         return user[0] || null;

@@ -38,9 +38,9 @@ FOREIGN KEY (project_id)
 REFERENCES projects(project_id)
 ON DELETE CASCADE;
 
-INSERT INTO projects (project_name, description, project_file)
-VALUES ('Proyecto 1', 'Descripción del proyecto 1', 'contenido del archivo 1'),
-       ('Proyecto 2', 'Descripción del proyecto 2', 'contenido del archivo 2');
+INSERT INTO projects (project_name, description)
+VALUES ('Proyecto 1', 'Descripción del proyecto 1'),
+       ('Proyecto 2', 'Descripción del proyecto 2');
 
 INSERT INTO staff_project (staff_id, project_id)
 VALUES (1, 1),

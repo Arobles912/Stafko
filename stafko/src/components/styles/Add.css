@@ -90,11 +90,40 @@
   background-color: #ff9900;
   transition: 0.3s;
 }
-.add-form .project-desc-input{
+.add-form .project-desc-input {
   margin-bottom: 20px;
   margin-left: 0;
   width: 100%;
   border-radius: 10px;
   border: 1px solid gray;
   height: 200px;
+}
+
+.list-div-bar {
+  border-radius: 3px;
+  border: 1px solid #ffcc00;
+  height: auto;
+  background-color: white;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.add-form p {
+  color: black;
+  font-size: 25px;
+  text-decoration: underline;
+  font-family: "Anek Gurmukhi", sans-serif;
+}
+
+.add-form ul {
+  list-style-type: none;
+}
+
+.add-form li {
+  font-size: 18px;
+  font-weight: 600;
+  color: #e97e19;
+  margin-bottom: 10px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+  "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }

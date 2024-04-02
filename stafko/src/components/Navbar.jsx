@@ -1,12 +1,23 @@
 import "./styles/Navbar.css";
 import { useNavigate } from "react-router-dom";
 
-export default function Navbar({ username, toggleAddProject, setIsLoggedIn, addButtonText }) {
+export default function Navbar({
+  username,
+  toggleAddProject,
+  setIsLoggedIn,
+  addButtonText,
+  setToken,
+  setUsername
+}) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    setToken(null);
+    localStorage.removeItem("token");
+    setUsername("");
+    localStorage.removeItem("username");
     setIsLoggedIn(false);
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -20,9 +31,7 @@ export default function Navbar({ username, toggleAddProject, setIsLoggedIn, addB
       <div className="right-side-div">
         <img src="src/assets/user-icon.png" alt="user-icon"></img>
         <p className="user-name">Logged as: {username}</p>
-        <button onClick={handleLogout}>
-          Logout
-        </button>
+        <button onClick={handleLogout}>Logout</button>
       </div>
     </nav>
   );

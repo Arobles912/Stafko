@@ -11,6 +11,7 @@ export declare class StaffProjectService {
     findByProjectId(projectId: number): Promise<StaffProjectEntity[]>;
     update(staffId: number, projectId: number, staffProjectDto: StaffProjectDto): Promise<StaffProjectEntity>;
     remove(staffId: number, projectId: number): Promise<void>;
+    removeByProjectId(projectId: number): Promise<void>;
     findUserById(userId: number): Promise<{
         username: string;
     } | null>;

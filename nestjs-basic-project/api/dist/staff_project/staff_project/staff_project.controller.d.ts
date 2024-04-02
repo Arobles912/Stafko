@@ -7,6 +7,7 @@ export declare class StaffProjectController {
     create(staffProjectDto: StaffProjectDto): Promise<StaffProjectEntity>;
     findByStaffId(staffId: number): Promise<StaffProjectEntity[]>;
     findByProjectId(projectId: number): Promise<StaffProjectEntity[]>;
+    removeByProjectId(projectId: number): Promise<void>;
     findUsersByProjectId(projectId: number): Promise<string[]>;
     findOne(staffId: number, projectId: number): Promise<StaffProjectEntity>;
     findAll(): Promise<StaffProjectEntity[]>;

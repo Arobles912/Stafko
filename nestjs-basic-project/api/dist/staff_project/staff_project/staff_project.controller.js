@@ -29,6 +29,9 @@ let StaffProjectController = class StaffProjectController {
     async findByProjectId(projectId) {
         return this.staffProjectService.findByProjectId(projectId);
     }
+    async removeByProjectId(projectId) {
+        return this.staffProjectService.removeByProjectId(+projectId);
+    }
     async findUsersByProjectId(projectId) {
         try {
             const members = await this.staffProjectService.findByProjectId(projectId);
@@ -78,6 +81,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], StaffProjectController.prototype, "findByProjectId", null);
+__decorate([
+    (0, common_1.Delete)("project/:projectId"),
+    __param(0, (0, common_1.Param)("projectId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], StaffProjectController.prototype, "removeByProjectId", null);
 __decorate([
     (0, common_1.Get)("project/:projectId/users"),
     __param(0, (0, common_1.Param)("projectId")),

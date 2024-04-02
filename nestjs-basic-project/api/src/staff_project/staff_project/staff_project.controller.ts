@@ -36,6 +36,13 @@ export class StaffProjectController {
     return this.staffProjectService.findByProjectId(projectId);
   }
 
+  @Delete("project/:projectId")
+  async removeByProjectId(
+    @Param("projectId") projectId: number
+  ): Promise<void> {
+    return this.staffProjectService.removeByProjectId(+projectId);
+  }
+
   @Get("project/:projectId/users")
   async findUsersByProjectId(
     @Param("projectId") projectId: number
@@ -92,4 +99,5 @@ export class StaffProjectController {
   ): Promise<void> {
     return this.staffProjectService.remove(+staffId, +projectId);
   }
+
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./styles/Login.css";
 import Header from "./Header.jsx";
@@ -7,6 +7,13 @@ import Footer from "./Footer.jsx";
 export default function Login({ setIsLoggedIn, username, setUsername }) {
   const [pass, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -23,7 +30,9 @@ export default function Login({ setIsLoggedIn, username, setUsername }) {
       });
 
       if (response.ok) {
-        console.log("Log successful");
+        const data = await response.json();
+        localStorage.setItem("token", data.token); 
+        localStorage.setItem("username", data.username);
         setIsLoggedIn(true);
       } else {
         const data = await response.json();

@@ -41,6 +41,11 @@ export class StaffProjectService {
     await this.staffProjectRepository.delete({ staff_id: staffId, project_id: projectId });
   }
 
+
+  async removeByProjectId(projectId: number): Promise<void> {
+    await this.staffProjectRepository.delete({project_id: projectId});
+  }
+
   async findUserById(userId: number): Promise<{ username: string } | null> {
     const user = await this.staffProjectRepository.query(`SELECT username FROM staff WHERE staff_id = $1`, [userId]);
     return user[0] || null;
