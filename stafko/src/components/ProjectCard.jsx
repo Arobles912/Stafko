@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles/ProjectCard.css";
+import AddCollaborator from "./AddCollaborator";
 
 export default function ProjectCard({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
+  const [isAddCollaboratorVisible, setIsAddCollaboratorVisible] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
   const [description, setDescription] = useState(project.project.description);
   const [staffProjectsData, setStaffProjectsData] = useState(null);
   const [collaborators, setCollaborators] = useState([]);
+  const [allCollaborators, setAllCollaborators] = useState([]);
+  const [shouldReload, setShouldReload] = useState(false);
+  const [error, setError] = useState(null);
 
   const textareaRef = useRef(null);
-
 
   useEffect(() => {
     async function fetchData() {
@@ -40,6 +44,7 @@ export default function ProjectCard({ project }) {
         if (response.ok) {
           const data = await response.json();
           setCollaborators(data);
+          setAllCollaborators(data);
         } else {
           throw new Error("Failed to fetch collaborators");
         }
@@ -50,7 +55,6 @@ export default function ProjectCard({ project }) {
 
     fetchCollaborators();
   }, [project.staffProject.project_id]);
-  
 
   useEffect(() => {
     adjustTextareaHeight();
@@ -63,82 +67,156 @@ export default function ProjectCard({ project }) {
     }
   };
 
-  async function deleteProject() {
-    let staffProjectData;
+  function handleEditButton() {
+    if (editButtonText === "Cancel") {
+      setTimeout(() => {
+        setCollaborators(allCollaborators);
+      }, 500);
+    }
+    setExtendedCard(!extendedCard);
+    setEditButtonText(extendedCard ? "Edit" : "Cancel");
+  }
 
+  async function modifyCollaborators(deleteCollaborator) {
+    setCollaborators((prevCollaborators) =>
+      prevCollaborators.filter(
+        (collaborator) => collaborator !== deleteCollaborator
+      )
+    );
+  }
+
+  async function deleteCollaborators(collaborator) {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/staffProject/project/${project.staffProject.project_id}`,
-        {
-          method: "DELETE",
-        }
+        `http://localhost:4000/api/staff/username/${collaborator}`
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to delete staff project");
-      }
-
-      staffProjectData = { ...project };
-
-      const projectResponse = await fetch(
-        `http://localhost:4000/api/projects/${project.project.project_id}`,
-        {
-          method: "DELETE",
+      if (response.ok) {
+        const staffData = await response.json();
+        const staffId = staffData.staff_id;
+        const staffProjectResponse = await fetch(
+          `http://localhost:4000/api/staffProject/${staffId}/${project.staffProject.project_id}`,
+          {
+            method: "DELETE",
+          }
+        );
+        if (staffProjectResponse.ok) {
+          console.log("Collaborator deleted successfully.");
+        } else {
+          console.error("Staff project couldn't be deleted.");
         }
-      );
-
-      if (!projectResponse.ok) {
-        throw new Error("Failed to delete project");
+      } else {
+        console.log("User couldn't be fetched");
       }
-      console.log("Project deleted successfully.");
-      window.location.reload();
     } catch (error) {
       console.error("An error has occurred:", error);
+    }
+  }
 
-      if (staffProjectData) {
-        try {
-          const restoreResponse = await fetch(
-            `http://localhost:4000/api/projects`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(staffProjectData),
-            }
-          );
+  async function deleteProject() {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete the project?"
+    );
+    if (confirmed) {
+      let staffProjectData;
 
-          if (restoreResponse.ok) {
-            console.log("Project restored successfully.");
-          } else {
-            throw new Error("Failed to restore project");
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/staffProject/project/${project.staffProject.project_id}`,
+          {
+            method: "DELETE",
           }
-        } catch (error) {
-          console.error("Error restoring project:", error);
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to delete staff project");
+        }
+
+        staffProjectData = { ...project };
+
+        const projectResponse = await fetch(
+          `http://localhost:4000/api/projects/${project.project.project_id}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (!projectResponse.ok) {
+          throw new Error("Failed to delete project");
+        }
+        console.log("Project deleted successfully.");
+        setShouldReload(true);
+      } catch (error) {
+        console.error("An error has occurred:", error);
+
+        if (staffProjectData) {
+          try {
+            const restoreResponse = await fetch(
+              `http://localhost:4000/api/projects`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(staffProjectData),
+              }
+            );
+
+            if (restoreResponse.ok) {
+              console.log("Project restored successfully.");
+              setShouldReload(false);
+            } else {
+              throw new Error("Failed to restore project");
+            }
+          } catch (error) {
+            console.error("Error restoring project:", error);
+          }
         }
       }
     }
   }
 
-  function handleEditButton() {
-    setExtendedCard(!extendedCard);
-    setEditButtonText(extendedCard ? "Edit" : "Cancel");
-  }
-
   async function saveChanges() {
-    try {
-      const response = await fetch(`http://localhost:4000/api/projects/${project.project.project_id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          description: description,
-        }),
-      });
-      console.log("Description updated:", description);
-    } catch (error) {
-      console.error("Error updating the description:", error);
+    const confirmed = window.confirm(
+      "Are you sure you want to save the changes?"
+    );
+    if (confirmed) {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/projects/${project.project.project_id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              description: description,
+            }),
+          }
+        );
+        if (response.ok) {
+          const deletedCollaborators = new Set();
+
+          allCollaborators.forEach((collaborator) => {
+            if (!collaborators.includes(collaborator)) {
+              deletedCollaborators.add(collaborator);
+            }
+          });
+
+          await Promise.all(
+            Array.from(deletedCollaborators).map((collaborator) =>
+              deleteCollaborators(collaborator)
+            )
+          );
+
+          setShouldReload(true);
+        } else {
+          setError("The description is too long.");
+        }
+      } catch (error) {
+        console.error("Error updating the description:", error);
+        setError("Error updating the description:", error);
+      }
     }
   }
 
@@ -148,13 +226,19 @@ export default function ProjectCard({ project }) {
     ? staffProjectsData.length
     : 0;
 
+  useEffect(() => {
+    if (shouldReload) {
+      window.location.reload();
+    }
+  }, [shouldReload]);
+
   return (
     <div className="main-container-div">
       <div className="container-div">
         <section className="project-card-main-div">
           <div className="title-div">
-          <img src="src/assets/project-icon.png" alt="project-img"></img>
-          <h1>{project.project.project_name}</h1>
+            <img src="src/assets/project-icon.png" alt="project-img" />
+            <h1>{project.project.project_name}</h1>
           </div>
           <div className="info-div">
             <p>Numero de miembros: {numberOfCollaborators}</p>
@@ -172,19 +256,20 @@ export default function ProjectCard({ project }) {
             extendedCard ? "extended" : ""
           }`}
         >
+          {isAddCollaboratorVisible && <AddCollaborator setIsAddCollaboratorVisible={setIsAddCollaboratorVisible}etIsAddCollaboratorVisible/>}
           <div className="description-div">
-            <h3>Readme</h3>
+            <h3>ReadME</h3>
             <hr />
             <textarea
               ref={textareaRef}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              rows="6" 
-              onFocus={adjustTextareaHeight} 
+              rows="6"
+              onFocus={adjustTextareaHeight}
             />
           </div>
           <div className="user-list">
-            <h3>Colaborators</h3>
+            <h3>Collaborators</h3>
             <hr />
             {collaborators.map((collaborator, index) => (
               <div className="user-card" key={index}>
@@ -192,16 +277,38 @@ export default function ProjectCard({ project }) {
                   <img src="src/assets/user-icon.png" alt="colaborators-icon" />
                   <span>{collaborator}</span>
                 </div>
-                <button>Delete collaborator</button>
+                <button
+                  type="button"
+                  onClick={() => modifyCollaborators(collaborator)}
+                >
+                  Delete collaborator
+                </button>
               </div>
             ))}
+            <button type="button" onClick={() => setIsAddCollaboratorVisible(true)}>Add collaborator</button>
           </div>
+          {error && (
+            <div style={{ textAlign: "center", width: "100%" }}>
+              <p
+                style={{
+                  color: "red",
+                  fontFamily: "Anek Gurmukhi, sans-serif",
+                  fontSize: "20px",
+                }}
+              >
+                {error}
+              </p>
+            </div>
+          )}
           <div className="buttons-div">
-
-            <button onClick={deleteProject} className="delete-button">
+            <button
+              type="button"
+              onClick={deleteProject}
+              className="delete-button"
+            >
               Delete project
             </button>
-            <button onClick={saveChanges} className="save-button">
+            <button type="button" onClick={saveChanges} className="save-button">
               Save changes
             </button>
           </div>

@@ -5,10 +5,10 @@ export class ProjectsEntity {
   @PrimaryGeneratedColumn()
   project_id: number;
 
-  @Column({ length: 255, nullable: false })
+  @Column({ length: 50, nullable: false })
   project_name: string;
 
-  @Column({ length: 1000, nullable: true })
+  @Column({ length: 3000, nullable: true })
   description: string;
 
   @Column({

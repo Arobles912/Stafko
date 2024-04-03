@@ -19,11 +19,11 @@ __decorate([
     __metadata("design:type", Number)
 ], ProjectsEntity.prototype, "project_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 255, nullable: false }),
+    (0, typeorm_1.Column)({ length: 50, nullable: false }),
     __metadata("design:type", String)
 ], ProjectsEntity.prototype, "project_name", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 1000, nullable: true }),
+    (0, typeorm_1.Column)({ length: 3000, nullable: true }),
     __metadata("design:type", String)
 ], ProjectsEntity.prototype, "description", void 0);
 __decorate([

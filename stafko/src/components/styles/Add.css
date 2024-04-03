@@ -9,7 +9,7 @@
   justify-content: center;
   font-size: larger;
   display: flex;
-  z-index: 2;
+  z-index: 3;
   align-items: center;
   box-sizing: border-box;
 }
@@ -61,7 +61,10 @@
   outline: none;
   padding: 4px;
   font-size: 18px;
-  width: 8%;
+  padding-right: 10px;
+  padding-left: 10px;
+  width: auto;
+  height: auto;
   border-radius: 10px;
 }
 
@@ -108,6 +111,28 @@
   margin-bottom: 30px;
 }
 
+.users-added-div li > button {
+  width: auto;
+  height: auto;
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  border-radius: 10px;
+  background-color: #ff0000;
+  border: 2px solid #ce2020;
+  outline: none;
+  font-size: 15px;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-left: 20px;
+}
+
+.users-added-div li > button:hover {
+  background-color: #ff7300;
+  border: 2px solid #d24613;
+  transition: 0.3s;
+}
+
 .add-form p {
   color: black;
   font-size: 25px;
@@ -125,5 +150,5 @@
   color: #e97e19;
   margin-bottom: 10px;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-  "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }

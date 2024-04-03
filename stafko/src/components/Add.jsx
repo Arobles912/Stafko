@@ -8,6 +8,7 @@ export default function Add() {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [users, setUsers] = useState([]);
   const [shouldReload, setShouldReload] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -27,6 +28,22 @@ export default function Add() {
 
   async function addProject(event) {
     event.preventDefault();
+
+    if (!project_name.trim()) {
+      setError("The project name can't be empty.");
+      return;
+    }
+
+    if(description.length > 3000){
+      setError("The project description can't be longer than 3000 characters.");
+      return;
+    }
+
+    if (selectedUsers.length < 1) {
+      setError("The users selected field can't be empty.");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:4000/api/projects", {
         method: "POST",
@@ -83,6 +100,13 @@ export default function Add() {
       }
     }
   }
+
+  async function deleteUser(username) {
+    setSelectedUsers((prevUsers) =>
+      prevUsers.filter((user) => user.username !== username)
+    );
+  }
+
   async function createStaffProject(projectId, staffId) {
     try {
       const response = await fetch("http://localhost:4000/api/staffProject", {
@@ -129,6 +153,7 @@ export default function Add() {
           value={project_name}
           onChange={(e) => setProjectName(e.target.value)}
           maxLength={50}
+          required
         />
         <br />
         <img
@@ -167,10 +192,18 @@ export default function Add() {
         <p>Users Selected:</p>
         <div className="list-div-bar"></div>
         {selectedUsers.length > 0 && (
-          <div>
+          <div className="users-added-div">
             <ul>
               {selectedUsers.map((user, index) => (
-                <li key={index}>-{user.username}</li>
+                <li key={index}>
+                  -{user.username}
+                  <button
+                    type="button"
+                    onClick={() => deleteUser(user.username)}
+                  >
+                    Delete
+                  </button>
+                </li>
               ))}
             </ul>
           </div>
@@ -190,6 +223,20 @@ export default function Add() {
           onChange={(e) => setProjectFile(e.target.files[0])}
         />
         <br />
+        {error && (
+            <div style={{ textAlign: "center", width: "100%" }}>
+              <p
+                style={{
+                  color: "red",
+                  fontFamily: "Anek Gurmukhi, sans-serif",
+                  fontSize: "20px",
+                  textDecoration: "none"
+                }}
+              >
+                {error}
+              </p>
+            </div>
+          )}
         <input
           className="add-project-input"
           type="submit"

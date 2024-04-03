@@ -1,0 +1,83 @@
+.main-add-collaborator-div {
+  position: absolute;
+  width: 100%;
+  min-height: 200px;
+  justify-content: center;
+  font-size: larger;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.add-collaborator-div {
+  text-align: center;
+  justify-content: center;
+  box-shadow: 0px 0px 8px 8px lightgray;
+  padding: 20px;
+  width: 30%;
+  border: none;
+  background: white;
+  border-radius: 15px;
+}
+
+.collaborators-list-content {
+  margin-bottom: 0;
+}
+
+.select-collaborator {
+  width: 60%;
+  background-color: rgb(245, 245, 245);
+  padding: 6px;
+  font-size: 15px;
+  border: 1px solid gray;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+.close-div {
+  text-align: right;
+}
+
+.close-div button{
+    padding: auto;
+    font-size: 20px;
+    background-color: rgb(221, 221, 221);
+    border-style: none;
+    border-radius: 20px;
+}
+
+.close-div button:hover{
+    background-color: rgb(188, 188, 188);
+    transition: 0.3s;
+}
+
+.add-collaborator-div h3 {
+  font-size: 25px;
+  text-align: center;
+  font-family: "Anek Gurmukhi", sans-serif;
+}
+
+.users-added-div ul {
+  list-style-type: none;
+}
+
+.users-added-div li {
+  font-size: 15px;
+  font-weight: 600;
+  color: #e97e19;
+  margin-bottom: 10px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.add-collaborator-div p {
+  color: black;
+  font-size: 20px;
+  text-decoration: underline;
+  font-family: "Anek Gurmukhi", sans-serif;
+}

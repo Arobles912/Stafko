@@ -122,7 +122,8 @@
   flex-basis: 65%;
   margin-top: 18px;
   margin-left: 10px;
-  padding-right: 15px;
+  padding-right: 20px; 
+  padding-left: 10px; 
   margin-bottom: 20px;
   box-shadow: 0px 3px 3px 3px lightgray;
   background-color: rgb(232, 232, 232);
@@ -144,19 +145,25 @@
 
 .description-div textarea {
   align-self: center;
-  border-style: none;
+  margin-top: 10px;
+  margin-bottom: 10px;
   margin-left: 10px;
   margin-right: 10px;
+  border-style: none;
   resize: none;
-  width: 100%;
+  width: calc(100% - 20px); 
   font-weight: 400;
   font-size: 15px;
   background-color: rgb(232, 232, 232);
-
 }
 
 .description-div textarea:focus{
   outline: none;
+}
+
+hr {
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .user-list {
@@ -165,13 +172,12 @@
   background-color: rgb(232, 232, 232);
   border-radius: 10px;
   flex-basis: 30%;
-  margin-right: 10px;
-  margin-bottom: 20px;
-}
-
-hr {
   margin-left: 10px;
   margin-right: 10px;
+  margin-bottom: 20px;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
 }
 
 .user-list h3 {
@@ -185,6 +191,31 @@ hr {
   margin-bottom: 15px;
 }
 
+.user-list button{
+  width: auto;
+  height: 30px;
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  border-radius: 10px;
+  background-color: #ffcc00;
+  border: 2px solid #ce9720;
+  outline: none;
+  font-size: 15px;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  align-self: center; 
+}
+
+.user-list button:hover{
+  border-color: #e97e19;
+  background-color: #ff9900;
+  transition: 0.3s;
+}
+
+
 .user-card {
   margin-left: 10px;
   margin-bottom: 10px;
@@ -193,7 +224,7 @@ hr {
 
 .user-card div {
   display: flex;
-  width: auto;
+  width: 100%;
   align-items: center;
 }
 
@@ -222,7 +253,7 @@ hr {
   padding-right: 10px;
   padding-left: 10px;
   margin-right: 10px;
-  margin-left: auto;
+  margin-left: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
@@ -255,7 +286,6 @@ hr {
   border: 2px solid #ce9720;
   outline: none;
   font-size: 20px;
-  max-width: 100%;
   width: auto;
 }
 
@@ -265,15 +295,16 @@ hr {
   transition: 0.3s;
 }
 
+
 .delete-button {
   color: white;
   font-family: "Courier New", Courier, monospace;
   font-weight: bold;
   height: 40px;
-  margin-left: 10px;
-  margin-right: 10px;
   margin-top: 20px;
   margin-bottom: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
   padding-left: 10px;
   padding-right: 10px;
   border-radius: 10px;
@@ -281,7 +312,6 @@ hr {
   border: 2px solid #ce2020;
   outline: none;
   font-size: 20px;
-  max-width: 100%;
   width: auto;
 }
 
