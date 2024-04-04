@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
 import "./styles/AddCollaborator.css";
 
-export default function AddCollaborator({setIsAddCollaboratorVisible}) {
+export default function AddCollaborator({
+  setIsAddCollaboratorVisible,
+  collaborators,
+  project,
+}) {
+  const [selectedUser, setSelectedUser] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [users, setUsers] = useState([]);
+  const [shouldReload, setShouldReload] = useState(false);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -11,7 +17,10 @@ export default function AddCollaborator({setIsAddCollaboratorVisible}) {
         const response = await fetch("http://localhost:4000/api/staff");
         if (response.ok) {
           const userData = await response.json();
-          setUsers(userData);
+          const filteredUsers = userData.filter(
+            (user) => !collaborators.includes(user.username)
+          );
+          setUsers(filteredUsers);
         }
       } catch (error) {
         console.error("Failed to fetch users: ", error);
@@ -19,7 +28,7 @@ export default function AddCollaborator({setIsAddCollaboratorVisible}) {
     }
 
     fetchUsers();
-  }, []);
+  }, [collaborators]);
 
   async function deleteUser(username) {
     setSelectedUsers((prevUsers) =>
@@ -28,8 +37,8 @@ export default function AddCollaborator({setIsAddCollaboratorVisible}) {
   }
 
   async function addUser() {
-    const userSelect = document.getElementById("users");
-    const selectedUser = userSelect.value;
+    if (!selectedUser) return;
+
     if (selectedUsers.some((user) => user.username === selectedUser)) {
       console.log("User already exists in the list.");
     } else {
@@ -51,15 +60,79 @@ export default function AddCollaborator({setIsAddCollaboratorVisible}) {
     }
   }
 
+  async function createStaffProject(projectId, staffId) {
+    try {
+      const response = await fetch("http://localhost:4000/api/staffProject", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          staff_id: staffId,
+          project_id: projectId,
+        }),
+      });
+      if (response.ok) {
+        console.log("User-project relation created.");
+        return true;
+      } else {
+        console.log("User-project error.");
+        return false;
+      }
+    } catch (error) {
+      console.error("An error has occurred: ", error);
+      return false;
+    }
+  }
+
+  useEffect(() => {
+    if (shouldReload) {
+      window.location.reload();
+    }
+  }, [shouldReload]);
+
+  async function handleConfirm() {
+    const confirmed = window.confirm(
+      "Are you sure you want to confirm the changes?"
+    );
+    if (confirmed) {
+      try {
+        const createProjectPromises = selectedUsers.map((user) =>
+          createStaffProject(project.project.project_id, user.id)
+        );
+        const results = await Promise.all(createProjectPromises);
+        const allSuccess = results.every((result) => result);
+        if (allSuccess) {
+          setShouldReload(true);
+        } else {
+          console.error("Error creating staff projects.");
+        }
+      } catch (error) {
+        console.error("Error creating staff projects: ", error);
+      }
+    }
+  }
+
   return (
     <div className="main-add-collaborator-div">
       <div className="add-collaborator-div">
         <div className="close-div">
-          <button type="button" onClick={() => setIsAddCollaboratorVisible(false)}>X</button>
+          <button
+            type="button"
+            onClick={() => setIsAddCollaboratorVisible(false)}
+          >
+            X
+          </button>
         </div>
         <h3>Add collaborators</h3>
         <div className="collaborators-list">
-          <select name="users" id="users" className="select-collaborator">
+          <select
+            name="users"
+            value={selectedUser}
+            onChange={(e) => setSelectedUser(e.target.value)}
+            className="select-collaborator"
+          >
+            <option value="">Select user</option>
             {users.map((user) => (
               <option key={user.id} value={user.username}>
                 {user.username}
@@ -90,6 +163,13 @@ export default function AddCollaborator({setIsAddCollaboratorVisible}) {
             </div>
           )}
           <div className="list-div-bar"></div>
+          <button
+            type="button"
+            className="confirm-button"
+            onClick={handleConfirm}
+          >
+            Confirm
+          </button>
         </div>
       </div>
     </div>

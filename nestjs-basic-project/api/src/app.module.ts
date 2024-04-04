@@ -6,6 +6,7 @@ import { ProjectsModule } from "./projects/projects.module";
 import { StaffModule } from "./staff/staff.module";
 import { AuthModule } from "./auth/auth.module";
 import { StaffProjectModule } from "./staff_project/staff_project.module";
+import { MulterModule } from "@nestjs/platform-express";
 
 @Module({
   imports: [
@@ -22,6 +23,9 @@ import { StaffProjectModule } from "./staff_project/staff_project.module";
       database: "dbname",
       autoLoadEntities: true,
       synchronize: true,
+    }),
+    MulterModule.register({
+      dest: './uploads', 
     }),
   ],
   controllers: [AppController],

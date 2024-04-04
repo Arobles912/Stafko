@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProjectsEntity } from '../entity/projects.entity/projects.entity';
 import { ProjectsDto } from '../dto/projects.dto/projects.dto';
-
+import { MulterFile } from 'multer';
 
 @Injectable()
 export class ProjectsService {
@@ -12,8 +12,13 @@ export class ProjectsService {
     private projectsRepository: Repository<ProjectsEntity>,
   ) {}
 
-  async create(projectDto: ProjectsDto): Promise<ProjectsEntity> {
-    return this.projectsRepository.save(projectDto);
+  async create(projectDto: ProjectsDto, file: MulterFile): Promise<ProjectsEntity> {
+      const project = this.projectsRepository.create({
+        ...projectDto,
+        project_file: file.buffer,
+      });
+      return this.projectsRepository.save(project);
+
   }
 
   async findAll(): Promise<ProjectsEntity[]> {

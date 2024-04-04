@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 .main-add-div {
   position: absolute;
   width: 100%;
   min-height: 700px;
+  margin-top: 90px;
   padding-top: 10px;
   padding-right: 50px;
   padding-left: 50px;
@@ -12,6 +15,19 @@
   z-index: 3;
   align-items: center;
   box-sizing: border-box;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transform-origin: center;
+}
+
+.main-add-div.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.main-add-div.hidden {
+  opacity: 0;
+  transform: scale(0);
+  overflow: hidden;
 }
 
 .add-form {
@@ -23,7 +39,9 @@
 }
 
 .add-form label {
-  font-size: 30px;
+  font-family: "Poppins", sans-serif;
+  font-size: 26px;
+  font-weight: 600;
   text-decoration: underline 2px solid;
 }
 
@@ -135,9 +153,9 @@
 
 .add-form p {
   color: black;
-  font-size: 25px;
+  font-size: 23px;
   text-decoration: underline;
-  font-family: "Anek Gurmukhi", sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .add-form ul {

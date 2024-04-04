@@ -21,8 +21,12 @@ let ProjectsService = class ProjectsService {
     constructor(projectsRepository) {
         this.projectsRepository = projectsRepository;
     }
-    async create(projectDto) {
-        return this.projectsRepository.save(projectDto);
+    async create(projectDto, file) {
+        const project = this.projectsRepository.create({
+            ...projectDto,
+            project_file: file.buffer,
+        });
+        return this.projectsRepository.save(project);
     }
     async findAll() {
         return this.projectsRepository.find();

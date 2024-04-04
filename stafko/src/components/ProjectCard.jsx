@@ -4,7 +4,8 @@ import AddCollaborator from "./AddCollaborator";
 
 export default function ProjectCard({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
-  const [isAddCollaboratorVisible, setIsAddCollaboratorVisible] = useState(false);
+  const [isAddCollaboratorVisible, setIsAddCollaboratorVisible] =
+    useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
   const [description, setDescription] = useState(project.project.description);
   const [staffProjectsData, setStaffProjectsData] = useState(null);
@@ -12,6 +13,7 @@ export default function ProjectCard({ project }) {
   const [allCollaborators, setAllCollaborators] = useState([]);
   const [shouldReload, setShouldReload] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const textareaRef = useRef(null);
 
@@ -45,6 +47,7 @@ export default function ProjectCard({ project }) {
           const data = await response.json();
           setCollaborators(data);
           setAllCollaborators(data);
+          setLoading(false);
         } else {
           throw new Error("Failed to fetch collaborators");
         }
@@ -75,6 +78,29 @@ export default function ProjectCard({ project }) {
     }
     setExtendedCard(!extendedCard);
     setEditButtonText(extendedCard ? "Edit" : "Cancel");
+  }
+
+  async function handleDownloadButton() {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/projects/${project.staffProject.project_id}/download`
+      );
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "downloaded-file";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        throw new Error("Can't get file URL.");
+      }
+    } catch (error) {
+      console.error("Error downloading the file:", error);
+    }
   }
 
   async function modifyCollaborators(deleteCollaborator) {
@@ -220,7 +246,12 @@ export default function ProjectCard({ project }) {
     }
   }
 
-  const projectDate = project.project.creation_date.substring(0, 10);
+  const projectDate =
+    project.project.creation_date.substring(8, 10) +
+    "-" +
+    project.project.creation_date.substring(5, 7) +
+    "-" +
+    project.project.creation_date.substring(0, 4);
 
   const numberOfCollaborators = staffProjectsData
     ? staffProjectsData.length
@@ -241,22 +272,46 @@ export default function ProjectCard({ project }) {
             <h1>{project.project.project_name}</h1>
           </div>
           <div className="info-div">
-            <p>Numero de miembros: {numberOfCollaborators}</p>
+            <p>Number of collaborators: {numberOfCollaborators}</p>
           </div>
           <div className="info-div">
             <p>Creation date: {projectDate}</p>
           </div>
-          <button className="edit-button" onClick={handleEditButton}>
+          <button
+            className="edit-button"
+            type="button"
+            onClick={handleEditButton}
+          >
             {editButtonText}
           </button>
-          <button className="download-button">Download File</button>
+          <button
+            className="download-button"
+            type="button"
+            onClick={handleDownloadButton}
+          >
+            Download File
+          </button>
         </section>
         <section
           className={`project-cardEx-main-div ${
             extendedCard ? "extended" : ""
           }`}
         >
-          {isAddCollaboratorVisible && <AddCollaborator setIsAddCollaboratorVisible={setIsAddCollaboratorVisible}etIsAddCollaboratorVisible/>}
+          <div
+            className={`main-add-collaborator-div ${
+              isAddCollaboratorVisible ? "visible" : "hidden"
+            }`}
+          >
+            {loading ? (
+              <div>Loading...</div>
+            ) : (
+              <AddCollaborator
+                setIsAddCollaboratorVisible={setIsAddCollaboratorVisible}
+                collaborators={collaborators}
+                project={project}
+              />
+            )}
+          </div>
           <div className="description-div">
             <h3>ReadME</h3>
             <hr />
@@ -285,7 +340,12 @@ export default function ProjectCard({ project }) {
                 </button>
               </div>
             ))}
-            <button type="button" onClick={() => setIsAddCollaboratorVisible(true)}>Add collaborator</button>
+            <button
+              type="button"
+              onClick={() => setIsAddCollaboratorVisible(true)}
+            >
+              Add collaborator
+            </button>
           </div>
           {error && (
             <div style={{ textAlign: "center", width: "100%" }}>

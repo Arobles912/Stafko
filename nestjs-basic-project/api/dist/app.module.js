@@ -15,6 +15,7 @@ const projects_module_1 = require("./projects/projects.module");
 const staff_module_1 = require("./staff/staff.module");
 const auth_module_1 = require("./auth/auth.module");
 const staff_project_module_1 = require("./staff_project/staff_project.module");
+const platform_express_1 = require("@nestjs/platform-express");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -34,6 +35,9 @@ exports.AppModule = AppModule = __decorate([
                 database: "dbname",
                 autoLoadEntities: true,
                 synchronize: true,
+            }),
+            platform_express_1.MulterModule.register({
+                dest: './uploads',
             }),
         ],
         controllers: [app_controller_1.AppController],

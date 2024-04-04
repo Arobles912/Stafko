@@ -28,34 +28,33 @@ export default function Add() {
 
   async function addProject(event) {
     event.preventDefault();
-
+  
     if (!project_name.trim()) {
       setError("The project name can't be empty.");
       return;
     }
-
+  
     if(description.length > 3000){
       setError("The project description can't be longer than 3000 characters.");
       return;
     }
-
+  
     if (selectedUsers.length < 1) {
       setError("The users selected field can't be empty.");
       return;
     }
-
+  
     try {
+      const formData = new FormData();
+      formData.append("project_name", project_name);
+      formData.append("description", description);
+      formData.append("project_file", project_file);
+  
       const response = await fetch("http://localhost:4000/api/projects", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          project_name,
-          description,
-          project_file,
-        }),
+        body: formData,
       });
+  
       if (response.ok) {
         const data = await response.json();
         const projectId = data.project_id;
@@ -76,6 +75,7 @@ export default function Add() {
       console.error("Failed to create project: ", error);
     }
   }
+  
 
   async function addUser() {
     const userSelect = document.getElementById("users");
@@ -137,7 +137,7 @@ export default function Add() {
 
   return (
     <div className="main-add-div">
-      <form className="add-form" onSubmit={addProject}>
+      <form className="add-form" onSubmit={addProject} encType="multipart/form-data">
         <img
           className="icon-img"
           src="src/assets/project-icon.png"
@@ -194,8 +194,8 @@ export default function Add() {
         {selectedUsers.length > 0 && (
           <div className="users-added-div">
             <ul>
-              {selectedUsers.map((user, index) => (
-                <li key={index}>
+              {selectedUsers.map((user) => (
+                <li key={user.id}>
                   -{user.username}
                   <button
                     type="button"
