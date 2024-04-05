@@ -16,6 +16,8 @@ exports.StaffProjectController = void 0;
 const common_1 = require("@nestjs/common");
 const staff_project_service_1 = require("./staff_project.service");
 const staff_project_dto_1 = require("../dto/staff_project.dto/staff_project.dto");
+const staff_project_entity_1 = require("../entity/staff_project.entity/staff_project.entity");
+const swagger_1 = require("@nestjs/swagger");
 let StaffProjectController = class StaffProjectController {
     constructor(staffProjectService) {
         this.staffProjectService = staffProjectService;
@@ -62,6 +64,10 @@ let StaffProjectController = class StaffProjectController {
 exports.StaffProjectController = StaffProjectController;
 __decorate([
     (0, common_1.Post)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Creates a relationship between a staff member and a project' }),
+    (0, swagger_1.ApiBody)({ type: staff_project_dto_1.StaffProjectDto, description: 'Staff project data' }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: 'The created staff project', type: staff_project_entity_1.StaffProjectEntity }),
+    (0, swagger_1.ApiInternalServerErrorResponse)({ description: 'Internal server error' }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [staff_project_dto_1.StaffProjectDto]),
@@ -69,6 +75,10 @@ __decorate([
 ], StaffProjectController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)("staff/:staffId"),
+    (0, swagger_1.ApiOperation)({ summary: 'Finds projects by staff ID' }),
+    (0, swagger_1.ApiParam)({ name: 'staffId', description: 'ID of the staff' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Projects associated with the staff' }),
+    (0, swagger_1.ApiInternalServerErrorResponse)({ description: 'Internal server error' }),
     __param(0, (0, common_1.Param)("staffId")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -76,6 +86,10 @@ __decorate([
 ], StaffProjectController.prototype, "findByStaffId", null);
 __decorate([
     (0, common_1.Get)("project/:projectId"),
+    (0, swagger_1.ApiOperation)({ summary: 'Finds staff projects by project ID' }),
+    (0, swagger_1.ApiParam)({ name: 'projectId', description: 'ID of the project' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Staff projects associated with the project' }),
+    (0, swagger_1.ApiInternalServerErrorResponse)({ description: 'Internal server error' }),
     __param(0, (0, common_1.Param)("projectId")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -83,6 +97,10 @@ __decorate([
 ], StaffProjectController.prototype, "findByProjectId", null);
 __decorate([
     (0, common_1.Delete)("project/:projectId"),
+    (0, swagger_1.ApiOperation)({ summary: 'Removes staff projects by project ID' }),
+    (0, swagger_1.ApiParam)({ name: 'projectId', description: 'ID of the project' }),
+    (0, swagger_1.ApiResponse)({ status: 204, description: 'Staff projects removed successfully' }),
+    (0, swagger_1.ApiInternalServerErrorResponse)({ description: 'Internal server error' }),
     __param(0, (0, common_1.Param)("projectId")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -90,6 +108,10 @@ __decorate([
 ], StaffProjectController.prototype, "removeByProjectId", null);
 __decorate([
     (0, common_1.Get)("project/:projectId/users"),
+    (0, swagger_1.ApiOperation)({ summary: 'Finds users by project ID' }),
+    (0, swagger_1.ApiParam)({ name: 'projectId', description: 'ID of the project' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns usernames of users associated with the project' }),
+    (0, swagger_1.ApiInternalServerErrorResponse)({ description: 'Internal server error' }),
     __param(0, (0, common_1.Param)("projectId")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -97,6 +119,11 @@ __decorate([
 ], StaffProjectController.prototype, "findUsersByProjectId", null);
 __decorate([
     (0, common_1.Get)(":staffId/:projectId"),
+    (0, swagger_1.ApiOperation)({ summary: 'Finds staff project by staff ID and project ID' }),
+    (0, swagger_1.ApiParam)({ name: 'staffId', description: 'ID of the staff member' }),
+    (0, swagger_1.ApiParam)({ name: 'projectId', description: 'ID of the project' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Staff project found', }),
+    (0, swagger_1.ApiInternalServerErrorResponse)({ description: 'Internal server error' }),
     __param(0, (0, common_1.Param)("staffId")),
     __param(1, (0, common_1.Param)("projectId")),
     __metadata("design:type", Function),
@@ -105,12 +132,21 @@ __decorate([
 ], StaffProjectController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Find all staff projects' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'All staff projects found' }),
+    (0, swagger_1.ApiInternalServerErrorResponse)({ description: 'Internal server error' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], StaffProjectController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Put)(":staffId/:projectId"),
+    (0, swagger_1.ApiOperation)({ summary: 'Updates staff project by staff ID and project ID' }),
+    (0, swagger_1.ApiParam)({ name: 'staffId', description: 'ID of the staff' }),
+    (0, swagger_1.ApiParam)({ name: 'projectId', description: 'ID of the project' }),
+    (0, swagger_1.ApiBody)({ type: staff_project_dto_1.StaffProjectDto, description: 'Staff project data' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Staff project updated', type: staff_project_entity_1.StaffProjectEntity }),
+    (0, swagger_1.ApiInternalServerErrorResponse)({ description: 'Internal server error' }),
     __param(0, (0, common_1.Param)("staffId")),
     __param(1, (0, common_1.Param)("projectId")),
     __param(2, (0, common_1.Body)()),
@@ -120,6 +156,11 @@ __decorate([
 ], StaffProjectController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(":staffId/:projectId"),
+    (0, swagger_1.ApiOperation)({ summary: 'Removes staff project by staff ID and project ID' }),
+    (0, swagger_1.ApiParam)({ name: 'staffId', description: 'ID of the staff' }),
+    (0, swagger_1.ApiParam)({ name: 'projectId', description: 'ID of the project' }),
+    (0, swagger_1.ApiResponse)({ status: 204, description: 'Staff project removed successfully' }),
+    (0, swagger_1.ApiInternalServerErrorResponse)({ description: 'Internal server error' }),
     __param(0, (0, common_1.Param)("staffId")),
     __param(1, (0, common_1.Param)("projectId")),
     __metadata("design:type", Function),
@@ -127,6 +168,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], StaffProjectController.prototype, "remove", null);
 exports.StaffProjectController = StaffProjectController = __decorate([
+    (0, swagger_1.ApiTags)('Staff Project'),
     (0, common_1.Controller)("api/staffProject"),
     __metadata("design:paramtypes", [staff_project_service_1.StaffProjectService])
 ], StaffProjectController);

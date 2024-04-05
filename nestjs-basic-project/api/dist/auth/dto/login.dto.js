@@ -12,14 +12,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginDto = void 0;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
 class LoginDto {
 }
 exports.LoginDto = LoginDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Username of the user', example: 'example_user' }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], LoginDto.prototype, "username", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Password of the user', example: 'password123' }),
     (0, class_validator_1.IsString)(),
     (0, class_transformer_1.Transform)(({ value }) => value.trim()),
     __metadata("design:type", String)

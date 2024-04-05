@@ -43,6 +43,11 @@ export default function Add() {
       setError("The users selected field can't be empty.");
       return;
     }
+
+    if (project_file === null){
+      setError("The project file is required.");
+      return;
+    }
   
     try {
       const formData = new FormData();

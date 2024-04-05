@@ -17,8 +17,10 @@ exports.ProjectsController = void 0;
 const common_1 = require("@nestjs/common");
 const projects_service_1 = require("./projects.service");
 const projects_dto_1 = require("../dto/projects.dto/projects.dto");
+const projects_entity_1 = require("../entity/projects.entity/projects.entity");
 const platform_express_1 = require("@nestjs/platform-express");
 const multer_1 = require("multer");
+const swagger_1 = require("@nestjs/swagger");
 let ProjectsController = class ProjectsController {
     constructor(projectsService) {
         this.projectsService = projectsService;
@@ -46,7 +48,11 @@ let ProjectsController = class ProjectsController {
 exports.ProjectsController = ProjectsController;
 __decorate([
     (0, common_1.Post)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Creates a new project.' }),
+    (0, swagger_1.ApiBody)({ type: projects_dto_1.ProjectsDto }),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)("project_file")),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns the created project.', type: projects_entity_1.ProjectsEntity }),
+    (0, swagger_1.ApiResponse)({ status: 500, description: 'An error has occurred while trying to create the project.' }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
@@ -55,12 +61,18 @@ __decorate([
 ], ProjectsController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Get all projects.' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns an array with all the projects.' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], ProjectsController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(":id"),
+    (0, swagger_1.ApiOperation)({ summary: 'Get project by ID.' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'Project ID.' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns the project specified by the ID.', type: projects_entity_1.ProjectsEntity }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Project not found.' }),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -68,6 +80,11 @@ __decorate([
 ], ProjectsController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Put)(":id"),
+    (0, swagger_1.ApiOperation)({ summary: 'Update project by ID.' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'Project ID.' }),
+    (0, swagger_1.ApiBody)({ type: projects_dto_1.ProjectsDto }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns the updated project specified by the ID.', type: projects_entity_1.ProjectsEntity }),
+    (0, swagger_1.ApiResponse)({ status: 500, description: 'An error has occurred while trying to update the project.' }),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -76,6 +93,10 @@ __decorate([
 ], ProjectsController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(":id"),
+    (0, swagger_1.ApiOperation)({ summary: 'Delete project by ID.' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'Project ID.' }),
+    (0, swagger_1.ApiResponse)({ status: 204, description: 'Deletes the project specified by the ID.' }),
+    (0, swagger_1.ApiResponse)({ status: 500, description: 'An error has occurred while trying to delete the project.' }),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -83,6 +104,10 @@ __decorate([
 ], ProjectsController.prototype, "remove", null);
 __decorate([
     (0, common_1.Get)(":id/download"),
+    (0, swagger_1.ApiOperation)({ summary: 'Download project file by ID.' }),
+    (0, swagger_1.ApiParam)({ name: 'id', description: 'Project ID.' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Returns the project file.' }),
+    (0, swagger_1.ApiResponse)({ status: 500, description: 'An error has occurred while trying to download the project file.' }),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
@@ -90,6 +115,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProjectsController.prototype, "downloadFile", null);
 exports.ProjectsController = ProjectsController = __decorate([
+    (0, swagger_1.ApiTags)('projects'),
     (0, common_1.Controller)("api/projects"),
     __metadata("design:paramtypes", [projects_service_1.ProjectsService])
 ], ProjectsController);

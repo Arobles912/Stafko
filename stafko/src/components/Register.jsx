@@ -33,6 +33,7 @@ export default function Register({username, setUsername}) {
 
       if (response.ok) {
         console.log("User registered successfully");
+        alert("User registered succesfully.");
         navigate('/');
       } else {
         const data = await response.json();

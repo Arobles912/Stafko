@@ -1,7 +1,8 @@
 .main-container-div {
   padding-left: 10px;
   padding-right: 10px;
-  background-color: white;
+  background: linear-gradient(to bottom, #f6f1e5 0%,  #ede3c9 100%);
+  /**background-color: white;**/
 }
 
 .container-div {
