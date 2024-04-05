@@ -1,7 +1,8 @@
 .main-container-div {
   padding-left: 10px;
   padding-right: 10px;
-  background-color: white;
+  background: linear-gradient(to bottom, #f6f1e5 0%,  #ede3c9 100%);
+  /**background-color: white;**/
 }
 
 .container-div {
@@ -28,8 +29,8 @@
 }
 
 .project-card-main-div h1 {
-  font-size: 30px;
-  font-family: "Anek Gurmukhi", sans-serif;
+  font-size: 26px;
+  font-family: "Poppins", sans-serif;
   margin-left: 10px;
   padding-top: 5px;
 }
@@ -144,6 +145,7 @@
 }
 
 .description-div textarea {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   align-self: center;
   margin-top: 10px;
   margin-bottom: 10px;

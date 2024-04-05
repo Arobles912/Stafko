@@ -10,12 +10,19 @@ import {
 import { StaffProjectService } from "./staff_project.service";
 import { StaffProjectDto } from "../dto/staff_project.dto/staff_project.dto";
 import { StaffProjectEntity } from "../entity/staff_project.entity/staff_project.entity";
+import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiResponse, ApiInternalServerErrorResponse } from '@nestjs/swagger';
 
+@ApiTags('Staff Project')
 @Controller("api/staffProject")
 export class StaffProjectController {
   constructor(private readonly staffProjectService: StaffProjectService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Creates a relationship between a staff member and a project' })
+  @ApiBody({ type: StaffProjectDto, description: 'Staff project data' })
+  @ApiResponse({ status: 201, description: 'The created staff project', type: StaffProjectEntity })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+
   async create(
     @Body() staffProjectDto: StaffProjectDto
   ): Promise<StaffProjectEntity> {
@@ -23,6 +30,11 @@ export class StaffProjectController {
   }
 
   @Get("staff/:staffId")
+  @ApiOperation({ summary: 'Finds projects by staff ID' })
+  @ApiParam({ name: 'staffId', description: 'ID of the staff' })
+  @ApiResponse({ status: 200, description: 'Projects associated with the staff'})
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+
   async findByStaffId(
     @Param("staffId") staffId: number
   ): Promise<StaffProjectEntity[]> {
@@ -30,6 +42,11 @@ export class StaffProjectController {
   }
 
   @Get("project/:projectId")
+  @ApiOperation({ summary: 'Finds staff projects by project ID' })
+  @ApiParam({ name: 'projectId', description: 'ID of the project' })
+  @ApiResponse({ status: 200, description: 'Staff projects associated with the project'})
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+
   async findByProjectId(
     @Param("projectId") projectId: number
   ): Promise<StaffProjectEntity[]> {
@@ -37,6 +54,11 @@ export class StaffProjectController {
   }
 
   @Delete("project/:projectId")
+  @ApiOperation({ summary: 'Removes staff projects by project ID' })
+  @ApiParam({ name: 'projectId', description: 'ID of the project' })
+  @ApiResponse({ status: 204, description: 'Staff projects removed successfully' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+
   async removeByProjectId(
     @Param("projectId") projectId: number
   ): Promise<void> {
@@ -44,6 +66,11 @@ export class StaffProjectController {
   }
 
   @Get("project/:projectId/users")
+  @ApiOperation({ summary: 'Finds users by project ID' })
+  @ApiParam({ name: 'projectId', description: 'ID of the project' })
+  @ApiResponse({ status: 200, description: 'Returns usernames of users associated with the project' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+
   async findUsersByProjectId(
     @Param("projectId") projectId: number
   ): Promise<string[]> {
@@ -67,6 +94,12 @@ export class StaffProjectController {
   }
 
   @Get(":staffId/:projectId")
+  @ApiOperation({ summary: 'Finds staff project by staff ID and project ID' })
+  @ApiParam({ name: 'staffId', description: 'ID of the staff member' })
+  @ApiParam({ name: 'projectId', description: 'ID of the project' })
+  @ApiResponse({ status: 200, description: 'Staff project found',})
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+
   async findOne(
     @Param("staffId") staffId: number,
     @Param("projectId") projectId: number
@@ -75,11 +108,22 @@ export class StaffProjectController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Find all staff projects' })
+  @ApiResponse({ status: 200, description: 'All staff projects found'})
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+
   async findAll(): Promise<StaffProjectEntity[]> {
     return this.staffProjectService.findAll();
   }
 
   @Put(":staffId/:projectId")
+  @ApiOperation({ summary: 'Updates staff project by staff ID and project ID' })
+  @ApiParam({ name: 'staffId', description: 'ID of the staff' })
+  @ApiParam({ name: 'projectId', description: 'ID of the project' })
+  @ApiBody({ type: StaffProjectDto, description: 'Staff project data' })
+  @ApiResponse({ status: 200, description: 'Staff project updated', type: StaffProjectEntity })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+
   async update(
     @Param("staffId") staffId: number,
     @Param("projectId") projectId: number,
@@ -93,11 +137,16 @@ export class StaffProjectController {
   }
 
   @Delete(":staffId/:projectId")
+  @ApiOperation({ summary: 'Removes staff project by staff ID and project ID' })
+  @ApiParam({ name: 'staffId', description: 'ID of the staff' })
+  @ApiParam({ name: 'projectId', description: 'ID of the project' })
+  @ApiResponse({ status: 204, description: 'Staff project removed successfully' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+
   async remove(
     @Param("staffId") staffId: number,
     @Param("projectId") projectId: number
   ): Promise<void> {
     return this.staffProjectService.remove(+staffId, +projectId);
   }
-
 }

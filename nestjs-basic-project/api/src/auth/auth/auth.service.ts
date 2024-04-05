@@ -4,7 +4,9 @@ import * as bcryptjs from "bcryptjs";
 import { StaffService } from "src/staff/staff/staff.service";
 import { LoginDto } from "../dto/login.dto";
 import { RegisterDto } from "../dto/register.dto";
+import { ApiResponse, ApiTags, ApiOperation, ApiBody, ApiUnauthorizedResponse, ApiBadRequestResponse } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Injectable()
 export class AuthService {
   constructor(
@@ -12,7 +14,10 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) {}
 
-
+  @ApiOperation({ summary: 'Register a new user' })
+  @ApiBody({ type: RegisterDto, description: 'User registration data' })
+  @ApiResponse({ status: 201, description: 'User created successfully' })
+  @ApiBadRequestResponse({ description: 'Username already exists or invalid data provided' })
   async register({ username, pass, email }: RegisterDto) {
     const user = await this.staffService.findOneByUserName(username);
 
@@ -33,6 +38,10 @@ export class AuthService {
     };
   }
 
+  @ApiOperation({ summary: 'Login user' })
+  @ApiBody({ type: LoginDto, description: 'User login data' })
+  @ApiResponse({ status: 200, description: 'User authenticated' })
+  @ApiUnauthorizedResponse({ description: 'Invalid username or password' })
   async login({ username, pass }: LoginDto) {
     const user = await this.staffService.findOneByUserName(username);
 
