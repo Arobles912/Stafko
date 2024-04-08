@@ -63,6 +63,7 @@ export default function Login({ setIsLoggedIn, username, setUsername }) {
               name="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              maxLength={30}
             />
             <br />
             <img
@@ -78,6 +79,7 @@ export default function Login({ setIsLoggedIn, username, setUsername }) {
               name="password"
               value={pass}
               onChange={(e) => setPassword(e.target.value)}
+              maxLength={50}
             />
             <br />
             <input className="submit" type="submit" value="Login" />

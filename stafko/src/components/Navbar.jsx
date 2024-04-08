@@ -25,7 +25,7 @@ export default function Navbar({
       <img src="src/assets/example-logo.png" alt="example-logo" />
       <h3>Stafko</h3>
       <div className="separation-div"></div>
-      <button onClick={toggleAddProject} className="nav-link">
+      <button onClick={toggleAddProject} className="nav-link" name="addproject">
         {addButtonText}
       </button>
       <div className="right-side-div">
