@@ -65,4 +65,8 @@ export class ProjectsService {
   async remove(id: number): Promise<void> {
     await this.projectsRepository.delete(id);
   }
+
+  async findByProjectName(project_name: string): Promise<ProjectsEntity> {
+    return this.projectsRepository.findOneBy({ project_name });
+  }
 }

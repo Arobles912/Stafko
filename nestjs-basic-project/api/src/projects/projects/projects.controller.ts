@@ -58,6 +58,12 @@ export class ProjectsController {
     return this.projectsService.update(+id, projectDto);
   }
 
+  @Get("projectname/:project_name")
+
+  async findByProjectName(@Param("project_name") project_name: string): Promise<ProjectsEntity> {
+    return this.projectsService.findByProjectName(project_name);
+  }
+
   @Delete(":id")
   @ApiOperation({ summary: 'Delete project by ID.' })
   @ApiParam({ name: 'id', description: 'Project ID.' })

@@ -9,6 +9,7 @@ export default function Add() {
   const [users, setUsers] = useState([]);
   const [shouldReload, setShouldReload] = useState(false);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     async function fetchUsers() {
@@ -65,11 +66,9 @@ export default function Add() {
         const projectId = data.project_id;
         for (let i = 0; i < selectedUsers.length; i++) {
           const staffId = selectedUsers[i].id;
-          console.log(staffId);
-          console.log(projectId);
           await createStaffProject(projectId, staffId);
         }
-        console.log("Project created successfully.");
+        setSuccessMessage("Project created successfully.");
         setProjectName("");
         setDescription("");
         setProjectFile(null);
@@ -126,6 +125,7 @@ export default function Add() {
       });
       if (response.ok) {
         console.log("User-project relation created.");
+        
       } else {
         console.log("User-project error.");
       }
@@ -136,13 +136,20 @@ export default function Add() {
 
   useEffect(() => {
     if (shouldReload) {
-      window.location.reload();
+      setTimeout(() => {
+        setShouldReload(false);
+        window.location.reload(); 
+      }, 750);
     }
   }, [shouldReload]);
 
   return (
     <div className="main-add-div">
-      <form className="add-form" onSubmit={addProject} encType="multipart/form-data">
+      <form
+        className="add-form"
+        onSubmit={addProject}
+        encType="multipart/form-data"
+      >
         <img
           className="icon-img"
           src="src/assets/project-icon.png"
@@ -158,7 +165,7 @@ export default function Add() {
           value={project_name}
           onChange={(e) => setProjectName(e.target.value)}
           maxLength={50}
-          required
+          //required
         />
         <br />
         <img
@@ -174,6 +181,7 @@ export default function Add() {
           className="project-desc-input"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          maxLength={3000}
         />
         <br />
         <img
@@ -229,19 +237,34 @@ export default function Add() {
         />
         <br />
         {error && (
-            <div style={{ textAlign: "center", width: "100%" }}>
-              <p
-                style={{
-                  color: "red",
-                  fontFamily: "Anek Gurmukhi, sans-serif",
-                  fontSize: "20px",
-                  textDecoration: "none"
-                }}
-              >
-                {error}
-              </p>
-            </div>
-          )}
+          <div style={{ textAlign: "center", width: "100%" }}>
+            <p className="error-message"
+              style={{
+                color: "red",
+                fontFamily: "Anek Gurmukhi, sans-serif",
+                fontSize: "20px",
+                textDecoration: "none",
+              }}
+            >
+              {error}
+            </p>
+          </div>
+        )}
+        {successMessage && (
+          <div style={{ textAlign: "center", width: "100%" }}>
+            <p className="success-message"
+              style={{
+                color: "green",
+                fontFamily: "Anek Gurmukhi, sans-serif",
+                fontSize: "20px",
+                textDecoration: "none",
+              }}
+            >
+              {successMessage}
+            </p>
+          </div>
+        )}
+
         <input
           className="add-project-input"
           type="submit"

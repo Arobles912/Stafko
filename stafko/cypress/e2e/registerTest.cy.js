@@ -45,7 +45,7 @@ describe("Register", () => {
     cy.url().should("include", "/register");
   });
 
-  it("should not allow more than 30 characters in the username field", () => {
+  it("Should not allow more than 30 characters in the username field", () => {
     cy.visit("http://localhost:5173/register");
 
     const longUsername = "a".repeat(31);
@@ -57,7 +57,7 @@ describe("Register", () => {
     );
   });
 
-  it("should not allow more than 50 characters in the password field", () => {
+  it("Should not allow more than 50 characters in the password field", () => {
     cy.visit("http://localhost:5173/register");
 
     const longPassword = "a".repeat(51);

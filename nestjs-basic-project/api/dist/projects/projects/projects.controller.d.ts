@@ -10,6 +10,7 @@ export declare class ProjectsController {
     findAll(): Promise<ProjectsEntity[]>;
     findOne(id: string): Promise<ProjectsEntity>;
     update(id: string, projectDto: ProjectsDto): Promise<ProjectsEntity>;
+    findByProjectName(project_name: string): Promise<ProjectsEntity>;
     remove(id: string): Promise<void>;
     downloadFile(id: string, res: Response): Promise<void>;
 }

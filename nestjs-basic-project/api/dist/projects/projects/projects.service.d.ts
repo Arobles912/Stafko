@@ -10,4 +10,5 @@ export declare class ProjectsService {
     findOne(id: number): Promise<ProjectsEntity>;
     update(id: number, projectDto: ProjectsDto): Promise<ProjectsEntity>;
     remove(id: number): Promise<void>;
+    findByProjectName(project_name: string): Promise<ProjectsEntity>;
 }

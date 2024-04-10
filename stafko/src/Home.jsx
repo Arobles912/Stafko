@@ -92,6 +92,18 @@ export default function Home({ setIsLoggedIn }) {
     setIsAddProjectVisible(!isAddProjectVisible);
   };
 
+  const compareProjects = (a, b) => {
+    if (a.project.creation_date > b.project.creation_date) {
+      return -1;
+    }
+    if (a.project.creation_date < b.project.creation_date) {
+      return 1;
+    }
+    return 0;
+  };
+
+  projects.sort(compareProjects)
+
   return (
     <main>
       <div className="bg-div-home">
@@ -112,12 +124,18 @@ export default function Home({ setIsLoggedIn }) {
         >
           <Add />
         </div>
-        {projects.map((project) => (
-          <ProjectCard
-            key={project.staffProject.project_id}
-            project={project}
-          />
-        ))}
+        {projects.map(
+          (project) => (
+            console.log(project.staffProject.project_id),
+            (
+              <ProjectCard
+                key={project.staffProject.project_id}
+                project={project}
+                data-testid={`project-card-${project.staffProject.project_id}`}
+              />
+            )
+          )
+        )}
       </div>
     </main>
   );

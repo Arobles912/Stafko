@@ -316,6 +316,7 @@ export default function ProjectCard({ project }) {
             <h3>ReadME</h3>
             <hr />
             <textarea
+              name="desctextarea"
               ref={textareaRef}
               value={description}
               onChange={(e) => setDescription(e.target.value)}

@@ -45,6 +45,9 @@ let ProjectsService = class ProjectsService {
     async remove(id) {
         await this.projectsRepository.delete(id);
     }
+    async findByProjectName(project_name) {
+        return this.projectsRepository.findOneBy({ project_name });
+    }
 };
 exports.ProjectsService = ProjectsService;
 __decorate([

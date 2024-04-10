@@ -37,6 +37,9 @@ let ProjectsController = class ProjectsController {
     async update(id, projectDto) {
         return this.projectsService.update(+id, projectDto);
     }
+    async findByProjectName(project_name) {
+        return this.projectsService.findByProjectName(project_name);
+    }
     async remove(id) {
         return this.projectsService.remove(+id);
     }
@@ -91,6 +94,13 @@ __decorate([
     __metadata("design:paramtypes", [String, projects_dto_1.ProjectsDto]),
     __metadata("design:returntype", Promise)
 ], ProjectsController.prototype, "update", null);
+__decorate([
+    (0, common_1.Get)("projectname/:project_name"),
+    __param(0, (0, common_1.Param)("project_name")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ProjectsController.prototype, "findByProjectName", null);
 __decorate([
     (0, common_1.Delete)(":id"),
     (0, swagger_1.ApiOperation)({ summary: 'Delete project by ID.' }),
