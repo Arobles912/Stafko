@@ -61,8 +61,8 @@ nav h3{
 }
 
 .right-side-div button{
-    font-family: "Courier New", Courier, monospace;
-    width: 120px;
+    font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
+    width: 110px;
     box-shadow: 1px 1px #98480f;
     color: white;
     padding-left: 15px;
@@ -80,9 +80,9 @@ nav h3{
 }
 
 .right-side-div button:hover{
-    border-color: #da620d;
-    background-color: #ff9500;
-    transition: 0.3s;
+    border-color: #e97e19;
+    background-color: #ff9900;
+    transition: 0.2s;
 }
 
 .separation-div{

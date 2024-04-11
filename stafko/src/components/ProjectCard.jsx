@@ -11,6 +11,7 @@ export default function ProjectCard({ project }) {
   const [staffProjectsData, setStaffProjectsData] = useState(null);
   const [collaborators, setCollaborators] = useState([]);
   const [allCollaborators, setAllCollaborators] = useState([]);
+  const [initialDesc, setInitialDesc] = useState([]);
   const [shouldReload, setShouldReload] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -21,11 +22,12 @@ export default function ProjectCard({ project }) {
     async function fetchData() {
       try {
         const staffProjectsResponse = await fetch(
-          `http://localhost:4000/api/staffProject/project/${project.staffProject.project_id}`
+          `http://localhost:3000/api/staffProject/project/${project.staffProject.project_id}`
         );
         if (staffProjectsResponse.ok) {
           const data = await staffProjectsResponse.json();
           setStaffProjectsData(data);
+          setInitialDesc(data.description);
         } else {
           throw new Error("Failed to fetch data");
         }
@@ -38,10 +40,30 @@ export default function ProjectCard({ project }) {
   }, [project.project_id]);
 
   useEffect(() => {
+    async function fetchDescription() {
+      try {
+        const staffProjectsResponse = await fetch(
+          `http://localhost:3000/api/projects/${project.staffProject.project_id}`
+        );
+        if (staffProjectsResponse.ok) {
+          const data = await staffProjectsResponse.json();
+          setInitialDesc(data.description);
+        } else {
+          throw new Error("Failed to fetch description");
+        }
+      } catch (error) {
+        console.error("An error has occurred:", error);
+      }
+    }
+
+    fetchDescription();
+  }, [project.project_id]);
+
+  useEffect(() => {
     async function fetchCollaborators() {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/staffProject/project/${project.staffProject.project_id}/users`
+          `http://localhost:3000/api/staffProject/project/${project.staffProject.project_id}/users`
         );
         if (response.ok) {
           const data = await response.json();
@@ -74,6 +96,7 @@ export default function ProjectCard({ project }) {
     if (editButtonText === "Cancel") {
       setTimeout(() => {
         setCollaborators(allCollaborators);
+        setDescription(initialDesc);
       }, 500);
     }
     setExtendedCard(!extendedCard);
@@ -81,9 +104,10 @@ export default function ProjectCard({ project }) {
   }
 
   async function handleDownloadButton() {
+    
     try {
       const response = await fetch(
-        `http://localhost:4000/api/projects/${project.staffProject.project_id}/download`
+        `http://localhost:3000/api/projects/${project.staffProject.project_id}/download`
       );
       if (response.ok) {
         const blob = await response.blob();
@@ -96,9 +120,11 @@ export default function ProjectCard({ project }) {
         link.click();
         document.body.removeChild(link);
       } else {
+        setError("Can't get file URL.");
         throw new Error("Can't get file URL.");
       }
     } catch (error) {
+      setError("Error dowloading the file:", error);
       console.error("Error downloading the file:", error);
     }
   }
@@ -114,14 +140,14 @@ export default function ProjectCard({ project }) {
   async function deleteCollaborators(collaborator) {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/staff/username/${collaborator}`
+        `http://localhost:3000/api/staff/username/${collaborator}`
       );
 
       if (response.ok) {
         const staffData = await response.json();
         const staffId = staffData.staff_id;
         const staffProjectResponse = await fetch(
-          `http://localhost:4000/api/staffProject/${staffId}/${project.staffProject.project_id}`,
+          `http://localhost:3000/api/staffProject/${staffId}/${project.staffProject.project_id}`,
           {
             method: "DELETE",
           }
@@ -148,7 +174,7 @@ export default function ProjectCard({ project }) {
 
       try {
         const response = await fetch(
-          `http://localhost:4000/api/staffProject/project/${project.staffProject.project_id}`,
+          `http://localhost:3000/api/staffProject/project/${project.staffProject.project_id}`,
           {
             method: "DELETE",
           }
@@ -161,7 +187,7 @@ export default function ProjectCard({ project }) {
         staffProjectData = { ...project };
 
         const projectResponse = await fetch(
-          `http://localhost:4000/api/projects/${project.project.project_id}`,
+          `http://localhost:3000/api/projects/${project.project.project_id}`,
           {
             method: "DELETE",
           }
@@ -178,7 +204,7 @@ export default function ProjectCard({ project }) {
         if (staffProjectData) {
           try {
             const restoreResponse = await fetch(
-              `http://localhost:4000/api/projects`,
+              `http://localhost:3000/api/projects`,
               {
                 method: "POST",
                 headers: {
@@ -209,7 +235,7 @@ export default function ProjectCard({ project }) {
     if (confirmed) {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/projects/${project.project.project_id}`,
+          `http://localhost:3000/api/projects/${project.project.project_id}`,
           {
             method: "PUT",
             headers: {
@@ -351,6 +377,7 @@ export default function ProjectCard({ project }) {
           {error && (
             <div style={{ textAlign: "center", width: "100%" }}>
               <p
+                className="error-message"
                 style={{
                   color: "red",
                   fontFamily: "Anek Gurmukhi, sans-serif",

@@ -4,7 +4,7 @@ import "./styles/Login.css";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 
-export default function Register({username, setUsername}) {
+export default function Register({ username, setUsername }) {
   const [pass, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -19,10 +19,10 @@ export default function Register({username, setUsername}) {
     }
 
     try {
-      const response = await fetch('http://localhost:4000/api/auth/register', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3000/api/auth/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username,
@@ -34,7 +34,7 @@ export default function Register({username, setUsername}) {
       if (response.ok) {
         console.log("User registered successfully");
         alert("User registered succesfully.");
-        navigate('/');
+        navigate("/");
       } else {
         const data = await response.json();
         setError(data.message || "Failed to register user");
@@ -47,73 +47,79 @@ export default function Register({username, setUsername}) {
 
   return (
     <div className="bg-div">
-      <Header/>
-    <div className="main-div">
-      <form onSubmit={handleRegister}>
-        <h2>Sign Up</h2>
-        <img
-          className="icon-img"
-          src="src/assets/user-icon.png"
-          alt="user-icon"
-        />
-        <label htmlFor="username">Username:</label>
-        <br />
-        <input
-          type="text"
-          id="username"
-          name="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          maxLength={30}
-        />
-        <br />
-        <img
-          className="icon-img"
-          src="src/assets/password-icon.png"
-          alt="password-icon"
-        />
-        <label htmlFor="password">Password:</label>
-        <br />
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={pass}
-          onChange={(e) => setPassword(e.target.value)}
-          maxLength={50}
-        />
-        <br />
-        <img
-          className="icon-img"
-          src="src/assets/email-icon.png"
-          alt="email-icon"
-        />
-        <label htmlFor="email">Email:</label>
-        <br />
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          maxLength={50}
-        />
-        <br />
-        <input
-          className="register-submit"
-          type="submit"
-          value="Create account"
-        />
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <p>
-          Already registered?&nbsp;
-          <Link to="/" className="register-link">
-            Sign in here
-          </Link>
-        </p>
-      </form>
-    </div>
-    <Footer/>
+      <Header />
+      <div className="main-div">
+        <form onSubmit={handleRegister}>
+          <h2>Sign Up</h2>
+          <img
+            className="icon-img"
+            src="src/assets/user-icon.png"
+            alt="user-icon"
+          />
+          <label htmlFor="username">Username:</label>
+          <br />
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            maxLength={30}
+          />
+          <br />
+          <img
+            className="icon-img"
+            src="src/assets/password-icon.png"
+            alt="password-icon"
+          />
+          <label htmlFor="password">Password:</label>
+          <br />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={pass}
+            onChange={(e) => setPassword(e.target.value)}
+            maxLength={50}
+          />
+          <br />
+          <img
+            className="icon-img"
+            src="src/assets/email-icon.png"
+            alt="email-icon"
+          />
+          <label htmlFor="email">Email:</label>
+          <br />
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            maxLength={50}
+          />
+          <br />
+          <div className="checkbox-container">
+            <input type="checkbox" id="cbox" required />
+            <label htmlFor="cbox">I accept the terms and conditions of the application.</label>
+          </div>
+          <br />
+
+          <input
+            className="register-submit"
+            type="submit"
+            value="Create account"
+          />
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <p>
+            Already registered?&nbsp;
+            <Link to="/" className="register-link">
+              Sign in here
+            </Link>
+          </p>
+        </form>
+      </div>
+      <Footer />
     </div>
   );
 }

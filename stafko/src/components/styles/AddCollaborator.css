@@ -30,7 +30,7 @@
 
 .confirm-button {
   color: white;
-  font-family: "Courier New", Courier, monospace;
+  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
   font-weight: bold;
   border-radius: 10px;
   background-color: #ffcc00;
@@ -50,7 +50,7 @@
 .confirm-button:hover{
   border-color: #e97e19;
   background-color: #ff9d00;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 .add-collaborator-div {
@@ -95,7 +95,7 @@
 
 .close-div button:hover {
   background-color: rgb(188, 188, 188);
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 .add-collaborator-div h3 {

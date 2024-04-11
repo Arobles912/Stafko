@@ -71,7 +71,7 @@
 
 .add-user-button {
   color: white;
-  font-family: "Courier New", Courier, monospace;
+  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
   font-weight: bold;
   border-radius: 10px;
   background-color: #ffcc00;
@@ -89,12 +89,12 @@
 .add-user-button:hover {
   border-color: #e97e19;
   background-color: #ff9900;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 .add-form .add-project-input {
   width: 30%;
-  font-family: "Courier New", Courier, monospace;
+  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
   font-weight: bold;
   background-color: #ffcc00;
   border: 2px solid #ce9720;
@@ -109,7 +109,7 @@
 .add-form .add-project-input:hover {
   border-color: #e97e19;
   background-color: #ff9900;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 .add-form .project-desc-input {
   margin-bottom: 20px;
@@ -133,7 +133,7 @@
   width: auto;
   height: auto;
   color: white;
-  font-family: "Courier New", Courier, monospace;
+  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
   font-weight: bold;
   border-radius: 10px;
   background-color: #ff0000;
@@ -148,7 +148,7 @@
 .users-added-div li > button:hover {
   background-color: #ff7300;
   border: 2px solid #d24613;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 .add-form p {

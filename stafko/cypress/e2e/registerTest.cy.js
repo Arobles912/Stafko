@@ -11,12 +11,12 @@ describe("Register", () => {
     cy.url().should("not.include", "/register");
 
     return cy
-      .request("GET", "http://localhost:4000/api/staff/username/Test")
+      .request("GET", "http://localhost:3000/api/staff/username/Test")
       .then((response) => {
         const userData = response.body;
         return cy.request(
           "DELETE",
-          `http://localhost:4000/api/staff/${userData.staff_id}`
+          `http://localhost:3000/api/staff/${userData.staff_id}`
         );
       });
   });

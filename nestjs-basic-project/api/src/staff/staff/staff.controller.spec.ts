@@ -30,8 +30,8 @@ describe("StaffController", () => {
     it("should create a staff member", async () => {
       const staffDto: StaffEntity = {
         staff_id: null,
-        username: "Testsvdfsv",
-        pass: "1234dfvfdsf",
+        username: "Test",
+        pass: "1234",
         email: "Test@gmail.com",
         user_role: "Usuario",
       };
@@ -43,30 +43,7 @@ describe("StaffController", () => {
         user_role: "Usuario",
       };
   
-      jest.spyOn(service, "create").mockResolvedValue(createdStaff);
-
-      await expect(controller.create(staffDto)).resolves.toEqual(createdStaff);
-    });
-  });
-  
-  describe("create", () => {
-    it("should create a staff member with a default role", async () => {
-      const staffDto = {
-        staff_id: null,
-        username: "Test",
-        pass: "1234",
-        email: "Test@gmail.com",
-        user_role: null,
-      };
-      const createdStaff: StaffEntity = {
-        staff_id: null,
-        username: "Test",
-        pass: "1234",
-        email: "Test@gmail.com",
-        user_role: "Usuario",
-      };
-
-      jest.spyOn(service, "create").mockResolvedValue(createdStaff);
+      jest.spyOn(service, "create").mockResolvedValue(staffDto);
 
       await expect(controller.create(staffDto)).resolves.toEqual(createdStaff);
     });
@@ -96,4 +73,22 @@ describe("StaffController", () => {
       await expect(controller.findAll()).resolves.toEqual(staffList);
     });
   });
+
+  describe("findOne", () => {
+  it('should find a staff member by a given id and return its data', async () => {
+
+    const id = '1';
+    const staffDto = {
+      staff_id: 1,
+      username: "Test",
+      pass: "1234",
+      email: "Test@gmail.com",
+      user_role: "Usuario"
+    };
+
+    jest.spyOn(service, "findOne").mockResolvedValue(staffDto);
+
+    await expect(controller.findOne(id)).resolves.toEqual(staffDto);
+  });
+});
 });

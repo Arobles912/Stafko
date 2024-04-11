@@ -16,7 +16,7 @@ import { MulterModule } from "@nestjs/platform-express";
     StaffProjectModule,
     TypeOrmModule.forRoot({
       type: "postgres",
-      host: "localhost",
+      host: "db",
       port: 5432,
       username: "user",
       password: "password",

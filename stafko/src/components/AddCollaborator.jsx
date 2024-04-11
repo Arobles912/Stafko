@@ -14,7 +14,7 @@ export default function AddCollaborator({
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch("http://localhost:4000/api/staff");
+        const response = await fetch("http://localhost:3000/api/staff");
         if (response.ok) {
           const userData = await response.json();
           const filteredUsers = userData.filter(
@@ -44,7 +44,7 @@ export default function AddCollaborator({
     } else {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/staff/username/${selectedUser}`
+          `http://localhost:3000/api/staff/username/${selectedUser}`
         );
         if (response.ok) {
           const userData = await response.json();
@@ -62,7 +62,7 @@ export default function AddCollaborator({
 
   async function createStaffProject(projectId, staffId) {
     try {
-      const response = await fetch("http://localhost:4000/api/staffProject", {
+      const response = await fetch("http://localhost:3000/api/staffProject", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

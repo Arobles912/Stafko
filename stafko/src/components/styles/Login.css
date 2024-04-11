@@ -25,7 +25,7 @@ form {
   justify-content: center;
   background: linear-gradient(to bottom, #ffffe6 0%, #eeddb3 100%);
   padding: 0px 20px 20px 20px;
-  border: 2px solid #ce7420;
+  border: 3px solid #ce7420;
   border-radius: 15px;
   margin-bottom: 40px;
 }
@@ -41,7 +41,7 @@ input {
 
 .submit {
   width: 50%;
-  font-family: "Courier New", Courier, monospace;
+  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
   font-weight: bold;
   background-color: #ffcc00;
   border: 2px solid #ce9720;
@@ -56,12 +56,12 @@ input {
 .submit:hover {
   border-color: #e97e19;
   background-color: #ff9d00;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 .register-submit {
   width: 70%;
-  font-family: "Courier New", Courier, monospace;
+  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
   font-weight: bold;
   background-color: #ffcc00;
   border: 2px solid #ce9720;
@@ -70,13 +70,13 @@ input {
   font-size: 20px;
   display: block;
   margin: 10px auto;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .register-submit:hover {
   border-color: #e97e19;
   background-color: #ff9900;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 label {
@@ -98,7 +98,7 @@ form p {
 
 .register-link:hover {
   color: #ff9900;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 form h2 {
@@ -113,3 +113,40 @@ form h2 {
   width: 28px;
   height: 28px;
 }
+
+.checkbox-container {
+  width: auto;
+  margin-right: 8px;
+  justify-content: left;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-container input {
+  appearance: none;
+  background-color: #fff;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ce9720;
+  border-radius: 0px;
+  position: relative; 
+}
+
+.checkbox-container input:checked::after {
+  content: ""; 
+  background-color: #ce9720; 
+  width: 10px; 
+  height: 10px; 
+  position: absolute; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+}
+
+
+.checkbox-container label {
+  font-size: 18px;
+  margin-top: 5px;
+  margin-left: 10px;
+}
+

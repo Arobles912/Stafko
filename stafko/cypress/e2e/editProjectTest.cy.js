@@ -2,7 +2,7 @@ import "cypress-file-upload";
 
 describe("Edit projects", () => {
   beforeEach(() => {
-    cy.intercept("POST", "http://localhost:4000/api/auth/login").as(
+    cy.intercept("POST", "http://localhost:3000/api/auth/login").as(
       "loginRequest"
     );
 
@@ -39,7 +39,42 @@ describe("Edit projects", () => {
     cy.get(".success-message").should("exist");
   });
 
+  it("Should save without changes", () => {
+    cy.viewport(1920, 1080);
+    cy.visit("http://localhost:5173/home");
+
+    let initialCollaboratorsCount;
+    cy.get(".main-container-div")
+      .eq(0)
+      .within(() => {
+        cy.get(".edit-button").click();
+        cy.get(".save-button").click();
+        cy.get(".user-list")
+          .find(".user-card")
+          .its("length")
+          .then((length) => {
+            initialCollaboratorsCount = length;
+          });
+      });
+
+    cy.get(".main-container-div")
+      .eq(0)
+      .within(() => {
+        cy.get(".edit-button").click();
+
+        cy.get('textarea[name="desctextarea"]').should(
+          "have.value",
+          "Project description"
+        );
+        cy.get(".user-list")
+          .find(".user-card")
+          .its("length")
+          .should("eq", initialCollaboratorsCount);
+      });
+  });
+
   it("Should edit the description", () => {
+    cy.viewport(1920, 1080);
     cy.visit("http://localhost:5173/home");
     cy.get(".main-container-div")
       .eq(0)
@@ -62,34 +97,127 @@ describe("Edit projects", () => {
   });
 
   it("Should delete one collaborator", () => {
-    cy.visit("http://localhost:5173/home");        
-  
+    cy.viewport(1920, 1080);
+    cy.visit("http://localhost:5173/home");
+
     let initialCollaboratorsCount;
     cy.get(".main-container-div")
       .eq(0)
       .within(() => {
         cy.get(".edit-button").click();
         cy.get(".user-list")
+          .find(".user-card")
           .its("length")
           .then((length) => {
             initialCollaboratorsCount = length;
           });
       });
-  
+
     cy.get(".main-container-div")
       .eq(0)
       .within(() => {
         cy.get(".user-card button").eq(1).click();
         cy.get(".save-button").click();
       });
-  
+
     cy.get(".main-container-div")
       .eq(0)
       .within(() => {
         cy.get(".edit-button").click();
         cy.get(".user-list")
+          .find(".user-card")
           .its("length")
-          .should("be.lessThan", initialCollaboratorsCount + 1); 
+          .should("be.lessThan", initialCollaboratorsCount + 1);
+      });
+  });
+
+  it("Should add two collaborators", () => {
+    cy.viewport(1920, 1080);
+    cy.visit("http://localhost:5173/home");
+
+    let initialCollaboratorsCount;
+    cy.get(".main-container-div")
+      .eq(0)
+      .within(() => {
+        cy.get(".edit-button").click();
+        cy.get(".user-list")
+          .find(".user-card")
+          .its("length")
+          .then((length) => {
+            initialCollaboratorsCount = length;
+          });
+      });
+
+    cy.get(".main-container-div")
+      .eq(0)
+      .within(() => {
+        cy.get(".user-list button").eq(1).click();
+        cy.wait(400);
+        cy.get(".select-collaborator").select("buenas");
+        cy.get(".add-user-button").click();
+        cy.get(".select-collaborator").select("Test2");
+        cy.get(".add-user-button").click();
+        cy.get(".confirm-button").click();
+      });
+      cy.on("window:confirm", () => true);
+
+    cy.get(".main-container-div")
+      .eq(0)
+      .within(() => {
+        cy.get(".edit-button").click();
+        cy.get(".user-list")
+          .find(".user-card")
+          .its("length")
+          .should("eq", initialCollaboratorsCount + 2);
+      });
+  });
+
+  it("Should reverse changes when the cancel button is pressed", () => {
+    cy.viewport(1920, 1080);
+    cy.visit("http://localhost:5173/home");
+
+    let initialCollaboratorsCount;
+    cy.get(".main-container-div")
+      .eq(0)
+      .within(() => {
+        cy.get(".edit-button").click();
+        cy.get(".user-list")
+          .find(".user-card")
+          .its("length")
+          .then((length) => {
+            initialCollaboratorsCount = length;
+          });
+        cy.get('textarea[name="desctextarea"]').type(" yeeeeeeeeee");
+        cy.get(".user-card button").eq(0).click();
+        cy.get(".edit-button").click();
+      });
+
+    cy.get(".main-container-div")
+      .eq(0)
+      .within(() => {
+        cy.wait(700);
+        cy.get(".edit-button").click();
+        cy.wait(700);
+        cy.get('textarea[name="desctextarea"]').should(
+          "have.value",
+          "Project description I edited this"
+        );
+        cy.get(".user-list")
+          .find(".user-card")
+          .its("length")
+          .should("eq", initialCollaboratorsCount);
+      });
+  });
+
+  it("Should download the project file", () => {
+    cy.viewport(1920, 1080);
+    cy.visit("http://localhost:5173/home");
+    cy.get(".main-container-div")
+      .eq(0)
+      .within(() => {
+        cy.get(".edit-button").click();
+        cy.get(".download-button").click();
+        cy.get(".error-message").should("not.exist");
       });
   });
 

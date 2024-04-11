@@ -28,7 +28,7 @@ export default function Home({ setIsLoggedIn }) {
     const fetchProjects = async () => {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/staff/username/${username}`,
+          `http://localhost:3000/api/staff/username/${username}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -39,7 +39,7 @@ export default function Home({ setIsLoggedIn }) {
           const userData = await response.json();
           const staffId = userData.staff_id;
           const staffProjectsResponse = await fetch(
-            `http://localhost:4000/api/staffProject/staff/${staffId}`,
+            `http://localhost:3000/api/staffProject/staff/${staffId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -51,7 +51,7 @@ export default function Home({ setIsLoggedIn }) {
             const projectsData = await Promise.all(
               staffProjectsData.map(async (staffProject) => {
                 const projectResponse = await fetch(
-                  `http://localhost:4000/api/projects/${staffProject.project_id}`,
+                  `http://localhost:3000/api/projects/${staffProject.project_id}`,
                   {
                     headers: {
                       Authorization: `Bearer ${token}`,

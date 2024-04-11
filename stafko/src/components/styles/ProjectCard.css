@@ -53,7 +53,7 @@
 .edit-button {
   margin-right: 30px;
   color: white;
-  font-family: "Courier New", Courier, monospace;
+  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
   font-weight: bold;
   margin-top: auto;
   margin-bottom: auto;
@@ -73,7 +73,7 @@
 .edit-button:hover {
   border-color: #e97e19;
   background-color: #ff9900;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 .download-button {
@@ -81,7 +81,7 @@
   padding-right: 10px;
   margin-right: 10px;
   color: white;
-  font-family: "Courier New", Courier, monospace;
+  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
   font-weight: bold;
   margin-top: auto;
   margin-bottom: auto;
@@ -99,7 +99,7 @@
 .download-button:hover {
   border-color: #e97e19;
   background-color: #ff9900;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 /** Extended card **/
@@ -134,7 +134,7 @@
 }
 
 .description-div h3 {
-  text-shadow: 2px 2px 1px rgb(137, 137, 137);
+  text-shadow: 2px 2px 1px rgb(89, 89, 89);
   font-family: "Anek Gurmukhi", sans-serif;
   color: #ffcc00;
   font-weight: 600;
@@ -183,7 +183,7 @@ hr {
 }
 
 .user-list h3 {
-  text-shadow: 2px 2px 1px rgb(137, 137, 137);
+  text-shadow: 2px 2px 1px rgb(89, 89, 89);
   font-family: "Anek Gurmukhi", sans-serif;
   color: #ffcc00;
   font-weight: 600;
@@ -197,7 +197,7 @@ hr {
   width: auto;
   height: 30px;
   color: white;
-  font-family: "Courier New", Courier, monospace;
+  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
   font-weight: bold;
   border-radius: 10px;
   background-color: #ffcc00;
@@ -214,7 +214,7 @@ hr {
 .user-list button:hover{
   border-color: #e97e19;
   background-color: #ff9900;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 
@@ -245,7 +245,7 @@ hr {
   width: auto;
   height: auto;
   color: white;
-  font-family: "Courier New", Courier, monospace;
+  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
   font-weight: bold;
   border-radius: 10px;
   background-color: #ff0000;
@@ -261,9 +261,9 @@ hr {
 }
 
 .user-card button:hover {
-  background-color: #ff7300;
-  border: 2px solid #d24613;
-  transition: 0.3s;
+  border-color: #e97e19;
+  background-color: #ff9900;
+  transition: 0.2s;
 }
 
 .buttons-div {
@@ -274,7 +274,7 @@ hr {
 
 .save-button {
   color: white;
-  font-family: "Courier New", Courier, monospace;
+  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
   font-weight: bold;
   height: 40px;
   margin-top: 20px;
@@ -294,13 +294,13 @@ hr {
 .save-button:hover {
   border-color: #e97e19;
   background-color: #ff9900;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 
 .delete-button {
   color: white;
-  font-family: "Courier New", Courier, monospace;
+  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
   font-weight: bold;
   height: 40px;
   margin-top: 20px;
@@ -318,7 +318,7 @@ hr {
 }
 
 .delete-button:hover {
-  background-color: #ff7300;
-  border: 2px solid #d24613;
-  transition: 0.3s;
+  border-color: #e97e19;
+  background-color: #ff9900;
+  transition: 0.2s;
 }

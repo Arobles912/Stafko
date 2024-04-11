@@ -14,7 +14,7 @@ export default function Add() {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch("http://localhost:4000/api/staff");
+        const response = await fetch("http://localhost:3000/api/staff");
         if (response.ok) {
           const userData = await response.json();
           setUsers(userData);
@@ -56,7 +56,7 @@ export default function Add() {
       formData.append("description", description);
       formData.append("project_file", project_file);
   
-      const response = await fetch("http://localhost:4000/api/projects", {
+      const response = await fetch("http://localhost:3000/api/projects", {
         method: "POST",
         body: formData,
       });
@@ -89,7 +89,7 @@ export default function Add() {
     } else {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/staff/username/${selectedUser}`
+          `http://localhost:3000/api/staff/username/${selectedUser}`
         );
         if (response.ok) {
           const userData = await response.json();
@@ -113,7 +113,7 @@ export default function Add() {
 
   async function createStaffProject(projectId, staffId) {
     try {
-      const response = await fetch("http://localhost:4000/api/staffProject", {
+      const response = await fetch("http://localhost:3000/api/staffProject", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -2,7 +2,7 @@ import "cypress-file-upload";
 
 describe("Add projects", () => {
   beforeEach(() => {
-    cy.intercept("POST", "http://localhost:4000/api/auth/login").as(
+    cy.intercept("POST", "http://localhost:3000/api/auth/login").as(
       "loginRequest"
     );
 

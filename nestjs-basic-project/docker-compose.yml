@@ -1,13 +1,14 @@
 version: '3.8'
 services:
   app:
-    build: ./api
+    build: ./api/
     ports:
       - "3000:3000"
     depends_on:
       - db
     environment:
       DATABASE_URL: postgres://user:password@db:5432/dbname
+      command: sh -c "npm install && npm run build  && npm run start:dev"
 
   db:
     image: postgres:13
