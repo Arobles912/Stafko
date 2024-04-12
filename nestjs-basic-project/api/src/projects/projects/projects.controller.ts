@@ -40,7 +40,7 @@ export class ProjectsController {
   @ApiResponse({ status: 200, description: 'Returns the project specified by the ID.', type: ProjectsEntity })
   @ApiResponse({ status: 404, description: 'Project not found.' })
 
-  async findOne(@Param("id") id: string): Promise<ProjectsEntity> {
+  async findOne(@Param("id") id: number): Promise<ProjectsEntity> {
     return this.projectsService.findOne(+id);
   }
 
@@ -52,7 +52,7 @@ export class ProjectsController {
   @ApiResponse({ status: 500, description: 'An error has occurred while trying to update the project.' })
 
   async update(
-    @Param("id") id: string,
+    @Param("id") id: number,
     @Body() projectDto: ProjectsDto
   ): Promise<ProjectsEntity> {
     return this.projectsService.update(+id, projectDto);
@@ -70,7 +70,7 @@ export class ProjectsController {
   @ApiResponse({ status: 204, description: 'Deletes the project specified by the ID.' })
   @ApiResponse({ status: 500, description: 'An error has occurred while trying to delete the project.'})
 
-  async remove(@Param("id") id: string): Promise<void> {
+  async remove(@Param("id") id: number): Promise<void> {
     return this.projectsService.remove(+id);
   }
 
@@ -80,7 +80,7 @@ export class ProjectsController {
   @ApiResponse({ status: 200, description: 'Returns the project file.' })
   @ApiResponse({ status: 500, description: 'An error has occurred while trying to download the project file.'})
 
-  async downloadFile(@Param("id") id: string, @Res() res: Response) {
+  async downloadFile(@Param("id") id: number, @Res() res: Response) {
     const project = await this.projectsService.findOne(+id);
     res.send(project.project_file);
   }

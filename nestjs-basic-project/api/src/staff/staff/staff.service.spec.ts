@@ -12,7 +12,9 @@ describe("StaffService", () => {
     save: jest.fn(),
     find: jest.fn(),
     findOne: jest.fn(),
+    update: jest.fn(),
     delete: jest.fn(),
+    findOneByUserName: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -21,9 +23,10 @@ describe("StaffService", () => {
         StaffService,
         {
           provide: getRepositoryToken(StaffEntity),
-          useValue: mockStaffRepository,
+          useValue: mockStaffRepository ,
         },
       ],
+      imports: [],
     }).compile();
 
     service = module.get<StaffService>(StaffService);
@@ -37,98 +40,128 @@ describe("StaffService", () => {
   });
 
   describe("create", () => {
-    it("should create a new staff member", async () => {
-      const staffDto = {
-        staff_id: 2,
+    it("should create a staff member", async () => {
+      const staffDto: StaffEntity = {
+        staff_id: 1,
         username: "Test",
+        pass: "1234",
+        email: "Test@gmail.com",
+        user_role: "Usuario",
+      };
+      const createdStaff: StaffEntity = {
+        staff_id: 1,
+        username: "Test",
+        pass: "1234",
+        email: "Test@gmail.com",
+        user_role: "Usuario",
+      };
+
+      jest.spyOn(mockStaffRepository, "save").mockReturnValue(staffDto);
+
+      const result = await service.create(staffDto);
+      expect(result).toEqual(createdStaff);
+    });
+  });
+
+  describe("findAll", () => {
+    it("should return an array of staff members", async () => {
+      const staffUser: StaffEntity = {
+        staff_id: 1,
+        username: "Test",
+        pass: "1234",
+        email: "test@gmail.com",
+        user_role: "Usuario",
+      };
+
+      const staffUsers = [staffUser];
+      jest.spyOn(mockStaffRepository, "find").mockReturnValue(staffUsers);
+
+      const result = await service.findAll();
+      expect(result).toEqual(staffUsers);
+      expect(mockStaffRepository.find).toHaveBeenCalled();
+    });
+  });
+
+  describe("findOne", () => {
+    it("should find a staff member by a given ID and return its data", async () => {
+      const id = 123;
+      const expectedStaffMember: StaffEntity = {
+        staff_id: 123,
+        username: "TestUser",
         pass: "1234",
         email: "test@example.com",
         user_role: "Usuario",
       };
   
-      const createdStaff: StaffEntity = {
-        staff_id: 2,
-        username: "Test",
+      jest.spyOn(mockStaffRepository, "findOne").mockResolvedValue(expectedStaffMember);
+  
+      const result = await service.findOne(id);
+      expect(result).toEqual(expectedStaffMember);
+      expect(mockStaffRepository.findOne).toHaveBeenCalled();
+      expect(mockStaffRepository.findOne).toHaveBeenCalledWith({ where: { staff_id: id } }); 
+    });
+  });
+  
+
+  describe("update", () => {
+    it("should find a staff user by a given id and update its data", async () => {
+      const id = 1;
+      const staffMember = {
+        username: "TestUser",
         pass: "1234",
         email: "test@example.com",
         user_role: "Usuario",
-      }; 
-  
-      mockStaffRepository.save.mockResolvedValue(staffDto);
-  
-      const result = await service.create(staffDto);
-  
-      expect(result).toEqual(createdStaff);
-    });
-  });
-  
+      };
 
-  describe("findAll", () => {
-    it("should return an array of staff members", async () => {
-      const staffMembers: StaffEntity[] = [
-        {
-          staff_id: 1,
-          username: "Test1",
-          pass: "1234",
-          email: "test1@example.com",
-          user_role: "Usuario",
-        },
-        {
-          staff_id: 2,
-          username: "Test2",
-          pass: "5678",
-          email: "test2@example.com",
-          user_role: "Admin",
-        },
-      ];
+      const expectedStaffMember = {
+        staff_id: 1,
+        username: "TestUser",
+        pass: "1234",
+        email: "test@example.com",
+        user_role: "Usuario",
+      };
 
-      mockStaffRepository.find.mockResolvedValue(staffMembers);
+      jest.spyOn(mockStaffRepository, "update").mockResolvedValue(expectedStaffMember);
 
-      const result = await service.findAll();
+      const result = await service.update(id, staffMember);
+      expect(mockStaffRepository.update).toHaveBeenCalled();
+      expect(mockStaffRepository.update).toHaveBeenCalledWith(staffMember);
 
-      expect(result).toEqual(staffMembers);
+      expect(result).toEqual(expectedStaffMember);
     });
   });
 
-  // describe('findOne', () => {
-  //   it('should return a staff member by id', async () => {
+  describe("remove", () => {
+    it("should remove a staff user by a given id", async () => {
+      const id = 1;
 
-  //     const staffId = 1;
+      mockStaffRepository.delete.mockResolvedValue({});
 
-  //     const result = await service.findOne(staffId);
+      await service.remove(id);
 
-  //     expect(result).toBeDefined();
-  //     expect(result.staff_id).toEqual(staffId);
-  //   });
-  // });
+      expect(mockStaffRepository.delete).toHaveBeenCalledWith(id);
+    });
+  });
+  
+  
 
-  // describe('update', () => {
-  //   it('should update a staff member', async () => {
+  describe("findOneByUserName", () => {
+    it("should find a staff member by a given username and return its data", async () => {
+      const username = "TestUser";
+      const expectedStaffMember: StaffEntity = {
+        staff_id: 123,
+        username: "TestUser",
+        pass: "1234",
+        email: "test@example.com",
+        user_role: "Usuario",
+      };
 
-  //     const staffId = 1;
-  //     const updateDto = {
-  //       username: 'UpdatedTest',
-  //       pass: '5678',
-  //       email: 'updated_test@example.com',
-  //       user_role: 'Admin',
-  //     };
+      jest.spyOn(mockStaffRepository, "findOneByUserName").mockResolvedValue(expectedStaffMember);
 
-  //     const result = await service.update(staffId, updateDto);
-
-  //     expect(result).toBeTruthy();
-
-  //   });
-  // });
-
-  // describe('remove', () => {
-  //   it('should remove a staff member', async () => {
-
-  //     const staffId = 1;
-
-  //     const result = await service.remove(staffId);
-
-  //     expect(result).toBeTruthy();
-
-  //   });
-  // });
+      const result = await service.findOneByUserName(username);
+      expect(result).toEqual(expectedStaffMember);
+      expect(mockStaffRepository.findOneByUserName).toHaveBeenCalled();
+      expect(mockStaffRepository.findOneByUserName).toHaveBeenCalledWith({ where: { username: username } });
+    });
+  });
 });

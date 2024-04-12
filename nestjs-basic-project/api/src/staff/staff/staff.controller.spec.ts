@@ -42,7 +42,7 @@ describe("StaffController", () => {
         email: "Test@gmail.com",
         user_role: "Usuario",
       };
-  
+
       jest.spyOn(service, "create").mockResolvedValue(staffDto);
 
       await expect(controller.create(staffDto)).resolves.toEqual(createdStaff);
@@ -75,20 +75,115 @@ describe("StaffController", () => {
   });
 
   describe("findOne", () => {
-  it('should find a staff member by a given id and return its data', async () => {
+    it("should find a staff member by a given ID and return its data", async () => {
+      const id = 123;
+      const expectedStaffMember: StaffEntity = {
+        staff_id: 123,
+        username: "TestUser",
+        pass: "1234",
+        email: "test@example.com",
+        user_role: "Usuario",
+      };
 
-    const id = '1';
-    const staffDto = {
-      staff_id: 1,
-      username: "Test",
-      pass: "1234",
-      email: "Test@gmail.com",
-      user_role: "Usuario"
-    };
+      const mockStaffService = {
+        findOne: jest.fn(() => Promise.resolve(expectedStaffMember)),
+      };
 
-    jest.spyOn(service, "findOne").mockResolvedValue(staffDto);
+      controller = new StaffController(mockStaffService as any);
 
-    await expect(controller.findOne(id)).resolves.toEqual(staffDto);
+      const actualStaffMember = await controller.findOne(id);
+
+      expect(actualStaffMember.staff_id).toEqual(id);
+
+      expect(mockStaffService.findOne).toHaveBeenCalledWith(id);
+    });
   });
-});
+
+  describe("update", () => {
+    it("should find a staff user by a given id and update its data", async () => {
+      const id = 1;
+      const staffMember = {
+        username: "TestUser",
+        pass: "1234",
+        email: "test@example.com",
+        user_role: "Usuario",
+      };
+  
+      const expectedStaffMember = {
+        staff_id: 1,
+        username: "TestUser",
+        pass: "1234",
+        email: "test@example.com",
+        user_role: "Usuario",
+      };
+  
+      const mockStaffService = {
+        update: jest.fn((id: number, staffMember: any) => Promise.resolve({
+          ...expectedStaffMember,
+          ...staffMember, 
+        })),
+      };
+      
+  
+      controller = new StaffController(mockStaffService as any);
+  
+      const actualStaffMember = await controller.update(id, staffMember);
+  
+      expect(mockStaffService.update).toHaveBeenCalledWith(id, staffMember);
+
+      expect(actualStaffMember).toEqual(expectedStaffMember);
+    });
+  });
+
+  describe("remove", () => {
+    it("should remove a staff user by a given id", async () => {
+      const id = 1;
+      const staffMember = {
+        staff_id: 1,
+        username: "TestUser",
+        pass: "1234",
+        email: "test@example.com",
+        user_role: "Usuario",
+      };
+  
+      const mockStaffService = {
+        remove: jest.fn((id: number) => Promise.resolve(staffMember)), 
+      };
+  
+      controller = new StaffController(mockStaffService as any);
+  
+      await controller.remove(id);
+      
+      expect(staffMember.staff_id).toEqual(id);
+  
+      expect(mockStaffService.remove).toHaveBeenCalledWith(id);
+    });
+  });
+
+  describe("findOneByUserName", () => {
+    it("should find a staff member by a given username and return its data", async () => {
+      const username = "TestUser";
+      const expectedStaffMember: StaffEntity = {
+        staff_id: 123,
+        username: "TestUser",
+        pass: "1234",
+        email: "test@example.com",
+        user_role: "Usuario",
+      };
+
+      const mockStaffService = {
+        findOneByUserName: jest.fn(() => Promise.resolve(expectedStaffMember)),
+      };
+
+      controller = new StaffController(mockStaffService as any);
+
+      const actualStaffMember = await controller.findOneByUserName(username);
+
+      expect(actualStaffMember.username).toEqual(username);
+
+      expect(mockStaffService.findOneByUserName).toHaveBeenCalledWith(username);
+    });
+  });
+  
+  
 });

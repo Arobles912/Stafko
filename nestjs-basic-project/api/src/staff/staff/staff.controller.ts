@@ -33,7 +33,7 @@ export class StaffController {
   @ApiResponse({ status: 200, description: 'Returns the staff member specified by the ID.' })
   @ApiResponse({ status: 404, description: 'Staff not found.' })
   
-  async findOne(@Param('id') id: string): Promise<StaffEntity> {
+  async findOne(@Param('id') id: number): Promise<StaffEntity> {
     return this.staffService.findOne(+id);
   }
 
@@ -44,7 +44,7 @@ export class StaffController {
   @ApiResponse({ status: 200, description: 'Returns the updated staff member specified by the ID.', type: StaffEntity })
   @ApiResponse({ status: 500, description: 'An error occurred while trying to update the staff member.' })
 
-  async update(@Param('id') id: string, @Body() staffDto: StaffDto): Promise<StaffEntity> {
+  async update(@Param('id') id: number, @Body() staffDto: StaffDto): Promise<StaffEntity> {
     return this.staffService.update(+id, staffDto);
   }
 
@@ -54,7 +54,7 @@ export class StaffController {
   @ApiResponse({ status: 204, description: 'Deletes the staff member specified by the ID.' })
   @ApiResponse({ status: 500, description: 'An error occurred while trying to delete the staff member.' })
 
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: number): Promise<void> {
     return this.staffService.remove(+id);
   }
 

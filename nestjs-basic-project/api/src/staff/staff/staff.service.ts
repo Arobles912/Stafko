@@ -68,5 +68,6 @@ export class StaffService {
 
   async findOneByUserName(username: string): Promise<StaffEntity> {
     return this.staffRepository.findOneBy({ username });
+    //return this.staffRepository.findOne({ where: { username } });
   }
 }
