@@ -152,10 +152,10 @@
 }
 
 .add-form p {
-  color: black;
-  font-size: 23px;
-  text-decoration: underline;
   font-family: "Poppins", sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  text-decoration: underline 2px solid;
 }
 
 .add-form ul {

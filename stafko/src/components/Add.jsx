@@ -5,6 +5,7 @@ export default function Add() {
   const [project_name, setProjectName] = useState("");
   const [description, setDescription] = useState("");
   const [project_file, setProjectFile] = useState(null);
+  const [project_owner, setProjectOwner] = useState(localStorage.getItem("username"));
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [users, setUsers] = useState([]);
   const [shouldReload, setShouldReload] = useState(false);
@@ -27,40 +28,63 @@ export default function Add() {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    async function fetchOwner() {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/staff/username/${project_owner}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setProjectOwner(data.staff_id); 
+        }
+      } catch (error) {
+        console.error("Failed to fetch project owner: ", error);
+      }
+      
+    }
+
+    fetchOwner();
+  }, []);
+
+
   async function addProject(event) {
     event.preventDefault();
-  
+
     if (!project_name.trim()) {
       setError("The project name can't be empty.");
       return;
     }
-  
-    if(description.length > 3000){
+
+    if (description.length > 3000) {
       setError("The project description can't be longer than 3000 characters.");
       return;
     }
-  
+
     if (selectedUsers.length < 1) {
       setError("The users selected field can't be empty.");
       return;
     }
 
-    if (project_file === null){
+    if (project_file === null) {
       setError("The project file is required.");
       return;
     }
-  
+
     try {
       const formData = new FormData();
       formData.append("project_name", project_name);
       formData.append("description", description);
+      formData.append("project_owner", project_owner);
       formData.append("project_file", project_file);
-  
+
+      console.log("formData: ", formData);
+
       const response = await fetch("http://localhost:3000/api/projects", {
         method: "POST",
         body: formData,
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         const projectId = data.project_id;
@@ -79,7 +103,6 @@ export default function Add() {
       console.error("Failed to create project: ", error);
     }
   }
-  
 
   async function addUser() {
     const userSelect = document.getElementById("users");
@@ -125,7 +148,6 @@ export default function Add() {
       });
       if (response.ok) {
         console.log("User-project relation created.");
-        
       } else {
         console.log("User-project error.");
       }
@@ -138,7 +160,7 @@ export default function Add() {
     if (shouldReload) {
       setTimeout(() => {
         setShouldReload(false);
-        window.location.reload(); 
+        window.location.reload();
       }, 750);
     }
   }, [shouldReload]);
@@ -165,7 +187,6 @@ export default function Add() {
           value={project_name}
           onChange={(e) => setProjectName(e.target.value)}
           maxLength={50}
-          //required
         />
         <br />
         <img
@@ -238,7 +259,8 @@ export default function Add() {
         <br />
         {error && (
           <div style={{ textAlign: "center", width: "100%" }}>
-            <p className="error-message"
+            <p
+              className="error-message"
               style={{
                 color: "red",
                 fontFamily: "Anek Gurmukhi, sans-serif",
@@ -252,7 +274,8 @@ export default function Add() {
         )}
         {successMessage && (
           <div style={{ textAlign: "center", width: "100%" }}>
-            <p className="success-message"
+            <p
+              className="success-message"
               style={{
                 color: "green",
                 fontFamily: "Anek Gurmukhi, sans-serif",

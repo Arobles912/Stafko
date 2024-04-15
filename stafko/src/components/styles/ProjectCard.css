@@ -1,7 +1,7 @@
 .main-container-div {
   padding-left: 10px;
   padding-right: 10px;
-  background: linear-gradient(to bottom, #fcf9f3 0%,  #efe8d6 100%);
+  background: linear-gradient(to bottom, #fcf9f3 0%, #efe8d6 100%);
   /**background-color: white;**/
 }
 
@@ -35,7 +35,7 @@
   padding-top: 5px;
 }
 
-.title-div{
+.title-div {
   overflow-x: auto;
   display: flex;
   width: 50%;
@@ -50,10 +50,16 @@
   margin-bottom: auto;
 }
 
+.project-owner-span {
+  color: #da620d;
+  font-weight: 600;
+}
+
 .edit-button {
   margin-right: 30px;
   color: white;
-  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
   font-weight: bold;
   margin-top: auto;
   margin-bottom: auto;
@@ -76,12 +82,40 @@
   transition: 0.2s;
 }
 
+.view-button {
+  margin-right: 30px;
+  color: white;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+  font-weight: bold;
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  background-color: #ffcc00;
+  border: 2px solid #ce9720;
+  outline: none;
+  font-size: 18px;
+  max-width: 100%;
+  width: auto;
+  border-radius: 10px;
+}
+
+.view-button:hover {
+  border-color: #e97e19;
+  background-color: #ff9900;
+  transition: 0.2s;
+}
+
 .download-button {
   padding-left: 10px;
   padding-right: 10px;
   margin-right: 10px;
   color: white;
-  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
   font-weight: bold;
   margin-top: auto;
   margin-bottom: auto;
@@ -123,14 +157,16 @@
   flex-basis: 65%;
   margin-top: 18px;
   margin-left: 10px;
-  padding-right: 20px; 
-  padding-left: 10px; 
+  padding-right: 20px;
+  padding-left: 10px;
   margin-bottom: 20px;
   box-shadow: 0px 3px 3px 3px lightgray;
   background-color: rgb(232, 232, 232);
   border-radius: 10px;
   width: 100%;
   min-height: 200px;
+  max-height: 600px;
+  overflow-y: scroll;
 }
 
 .description-div h3 {
@@ -145,7 +181,8 @@
 }
 
 .description-div textarea {
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   align-self: center;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -153,13 +190,13 @@
   margin-right: 10px;
   border-style: none;
   resize: none;
-  width: calc(100% - 20px); 
+  width: calc(100% - 20px);
   font-weight: 400;
   font-size: 15px;
   background-color: rgb(232, 232, 232);
 }
 
-.description-div textarea:focus{
+.description-div textarea:focus {
   outline: none;
 }
 
@@ -177,9 +214,10 @@ hr {
   margin-left: 10px;
   margin-right: 10px;
   margin-bottom: 20px;
-  display: flex; 
-  flex-direction: column; 
-  justify-content: center; 
+  justify-content: center;
+  max-height: 350px;
+  overflow-y: auto;
+  text-align: center;
 }
 
 .user-list h3 {
@@ -191,13 +229,15 @@ hr {
   font-size: 30px;
   text-align: center;
   margin-bottom: 15px;
+  display: block;
 }
 
-.user-list button{
+.user-list button {
   width: auto;
   height: 30px;
   color: white;
-  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
   font-weight: bold;
   border-radius: 10px;
   background-color: #ffcc00;
@@ -208,15 +248,13 @@ hr {
   padding-left: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
-  align-self: center; 
 }
 
-.user-list button:hover{
+.user-list button:hover {
   border-color: #e97e19;
   background-color: #ff9900;
   transition: 0.2s;
 }
-
 
 .user-card {
   margin-left: 10px;
@@ -245,7 +283,8 @@ hr {
   width: auto;
   height: auto;
   color: white;
-  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
   font-weight: bold;
   border-radius: 10px;
   background-color: #ff0000;
@@ -274,7 +313,8 @@ hr {
 
 .save-button {
   color: white;
-  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
   font-weight: bold;
   height: 40px;
   margin-top: 20px;
@@ -297,10 +337,10 @@ hr {
   transition: 0.2s;
 }
 
-
 .delete-button {
   color: white;
-  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
   font-weight: bold;
   height: 40px;
   margin-top: 20px;

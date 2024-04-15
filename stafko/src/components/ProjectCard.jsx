@@ -8,6 +8,7 @@ export default function ProjectCard({ project }) {
     useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
   const [description, setDescription] = useState(project.project.description);
+  const [project_owner, setProjectOwner] = useState(project.project.project_owner);
   const [staffProjectsData, setStaffProjectsData] = useState(null);
   const [collaborators, setCollaborators] = useState([]);
   const [allCollaborators, setAllCollaborators] = useState([]);
@@ -80,6 +81,25 @@ export default function ProjectCard({ project }) {
 
     fetchCollaborators();
   }, [project.staffProject.project_id]);
+
+  useEffect(() => {
+    async function fetchOwner() {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/staff/${project_owner}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setProjectOwner(data.username); 
+        }
+      } catch (error) {
+        console.error("Failed to fetch project owner: ", error);
+      }
+      
+    }
+
+    fetchOwner();
+  }, []);
 
   useEffect(() => {
     adjustTextareaHeight();
@@ -296,6 +316,9 @@ export default function ProjectCard({ project }) {
           <div className="title-div">
             <img src="src/assets/project-icon.png" alt="project-img" />
             <h1>{project.project.project_name}</h1>
+          </div>
+          <div className="info-div">
+            <p>Owner: <span className="project-owner-span">{project_owner}</span></p>
           </div>
           <div className="info-div">
             <p>Number of collaborators: {numberOfCollaborators}</p>

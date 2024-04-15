@@ -14,9 +14,11 @@ CREATE TABLE projects (
     project_id SERIAL PRIMARY KEY,
     project_name VARCHAR(50) NOT NULL,
     description VARCHAR(3000),
+    project_owner INTEGER NOT NULL REFERENCES staff(staff_id),
     creation_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     project_file BYTEA
 );
+
 
 
 CREATE TABLE staff_project (

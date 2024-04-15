@@ -18,4 +18,7 @@ export class ProjectsDto {
   @ApiProperty({ description: 'The file attached to the project.', type: 'string', format: 'binary' })
   @IsNotEmpty()
   project_file: Buffer;
+
+  @ApiProperty({ description: 'The project owner', type: 'number', example: 5 })
+  project_owner: number;
 }
