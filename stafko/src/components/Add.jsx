@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import "./styles/Add.css";
 
 export default function Add() {
-  const [project_name, setProjectName] = useState("");
+  const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
-  const [project_file, setProjectFile] = useState(null);
-  const [project_owner, setProjectOwner] = useState(localStorage.getItem("username"));
+  const [projectFile, setProjectFile] = useState(null);
+  const [projectOwner, setProjectOwner] = useState(localStorage.getItem("username"));
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [users, setUsers] = useState([]);
   const [shouldReload, setShouldReload] = useState(false);
@@ -32,26 +32,28 @@ export default function Add() {
     async function fetchOwner() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staff/username/${project_owner}`
+          `http://localhost:3000/api/staff/username/${projectOwner}`
         );
         if (response.ok) {
           const data = await response.json();
           setProjectOwner(data.staff_id); 
+          //await autoAddOwnerToCollaborators(); 
         }
       } catch (error) {
         console.error("Failed to fetch project owner: ", error);
       }
       
     }
-
+  
     fetchOwner();
   }, []);
+  
 
 
   async function addProject(event) {
     event.preventDefault();
 
-    if (!project_name.trim()) {
+    if (!projectName.trim()) {
       setError("The project name can't be empty.");
       return;
     }
@@ -66,17 +68,17 @@ export default function Add() {
       return;
     }
 
-    if (project_file === null) {
+    if (projectFile === null) {
       setError("The project file is required.");
       return;
     }
 
     try {
       const formData = new FormData();
-      formData.append("project_name", project_name);
+      formData.append("project_name", projectName);
       formData.append("description", description);
-      formData.append("project_owner", project_owner);
-      formData.append("project_file", project_file);
+      formData.append("project_owner", projectOwner);
+      formData.append("project_file", projectFile);
 
       console.log("formData: ", formData);
 
@@ -134,6 +136,25 @@ export default function Add() {
     );
   }
 
+  // async function autoAddOwnerToCollaborators() {
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:3000/api/staff/username/${projectOwner}`
+  //     );
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       const ownerStaffId = data.staff_id;
+  //       setSelectedUsers((prevUsers) => [
+  //         ...prevUsers,
+  //         { username: projectOwner, id: ownerStaffId },
+  //       ]);
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to fetch project owner: ", error);
+  //   }
+  // }
+  
+
   async function createStaffProject(projectId, staffId) {
     try {
       const response = await fetch("http://localhost:3000/api/staffProject", {
@@ -184,7 +205,7 @@ export default function Add() {
           id="projectname"
           name="projectname"
           className="project-name-input"
-          value={project_name}
+          value={projectName}
           onChange={(e) => setProjectName(e.target.value)}
           maxLength={50}
         />
@@ -213,6 +234,7 @@ export default function Add() {
         <label htmlFor="projectStaff">Project Staff:</label>
         <br />
         <select name="users" id="users" className="select-user">
+          <option>Select user</option>
           {users.map((user) => (
             <option key={user.id} value={user.username}>
               {user.username}

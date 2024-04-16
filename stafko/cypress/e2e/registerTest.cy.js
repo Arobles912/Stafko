@@ -6,6 +6,8 @@ describe("Register", () => {
     cy.get('input[name="password"]').type("2468");
     cy.get('input[name="email"]').type("test@gmail.com");
 
+    cy.get('input[name="checkbox-input"]').click();
+
     cy.get('input[type="submit"]').click();
 
     cy.url().should("not.include", "/register");
@@ -28,6 +30,8 @@ describe("Register", () => {
     cy.get('input[name="password"]').type("2468");
     cy.get('input[name="email"]').type("test@gmail.com");
 
+    cy.get('input[name="checkbox-input"]').click();
+
     cy.get('input[type="submit"]').click();
 
     cy.contains("Username already exists.").should("exist");
@@ -39,6 +43,8 @@ describe("Register", () => {
     cy.get('input[name="username"]').type("Test2");
     cy.get('input[name="password"]').type("2468");
     cy.get('input[name="email"]').type("hola@gmail.com");
+
+    cy.get('input[name="checkbox-input"]').click();
 
     cy.get('input[type="submit"]').click();
 
@@ -76,6 +82,21 @@ describe("Register", () => {
     cy.get('input[name="password"]').type("123456");
 
     cy.get('input[name="email"]').type("correo-invalido");
+
+    cy.get('input[name="checkbox-input"]').click();
+
+    cy.get('input[type="submit"]').click();
+
+    cy.url().should("include", "/register");
+  });
+
+  it("Should display an error when the checkbox isn't marked", () => {
+    cy.visit("http://localhost:5173/register");
+
+    cy.get('input[name="username"]').type("TestUser");
+    cy.get('input[name="password"]').type("123456");
+
+    cy.get('input[name="email"]').type("testuser@gmail.com");
 
     cy.get('input[type="submit"]').click();
 

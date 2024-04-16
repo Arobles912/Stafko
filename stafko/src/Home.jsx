@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Add from "./components/Add";
 import ProjectCard from "./components/ProjectCard";
-import ProjectCardView from "./components/ProjectCardView"; 
+import ProjectCardView from "./components/ProjectCardView";
 import "./components/styles/Home.css";
 
 export default function Home({ setIsLoggedIn }) {
   const [isAddProjectVisible, setIsAddProjectVisible] = useState(false);
   const [projects, setProjects] = useState([]);
   const [username, setUsername] = useState("");
-  const [project_owner, setProjectOwner] = useState(localStorage.getItem("username"));
+  const [projectOwner, setProjectOwner] = useState(
+    localStorage.getItem("username")
+  );
   const [token, setToken] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); 
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -30,16 +33,15 @@ export default function Home({ setIsLoggedIn }) {
     async function fetchOwner() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staff/username/${project_owner}`
+          `http://localhost:3000/api/staff/username/${projectOwner}`
         );
         if (response.ok) {
           const data = await response.json();
-          setProjectOwner(data.staff_id); 
+          setProjectOwner(data.staff_id);
         }
       } catch (error) {
         console.error("Failed to fetch project owner: ", error);
       }
-      
     }
 
     fetchOwner();
@@ -125,6 +127,10 @@ export default function Home({ setIsLoggedIn }) {
 
   projects.sort(compareProjects);
 
+  const filteredProjects = projects.filter((project) =>
+    project.project.project_name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <main>
       <div className="bg-div-home">
@@ -137,6 +143,7 @@ export default function Home({ setIsLoggedIn }) {
           }
           setUsername={setUsername}
           setToken={setToken}
+          setSearchTerm={setSearchTerm}
         />
         <div
           className={`main-add-div ${
@@ -145,23 +152,19 @@ export default function Home({ setIsLoggedIn }) {
         >
           <Add />
         </div>
-        {projects.map(
-          (project) => (
-            (
-              project_owner === project.project.project_owner ? (
-                <ProjectCard
-                  key={project.staffProject.project_id}
-                  project={project}
-                  data-testid={`project-card-${project.staffProject.project_id}`}
-                />
-              ) : (
-                <ProjectCardView
-                  key={project.staffProject.project_id}
-                  project={project}
-                  data-testid={`project-card-${project.staffProject.project_id}`}
-                />
-              )
-            )
+        {filteredProjects.map((project) =>
+          projectOwner === project.project.project_owner ? (
+            <ProjectCard
+              key={project.staffProject.project_id}
+              project={project}
+              data-testid={`project-card-${project.staffProject.project_id}`}
+            />
+          ) : (
+            <ProjectCardView
+              key={project.staffProject.project_id}
+              project={project}
+              data-testid={`project-card-${project.staffProject.project_id}`}
+            />
           )
         )}
       </div>

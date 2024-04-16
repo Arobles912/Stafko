@@ -1,3 +1,4 @@
+import React from "react";
 import "./styles/Navbar.css";
 import { useNavigate } from "react-router-dom";
 
@@ -7,7 +8,8 @@ export default function Navbar({
   setIsLoggedIn,
   addButtonText,
   setToken,
-  setUsername
+  setUsername,
+  setSearchTerm 
 }) {
   const navigate = useNavigate();
 
@@ -20,6 +22,10 @@ export default function Navbar({
     navigate("/");
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
   return (
     <nav>
       <img src="src/assets/example-logo.png" alt="example-logo" />
@@ -28,10 +34,20 @@ export default function Navbar({
       <button onClick={toggleAddProject} className="nav-link" name="addproject">
         {addButtonText}
       </button>
+      <div className="search-bar-div">
+        <input
+          type="text"
+          id="searchbar"
+          name="searchbar"
+          className="search-bar-input"
+          placeholder="Search project..."
+          onChange={handleSearchChange} 
+        />
+      </div>
       <div className="right-side-div">
         <img src="src/assets/user-icon.png" alt="user-icon"></img>
         <p className="user-name">Logged as: {username}</p>
-        <button onClick={handleLogout}>Logout</button>
+        <button name="logoutbutton" onClick={handleLogout}>Logout</button>
       </div>
     </nav>
   );

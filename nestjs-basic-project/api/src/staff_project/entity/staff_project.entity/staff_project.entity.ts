@@ -13,13 +13,13 @@ export class StaffProjectEntity {
   @PrimaryColumn()
   project_id: number;
 
-  // @ApiProperty({ description: 'Staff entity', type: StaffEntity })
-  // @ManyToOne(() => StaffEntity, { nullable: false })
-  // @JoinColumn({ name: 'staff_id' })
-  // staff: StaffEntity;
+  @ApiProperty({ description: 'Staff entity', type: StaffEntity })
+  @ManyToOne(() => StaffEntity, { nullable: false })
+  @JoinColumn({ name: 'staff_id' })
+  staff: StaffEntity;
 
-  // @ApiProperty({ description: 'Projects entity', type: ProjectsEntity })
-  // @ManyToOne(() => ProjectsEntity, { nullable: false })
-  // @JoinColumn({ name: 'project_id' })
-  // project: ProjectsEntity;
+  @ApiProperty({ description: 'Projects entity', type: ProjectsEntity })
+  @ManyToOne(() => ProjectsEntity, { nullable: false })
+  @JoinColumn({ name: 'project_id' })
+  project: ProjectsEntity;
 }

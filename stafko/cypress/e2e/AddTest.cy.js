@@ -18,7 +18,15 @@ describe("Add projects", () => {
     });
   });
 
+  afterEach(() => {
+    cy.visit("http://localhost:5173/home");
+
+    cy.get('button[name="logoutbutton"]').click();
+  });
+
+
   it("Should add a project", () => {
+    cy.viewport(1920, 1080);
     cy.visit("http://localhost:5173/home");
 
     cy.get('button[name="addproject"]').click();
@@ -36,6 +44,7 @@ describe("Add projects", () => {
     cy.get(".add-project-input").click();
     cy.get(".success-message").should("exist");
     cy.wait(800);
+    cy.visit("http://localhost:5173/home");
     cy.get(".main-container-div")
       .eq(0)
       .within(() => {
@@ -46,6 +55,7 @@ describe("Add projects", () => {
   });
 
   it("Should add a project with no description", () => {
+    cy.viewport(1920, 1080);
     cy.visit("http://localhost:5173/home");
 
     cy.get('button[name="addproject"]').click();
@@ -73,6 +83,7 @@ describe("Add projects", () => {
   });
 
   it("Should add a project with multiple collaborators", () => {
+    cy.viewport(1920, 1080);
     cy.visit("http://localhost:5173/home");
 
     cy.get('button[name="addproject"]').click();
@@ -104,6 +115,7 @@ describe("Add projects", () => {
   });
 
   it("Should display an error message when trying to add a project without a name", () => {
+    cy.viewport(1920, 1080);
     cy.visit("http://localhost:5173/home");
 
     cy.get('button[name="addproject"]').click();
@@ -122,6 +134,7 @@ describe("Add projects", () => {
   });
 
   it("Should display an error message when trying to add a project without collaborators", () => {
+    cy.viewport(1920, 1080);
     cy.visit("http://localhost:5173/home");
     cy.get('button[name="addproject"]').click();
     cy.get('input[name="projectname"]').type("Project name");
@@ -138,6 +151,7 @@ describe("Add projects", () => {
   });
 
   it("Should display an error message when trying to add a project without a project file", () => {
+    cy.viewport(1920, 1080);
     cy.visit("http://localhost:5173/home");
     cy.get('button[name="addproject"]').click();
     cy.get('input[name="projectname"]').type("Project name");
@@ -149,6 +163,7 @@ describe("Add projects", () => {
   });
 
   it("Should not allow more than 50 characters in the projectname field", () => {
+    cy.viewport(1920, 1080);
     cy.visit("http://localhost:5173/home");
     cy.get('button[name="addproject"]').click();
     const longProjectName = "a".repeat(51);
@@ -161,6 +176,7 @@ describe("Add projects", () => {
   });
 
   it("Should not change the number of users in the list when adding an existing user", () => {
+    cy.viewport(1920, 1080);
     cy.visit("http://localhost:5173/home");
   
     cy.get('button[name="addproject"]').click();
@@ -178,6 +194,7 @@ describe("Add projects", () => {
   });
 
   it("Should not allow more than 3000 characters in the projectdesc field", () => {
+    cy.viewport(1920, 1080);
     cy.visit("http://localhost:5173/home");
     cy.get('button[name="addproject"]').click();
     const longProjectDesc = "a".repeat(3001);

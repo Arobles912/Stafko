@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles/ProjectCard.css";
 import AddCollaborator from "./AddCollaborator";
+import EditProjectName from "./EditProjectName";
 
 export default function ProjectCard({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
   const [isAddCollaboratorVisible, setIsAddCollaboratorVisible] =
     useState(false);
+  const [isEditProjectName, setIsEditProjectName] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
   const [description, setDescription] = useState(project.project.description);
-  const [project_owner, setProjectOwner] = useState(project.project.project_owner);
+  const [projectOwner, setProjectOwner] = useState(
+    project.project.project_owner
+  );
   const [staffProjectsData, setStaffProjectsData] = useState(null);
   const [collaborators, setCollaborators] = useState([]);
   const [allCollaborators, setAllCollaborators] = useState([]);
@@ -86,16 +90,15 @@ export default function ProjectCard({ project }) {
     async function fetchOwner() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staff/${project_owner}`
+          `http://localhost:3000/api/staff/${projectOwner}`
         );
         if (response.ok) {
           const data = await response.json();
-          setProjectOwner(data.username); 
+          setProjectOwner(data.username);
         }
       } catch (error) {
         console.error("Failed to fetch project owner: ", error);
       }
-      
     }
 
     fetchOwner();
@@ -124,7 +127,6 @@ export default function ProjectCard({ project }) {
   }
 
   async function handleDownloadButton() {
-    
     try {
       const response = await fetch(
         `http://localhost:3000/api/projects/${project.staffProject.project_id}/download`
@@ -315,10 +317,12 @@ export default function ProjectCard({ project }) {
         <section className="project-card-main-div">
           <div className="title-div">
             <img src="src/assets/project-icon.png" alt="project-img" />
-            <h1>{project.project.project_name}</h1>
+            <h1 name="projecttitle">{project.project.project_name}</h1>
           </div>
           <div className="info-div">
-            <p>Owner: <span className="project-owner-span">{project_owner}</span></p>
+            <p>
+              Owner: <span className="project-owner-span">{projectOwner}</span>
+            </p>
           </div>
           <div className="info-div">
             <p>Number of collaborators: {numberOfCollaborators}</p>
@@ -361,6 +365,21 @@ export default function ProjectCard({ project }) {
               />
             )}
           </div>
+          <div
+            className={`main-edit-project-name-div ${
+              isEditProjectName ? "visible" : "hidden"
+            }`}
+          >
+            {loading ? (
+              <div>Loading...</div>
+            ) : (
+              <EditProjectName
+                setIsEditProjectName={setIsEditProjectName}
+                project={project}
+              />
+            )}
+          </div>
+
           <div className="description-div">
             <h3>ReadME</h3>
             <hr />
@@ -411,6 +430,12 @@ export default function ProjectCard({ project }) {
               </p>
             </div>
           )}
+          <div className="edit-project-button-div">
+            <button type="button" name="editprojectnamebutton" onClick={() => setIsEditProjectName(true)}>
+              Edit project name
+            </button>
+          </div>
+
           <div className="buttons-div">
             <button
               type="button"

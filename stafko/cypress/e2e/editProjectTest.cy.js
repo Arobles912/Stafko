@@ -2,6 +2,7 @@ import "cypress-file-upload";
 
 describe("Edit projects", () => {
   beforeEach(() => {
+    cy.viewport(1920, 1080);
     cy.intercept("POST", "http://localhost:3000/api/auth/login").as(
       "loginRequest"
     );
@@ -19,6 +20,22 @@ describe("Edit projects", () => {
   });
 
   before(() => {
+    cy.viewport(1920, 1080);
+    cy.intercept("POST", "http://localhost:3000/api/auth/login").as(
+      "loginRequest"
+    );
+
+    cy.visit("http://localhost:5173");
+    cy.get('input[name="username"]').type("Hola");
+    cy.get('input[name="password"]').type("12345");
+    cy.get('input[type="submit"]').click();
+
+    cy.wait("@loginRequest").then((interception) => {
+      const token = interception.response.body.token;
+
+      window.localStorage.setItem("token", token);
+    });
+
     cy.visit("http://localhost:5173/home");
 
     cy.get('button[name="addproject"]').click();
@@ -37,11 +54,21 @@ describe("Edit projects", () => {
     });
     cy.get(".add-project-input").click();
     cy.get(".success-message").should("exist");
+
+    cy.wait(1000);
+
+    cy.visit("http://localhost:5173/home");
+
+    cy.get('button[name="logoutbutton"]').click();
+  });
+
+  afterEach(() => {
+
+    cy.get('button[name="logoutbutton"]').click();
   });
 
   it("Should save without changes", () => {
     cy.viewport(1920, 1080);
-    cy.visit("http://localhost:5173/home");
 
     let initialCollaboratorsCount;
     cy.get(".main-container-div")
@@ -56,6 +83,7 @@ describe("Edit projects", () => {
             initialCollaboratorsCount = length;
           });
       });
+      cy.on("window:confirm", () => true);
 
     cy.get(".main-container-div")
       .eq(0)
@@ -73,9 +101,32 @@ describe("Edit projects", () => {
       });
   });
 
+  it("Should edit the project name", () => {
+    cy.viewport(1920, 1080);
+    cy.get(".main-container-div")
+      .eq(0)
+      .within(() => {
+        cy.get(".edit-button").click();
+        cy.get('button[name="editprojectnamebutton"]').click();
+        cy.get('input[name="projectnameinput"]').type(" edited name")
+
+        cy.get(".confirm-button").eq(1).click();
+      });
+      cy.on("window:confirm", () => true);
+
+    cy.get(".main-container-div")
+      .eq(0)
+      .within(() => {
+        cy.get(".edit-button").click();
+        cy.wait(500);
+        cy.get('button[name="editprojectnamebutton"]').click();
+        cy.get('input[name="projectnameinput"]').should(
+          "have.value", "Project name edited name");
+      });
+  });
+
   it("Should edit the description", () => {
     cy.viewport(1920, 1080);
-    cy.visit("http://localhost:5173/home");
     cy.get(".main-container-div")
       .eq(0)
       .within(() => {
@@ -84,6 +135,7 @@ describe("Edit projects", () => {
 
         cy.get(".save-button").click();
       });
+      cy.on("window:confirm", () => true);
 
     cy.get(".main-container-div")
       .eq(0)
@@ -98,7 +150,6 @@ describe("Edit projects", () => {
 
   it("Should delete one collaborator", () => {
     cy.viewport(1920, 1080);
-    cy.visit("http://localhost:5173/home");
 
     let initialCollaboratorsCount;
     cy.get(".main-container-div")
@@ -119,6 +170,7 @@ describe("Edit projects", () => {
         cy.get(".user-card button").eq(1).click();
         cy.get(".save-button").click();
       });
+      cy.on("window:confirm", () => true);
 
     cy.get(".main-container-div")
       .eq(0)
@@ -133,7 +185,6 @@ describe("Edit projects", () => {
 
   it("Should add two collaborators", () => {
     cy.viewport(1920, 1080);
-    cy.visit("http://localhost:5173/home");
 
     let initialCollaboratorsCount;
     cy.get(".main-container-div")
@@ -157,9 +208,9 @@ describe("Edit projects", () => {
         cy.get(".add-user-button").click();
         cy.get(".select-collaborator").select("Test2");
         cy.get(".add-user-button").click();
-        cy.get(".confirm-button").click();
+        cy.get(".confirm-button").eq(0).click();
       });
-      cy.on("window:confirm", () => true);
+    cy.on("window:confirm", () => true);
 
     cy.get(".main-container-div")
       .eq(0)
@@ -172,9 +223,10 @@ describe("Edit projects", () => {
       });
   });
 
+  // Sometimes this test bugs, execute it again when this happen.
+
   it("Should reverse changes when the cancel button is pressed", () => {
     cy.viewport(1920, 1080);
-    cy.visit("http://localhost:5173/home");
 
     let initialCollaboratorsCount;
     cy.get(".main-container-div")
@@ -209,9 +261,20 @@ describe("Edit projects", () => {
       });
   });
 
+  it("Should search a project", () => {
+    cy.viewport(1920, 1080);
+    cy.get('input[name="searchbar"]').type("Project name");
+    cy.get(".main-container-div").eq(0).within(() => {
+      cy.get(".edit-button").click();
+      cy.wait(500);
+      cy.get('button[name="editprojectnamebutton"]').click();
+      cy.get('input[name="projectnameinput"]').should(
+        "have.value", "Project name edited name");
+    })
+  });
+
   it("Should download the project file", () => {
     cy.viewport(1920, 1080);
-    cy.visit("http://localhost:5173/home");
     cy.get(".main-container-div")
       .eq(0)
       .within(() => {
@@ -222,6 +285,21 @@ describe("Edit projects", () => {
   });
 
   after(() => {
+    cy.intercept("POST", "http://localhost:3000/api/auth/login").as(
+      "loginRequest"
+    );
+
+    cy.visit("http://localhost:5173");
+    cy.get('input[name="username"]').type("Hola");
+    cy.get('input[name="password"]').type("12345");
+    cy.get('input[type="submit"]').click();
+
+    cy.wait("@loginRequest").then((interception) => {
+      const token = interception.response.body.token;
+
+      window.localStorage.setItem("token", token);
+    });
+
     cy.wait(1000);
     cy.get(".main-container-div")
       .eq(0)

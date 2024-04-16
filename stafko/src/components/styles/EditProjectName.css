@@ -1,0 +1,53 @@
+.main-edit-project-name-div {
+    position: absolute;
+    min-height: 200px;
+    width: 100%;
+    margin-top: 20px;
+    justify-content: center;
+    font-size: larger;
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+    align-items: center;
+    box-sizing: border-box;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform-origin: center;
+  }
+
+  .main-edit-project-name-div.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .main-edit-project-name-div.hidden {
+    opacity: 0;
+    transform: scale(0);
+    overflow: hidden;
+  }
+
+  .edit-project-name-div {
+    text-align: center;
+    justify-content: center;
+    box-shadow: 0px 0px 8px 8px lightgray;
+    padding: 20px;
+    width: 30%;
+    border: none;
+    background: white;
+    border-radius: 15px;
+  }
+
+  .edit-project-name-div input {
+    margin-top: 0;
+    margin-bottom: 30px;
+    width: 90%;
+    border-radius: 10px;
+    border: 1px solid gray;
+  }
+
+  .edit-project-name-div h3 {
+    margin-top: 0;
+    font-size: 25px;
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+  }
+  

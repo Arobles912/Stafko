@@ -100,7 +100,7 @@ export default function Register({ username, setUsername }) {
           />
           <br />
           <div className="checkbox-container">
-            <input type="checkbox" id="cbox" required />
+            <input name="checkbox-input" type="checkbox" id="cbox" required />
             <label htmlFor="cbox">I accept the terms and conditions of the application.</label>
           </div>
           <br />

@@ -164,7 +164,7 @@
   background-color: rgb(232, 232, 232);
   border-radius: 10px;
   width: 100%;
-  min-height: 200px;
+  min-height: 300px;
   max-height: 600px;
   overflow-y: scroll;
 }
@@ -215,7 +215,7 @@ hr {
   margin-right: 10px;
   margin-bottom: 20px;
   justify-content: center;
-  max-height: 350px;
+  max-height: 300px;
   overflow-y: auto;
   text-align: center;
 }
@@ -332,6 +332,36 @@ hr {
 }
 
 .save-button:hover {
+  border-color: #e97e19;
+  background-color: #ff9900;
+  transition: 0.2s;
+}
+
+.edit-project-button-div{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.edit-project-button-div button{
+  color: white;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+  font-weight: bold;
+  height: 35px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  background-color: #ffcc00;
+  border: 2px solid #ce9720;
+  outline: none;
+  font-size: 18px;
+  width: auto;
+}
+
+.edit-project-button-div button:hover{
   border-color: #e97e19;
   background-color: #ff9900;
   transition: 0.2s;

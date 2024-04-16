@@ -5,7 +5,7 @@ export default function ProjectCardView({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
   const [viewButtonText, setViewButtonText] = useState("View");
   const [description, setDescription] = useState(project.project.description);
-  const [project_owner, setProjectOwner] = useState(project.project.project_owner);
+  const [projectOwner, setProjectOwner] = useState(project.project.project_owner);
   const [staffProjectsData, setStaffProjectsData] = useState(null);
   const [collaborators, setCollaborators] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,7 +57,7 @@ export default function ProjectCardView({ project }) {
     async function fetchOwner() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staff/${project_owner}`
+          `http://localhost:3000/api/staff/${projectOwner}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -133,7 +133,7 @@ export default function ProjectCardView({ project }) {
             <h1>{project.project.project_name}</h1>
           </div>
           <div className="info-div">
-            <p>Owner: {project_owner}</p>
+            <p>Owner: {projectOwner}</p>
           </div>
           <div className="info-div">
             <p>Number of collaborators: {numberOfCollaborators}</p>

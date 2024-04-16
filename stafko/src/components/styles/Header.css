@@ -19,12 +19,32 @@ header h1 {
   text-stroke: 2px black;
 }
 
-.error {
-  color: red;
-}
-
-header img{
+header img {
   width: 200px;
   height: 200px;
   margin-right: -10px;
+}
+
+@media screen and (max-width: 768px) {
+  header {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    margin-bottom: 50px;
+    padding: 0;
+  }
+
+  header h1{
+    padding: 0;
+    margin: 0
+  }
+
+  header img {
+    padding: 0;
+    margin: 0;
+    margin-bottom: -40px;
+    width: 250px;
+    height: 250px; 
+  }
 }
