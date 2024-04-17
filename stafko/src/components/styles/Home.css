@@ -10,3 +10,18 @@
   background-size: cover;
   background-position: center center;
 }
+
+input[type="text"]:focus{
+  outline: 2px solid black;
+  border: 1px solid transparent;
+}
+
+input[type="password"]:focus{
+  outline: 2px solid black;
+  border: 1px solid transparent;
+}
+
+input[type="email"]:focus{
+  outline: 2px solid black;
+  border: 1px solid transparent;
+}

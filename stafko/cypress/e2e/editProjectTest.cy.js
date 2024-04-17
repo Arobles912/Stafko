@@ -1,5 +1,7 @@
 import "cypress-file-upload";
 
+// Sometimes these tests bugs, execute them until they work properly.
+
 describe("Edit projects", () => {
   beforeEach(() => {
     cy.viewport(1920, 1080);
@@ -167,7 +169,7 @@ describe("Edit projects", () => {
     cy.get(".main-container-div")
       .eq(0)
       .within(() => {
-        cy.get(".user-card button").eq(1).click();
+        cy.get(".user-card button").eq(0).click();
         cy.get(".save-button").click();
       });
       cy.on("window:confirm", () => true);
@@ -202,7 +204,7 @@ describe("Edit projects", () => {
     cy.get(".main-container-div")
       .eq(0)
       .within(() => {
-        cy.get(".user-list button").eq(1).click();
+        cy.get(".user-list button").eq(0).click();
         cy.wait(400);
         cy.get(".select-collaborator").select("buenas");
         cy.get(".add-user-button").click();

@@ -13,7 +13,8 @@ export default function Home({ setIsLoggedIn }) {
     localStorage.getItem("username")
   );
   const [token, setToken] = useState("");
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -113,6 +114,7 @@ export default function Home({ setIsLoggedIn }) {
 
   const toggleAddProject = () => {
     setIsAddProjectVisible(!isAddProjectVisible);
+    selectedUsers.splice(1, 1);
   };
 
   const compareProjects = (a, b) => {
@@ -128,7 +130,9 @@ export default function Home({ setIsLoggedIn }) {
   projects.sort(compareProjects);
 
   const filteredProjects = projects.filter((project) =>
-    project.project.project_name.toLowerCase().includes(searchTerm.toLowerCase())
+    project.project.project_name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -150,7 +154,10 @@ export default function Home({ setIsLoggedIn }) {
             isAddProjectVisible ? "visible" : "hidden"
           }`}
         >
-          <Add />
+          <Add
+            selectedUsers={selectedUsers}
+            setSelectedUsers={setSelectedUsers}
+          />
         </div>
         {filteredProjects.map((project) =>
           projectOwner === project.project.project_owner ? (

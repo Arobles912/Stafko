@@ -2,7 +2,6 @@
   padding-left: 10px;
   padding-right: 10px;
   background: linear-gradient(to bottom, #fcf9f3 0%, #efe8d6 100%);
-  /**background-color: white;**/
 }
 
 .container-div {
@@ -272,6 +271,11 @@ hr {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   margin-left: 10px;
+}
+
+.owner-color-span{
+  color: #da620d;
+  font-weight: 600;
 }
 
 .user-card div > img {

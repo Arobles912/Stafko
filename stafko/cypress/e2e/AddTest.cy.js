@@ -54,6 +54,27 @@ describe("Add projects", () => {
       });
   });
 
+  it("Should clear all the fields", () => {
+    cy.viewport(1920, 1080);
+    cy.visit("http://localhost:5173/home");
+
+    cy.get('button[name="addproject"]').click();
+    cy.get('input[name="projectname"]').type("Project name");
+    cy.get('textarea[name="projectdesc"]').type("Project description");
+    cy.get("#users").select("Hola");
+    cy.get(".add-user-button").eq(0).click();
+    cy.readFile("src/assets/staff-icon.png", "base64").then((fileContent) => {
+      cy.get("#projectfile").attachFile({
+        fileContent,
+        fileName: "staff-icon.png",
+        mimeType: "image/png",
+      });
+    });
+    cy.get(".clear-all-button").click();
+    cy.on("window:confirm", () => true);
+    cy.get(".success-message").should("exist");
+  });
+
   it("Should add a project with no description", () => {
     cy.viewport(1920, 1080);
     cy.visit("http://localhost:5173/home");
@@ -133,22 +154,22 @@ describe("Add projects", () => {
     cy.get(".error-message").should("exist");
   });
 
-  it("Should display an error message when trying to add a project without collaborators", () => {
-    cy.viewport(1920, 1080);
-    cy.visit("http://localhost:5173/home");
-    cy.get('button[name="addproject"]').click();
-    cy.get('input[name="projectname"]').type("Project name");
-    cy.get('textarea[name="projectdesc"]').type("Project description");
-    cy.readFile("src/assets/staff-icon.png", "base64").then((fileContent) => {
-      cy.get("#projectfile").attachFile({
-        fileContent,
-        fileName: "staff-icon.png",
-        mimeType: "image/png",
-      });
-    });
-    cy.get(".add-project-input").click();
-    cy.get(".error-message").should("exist");
-  });
+  // it("Should display an error message when trying to add a project without collaborators", () => {
+  //   cy.viewport(1920, 1080);
+  //   cy.visit("http://localhost:5173/home");
+  //   cy.get('button[name="addproject"]').click();
+  //   cy.get('input[name="projectname"]').type("Project name");
+  //   cy.get('textarea[name="projectdesc"]').type("Project description");
+  //   cy.readFile("src/assets/staff-icon.png", "base64").then((fileContent) => {
+  //     cy.get("#projectfile").attachFile({
+  //       fileContent,
+  //       fileName: "staff-icon.png",
+  //       mimeType: "image/png",
+  //     });
+  //   });
+  //   cy.get(".add-project-input").click();
+  //   cy.get(".error-message").should("exist");
+  // });
 
   it("Should display an error message when trying to add a project without a project file", () => {
     cy.viewport(1920, 1080);

@@ -399,14 +399,22 @@ export default function ProjectCard({ project }) {
               <div className="user-card" key={index}>
                 <div>
                   <img src="src/assets/user-icon.png" alt="colaborators-icon" />
-                  <span>{collaborator}</span>
+                  <span
+                    className={
+                      collaborator === projectOwner ? "owner-color-span" : ""
+                    }
+                  >
+                    {collaborator}
+                  </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => modifyCollaborators(collaborator)}
-                >
-                  Delete collaborator
-                </button>
+                {collaborator !== projectOwner && (
+                  <button
+                    type="button"
+                    onClick={() => modifyCollaborators(collaborator)}
+                  >
+                    Delete collaborator
+                  </button>
+                )}
               </div>
             ))}
             <button
@@ -431,7 +439,11 @@ export default function ProjectCard({ project }) {
             </div>
           )}
           <div className="edit-project-button-div">
-            <button type="button" name="editprojectnamebutton" onClick={() => setIsEditProjectName(true)}>
+            <button
+              type="button"
+              name="editprojectnamebutton"
+              onClick={() => setIsEditProjectName(true)}
+            >
               Edit project name
             </button>
           </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import "./styles/Navbar.css";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 
 export default function Navbar({
   username,
@@ -12,6 +13,8 @@ export default function Navbar({
   setSearchTerm 
 }) {
   const navigate = useNavigate();
+  const [menuVisible, setMenuVisible] = useState(false);
+  const dropdownRef = useRef(null);
 
   const handleLogout = () => {
     setToken(null);
@@ -25,6 +28,24 @@ export default function Navbar({
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
+
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setMenuVisible(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  }, []);
+
 
   return (
     <nav>
@@ -45,9 +66,21 @@ export default function Navbar({
         />
       </div>
       <div className="right-side-div">
+        <img src="src/assets/user-icon.png" alt="user-icon" onClick={toggleMenu} ref={dropdownRef}></img>
+        <p className="user-name" onClick={toggleMenu} ref={dropdownRef}>Logged as: {username}</p>
+        <div className={menuVisible ? "dropdown-content show" : "dropdown-content"}>
+          <div>
         <img src="src/assets/user-icon.png" alt="user-icon"></img>
-        <p className="user-name">Logged as: {username}</p>
-        <button name="logoutbutton" onClick={handleLogout}>Logout</button>
+        <span>{username}</span>
+        </div>
+          <hr/>
+          <a href="">Profile</a>
+          <a href="">Your projects</a>
+          <a href="">Friends</a>
+          <a href="">Settings</a>
+          <button name="logoutbutton" onClick={handleLogout}>Logout</button>
+
+        </div>
       </div>
     </nav>
   );

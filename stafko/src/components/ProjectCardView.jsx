@@ -5,7 +5,9 @@ export default function ProjectCardView({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
   const [viewButtonText, setViewButtonText] = useState("View");
   const [description, setDescription] = useState(project.project.description);
-  const [projectOwner, setProjectOwner] = useState(project.project.project_owner);
+  const [projectOwner, setProjectOwner] = useState(
+    project.project.project_owner
+  );
   const [staffProjectsData, setStaffProjectsData] = useState(null);
   const [collaborators, setCollaborators] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -61,12 +63,11 @@ export default function ProjectCardView({ project }) {
         );
         if (response.ok) {
           const data = await response.json();
-          setProjectOwner(data.username); 
+          setProjectOwner(data.username);
         }
       } catch (error) {
         console.error("Failed to fetch project owner: ", error);
       }
-      
     }
     fetchOwner();
   }, []);
@@ -83,11 +84,11 @@ export default function ProjectCardView({ project }) {
   };
 
   function handleViewButton() {
-      setExtendedCard(!extendedCard);
-      setViewButtonText(extendedCard ? "View" : "Close");
+    setExtendedCard(!extendedCard);
+    setViewButtonText(extendedCard ? "View" : "Close");
   }
 
-  async function handleDownloadButton() {  
+  async function handleDownloadButton() {
     try {
       const response = await fetch(
         `http://localhost:3000/api/projects/${project.staffProject.project_id}/download`
@@ -122,7 +123,6 @@ export default function ProjectCardView({ project }) {
   const numberOfCollaborators = staffProjectsData
     ? staffProjectsData.length
     : 0;
-
 
   return (
     <div className="main-container-div">
@@ -181,7 +181,13 @@ export default function ProjectCardView({ project }) {
               <div className="user-card" key={index}>
                 <div>
                   <img src="src/assets/user-icon.png" alt="colaborators-icon" />
-                  <span>{collaborator}</span>
+                  <span
+                    className={
+                      collaborator === projectOwner ? "owner-color-span" : ""
+                    }
+                  >
+                    {collaborator}
+                  </span>
                 </div>
               </div>
             ))}
