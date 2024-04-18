@@ -10,19 +10,23 @@ export default function Navbar({
   addButtonText,
   setToken,
   setUsername,
-  setSearchTerm 
+  setSearchTerm,
 }) {
   const navigate = useNavigate();
   const [menuVisible, setMenuVisible] = useState(false);
+  const [searchBarVisible, setSearchBarVisible] = useState(false);
   const dropdownRef = useRef(null);
 
   const handleLogout = () => {
-    setToken(null);
-    localStorage.removeItem("token");
-    setUsername("");
-    localStorage.removeItem("username");
-    setIsLoggedIn(false);
-    navigate("/");
+    const confirmed = window.confirm("Are you sure you want to logout?");
+    if (confirmed) {
+      setToken(null);
+      localStorage.removeItem("token");
+      setUsername("");
+      localStorage.removeItem("username");
+      setIsLoggedIn(false);
+      navigate("/");
+    }
   };
 
   const handleSearchChange = (event) => {
@@ -46,7 +50,6 @@ export default function Navbar({
     };
   }, []);
 
-
   return (
     <nav>
       <img src="src/assets/example-logo.png" alt="example-logo" />
@@ -62,24 +65,48 @@ export default function Navbar({
           name="searchbar"
           className="search-bar-input"
           placeholder="Search project..."
-          onChange={handleSearchChange} 
+          onChange={handleSearchChange}
         />
       </div>
       <div className="right-side-div">
-        <img src="src/assets/user-icon.png" alt="user-icon" onClick={toggleMenu} ref={dropdownRef}></img>
-        <p className="user-name" onClick={toggleMenu} ref={dropdownRef}>Logged as: {username}</p>
-        <div className={menuVisible ? "dropdown-content show" : "dropdown-content"}>
+      <img className="search-bar-icon" src="src/assets/search-icon2.png" alt="search-icon"></img>
+        <img
+        className="user-icon-img"
+          src="src/assets/user-icon.png"
+          alt="user-icon"
+          onClick={toggleMenu}
+          ref={dropdownRef}
+        ></img>
+        <p className="user-name" onClick={toggleMenu} ref={dropdownRef}>
+          Logged as: {username}
+        </p>
+        <div
+          className={menuVisible ? "dropdown-content show" : "dropdown-content"}
+        >
           <div>
-        <img src="src/assets/user-icon.png" alt="user-icon"></img>
-        <span>{username}</span>
-        </div>
-          <hr/>
-          <a href="">Profile</a>
-          <a href="">Your projects</a>
-          <a href="">Friends</a>
-          <a href="">Settings</a>
-          <button name="logoutbutton" onClick={handleLogout}>Logout</button>
-
+            <img src="src/assets/user-icon.png" alt="user-icon"></img>
+            <span>{username}</span>
+          </div>
+          <hr />
+          <div className="dropdown-link-div">
+            <img src="src/assets/user-icon2.png" alt="user-icon"></img>
+            <a href="">Profile</a>
+          </div>
+          <div className="dropdown-link-div">
+            <img src="src/assets/project-icon2.png" alt="user-icon"></img>
+            <a href="">Your projects</a>
+          </div>
+          <div className="dropdown-link-div">
+            <img src="src/assets/friends-icon.png" alt="user-icon"></img>
+            <a href="">Friends</a>
+          </div>
+          <div className="dropdown-link-div">
+            <img src="src/assets/settings-icon.png" alt="user-icon"></img>
+            <a href="">Settings</a>
+          </div>
+          <button name="logoutbutton" onClick={handleLogout}>
+            Logout
+          </button>
         </div>
       </div>
     </nav>

@@ -18,7 +18,7 @@ export default function EditProjectName({ setIsEditProjectName, project }) {
     if (confirmed) {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/projects/${project.project.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/projects/${project.project.project_id}`,
           {
             method: "PUT",
             headers: {

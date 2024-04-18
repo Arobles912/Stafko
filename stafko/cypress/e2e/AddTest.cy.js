@@ -21,7 +21,9 @@ describe("Add projects", () => {
   afterEach(() => {
     cy.visit("http://localhost:5173/home");
 
+    cy.get(".right-side-div p").click();
     cy.get('button[name="logoutbutton"]').click();
+    cy.on("window:confirm", () => true);
   });
 
 

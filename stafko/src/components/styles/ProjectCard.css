@@ -11,7 +11,7 @@
   margin-bottom: 20px;
   box-sizing: border-box;
   border-radius: 10px;
-  box-shadow: 0px 0px 3px 3px lightgray;
+  box-shadow: 0px 0px 3px 3px rgb(195, 195, 195);
 }
 
 .project-card-main-div {
@@ -159,7 +159,7 @@
   padding-right: 20px;
   padding-left: 10px;
   margin-bottom: 20px;
-  box-shadow: 0px 3px 3px 3px lightgray;
+  box-shadow: 0px 3px 3px 3px rgb(195, 195, 195);
   background-color: rgb(232, 232, 232);
   border-radius: 10px;
   width: 100%;
@@ -206,7 +206,7 @@ hr {
 
 .user-list {
   margin-top: 18px;
-  box-shadow: 0px 3px 3px 3px lightgray;
+  box-shadow: 0px 3px 3px 3px rgb(195, 195, 195);
   background-color: rgb(232, 232, 232);
   border-radius: 10px;
   flex-basis: 30%;

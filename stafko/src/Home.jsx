@@ -34,7 +34,7 @@ export default function Home({ setIsLoggedIn }) {
     async function fetchOwner() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staff/username/${projectOwner}`
+          `${import.meta.env.VITE_BACKEND_URL}/staff/username/${projectOwner}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -52,7 +52,7 @@ export default function Home({ setIsLoggedIn }) {
     const fetchProjects = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staff/username/${username}`,
+          `${import.meta.env.VITE_BACKEND_URL}/staff/username/${username}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -63,7 +63,7 @@ export default function Home({ setIsLoggedIn }) {
           const userData = await response.json();
           const staffId = userData.staff_id;
           const staffProjectsResponse = await fetch(
-            `http://localhost:3000/api/staffProject/staff/${staffId}`,
+            `${import.meta.env.VITE_BACKEND_URL}/staffProject/staff/${staffId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -75,7 +75,7 @@ export default function Home({ setIsLoggedIn }) {
             const projectsData = await Promise.all(
               staffProjectsData.map(async (staffProject) => {
                 const projectResponse = await fetch(
-                  `http://localhost:3000/api/projects/${staffProject.project_id}`,
+                  `${import.meta.env.VITE_BACKEND_URL}/projects/${staffProject.project_id}`,
                   {
                     headers: {
                       Authorization: `Bearer ${token}`,

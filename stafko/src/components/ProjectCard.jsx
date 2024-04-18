@@ -27,7 +27,7 @@ export default function ProjectCard({ project }) {
     async function fetchData() {
       try {
         const staffProjectsResponse = await fetch(
-          `http://localhost:3000/api/staffProject/project/${project.staffProject.project_id}`
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${project.staffProject.project_id}`
         );
         if (staffProjectsResponse.ok) {
           const data = await staffProjectsResponse.json();
@@ -48,7 +48,7 @@ export default function ProjectCard({ project }) {
     async function fetchDescription() {
       try {
         const staffProjectsResponse = await fetch(
-          `http://localhost:3000/api/projects/${project.staffProject.project_id}`
+          `${import.meta.env.VITE_BACKEND_URL}/projects/${project.staffProject.project_id}`
         );
         if (staffProjectsResponse.ok) {
           const data = await staffProjectsResponse.json();
@@ -68,7 +68,7 @@ export default function ProjectCard({ project }) {
     async function fetchCollaborators() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staffProject/project/${project.staffProject.project_id}/users`
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${project.staffProject.project_id}/users`
         );
         if (response.ok) {
           const data = await response.json();
@@ -90,7 +90,7 @@ export default function ProjectCard({ project }) {
     async function fetchOwner() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staff/${projectOwner}`
+          `${import.meta.env.VITE_BACKEND_URL}/staff/${projectOwner}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -129,7 +129,7 @@ export default function ProjectCard({ project }) {
   async function handleDownloadButton() {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/projects/${project.staffProject.project_id}/download`
+        `${import.meta.env.VITE_BACKEND_URL}/projects/${project.staffProject.project_id}/download`
       );
       if (response.ok) {
         const blob = await response.blob();
@@ -162,14 +162,14 @@ export default function ProjectCard({ project }) {
   async function deleteCollaborators(collaborator) {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/staff/username/${collaborator}`
+        `${import.meta.env.VITE_BACKEND_URL}/staff/username/${collaborator}`
       );
 
       if (response.ok) {
         const staffData = await response.json();
         const staffId = staffData.staff_id;
         const staffProjectResponse = await fetch(
-          `http://localhost:3000/api/staffProject/${staffId}/${project.staffProject.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/${staffId}/${project.staffProject.project_id}`,
           {
             method: "DELETE",
           }
@@ -196,7 +196,7 @@ export default function ProjectCard({ project }) {
 
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staffProject/project/${project.staffProject.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${project.staffProject.project_id}`,
           {
             method: "DELETE",
           }
@@ -209,7 +209,7 @@ export default function ProjectCard({ project }) {
         staffProjectData = { ...project };
 
         const projectResponse = await fetch(
-          `http://localhost:3000/api/projects/${project.project.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/projects/${project.project.project_id}`,
           {
             method: "DELETE",
           }
@@ -226,7 +226,7 @@ export default function ProjectCard({ project }) {
         if (staffProjectData) {
           try {
             const restoreResponse = await fetch(
-              `http://localhost:3000/api/projects`,
+              `${import.meta.env.VITE_BACKEND_URL}/projects`,
               {
                 method: "POST",
                 headers: {
@@ -257,7 +257,7 @@ export default function ProjectCard({ project }) {
     if (confirmed) {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/projects/${project.project.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/projects/${project.project.project_id}`,
           {
             method: "PUT",
             headers: {

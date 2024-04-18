@@ -61,12 +61,16 @@ describe("Edit projects", () => {
 
     cy.visit("http://localhost:5173/home");
 
+    cy.get(".right-side-div p").click();
     cy.get('button[name="logoutbutton"]').click();
+    cy.on("window:confirm", () => true);
   });
 
   afterEach(() => {
 
+    cy.get(".right-side-div p").click();
     cy.get('button[name="logoutbutton"]').click();
+    cy.on("window:confirm", () => true);
   });
 
   it("Should save without changes", () => {
@@ -287,6 +291,7 @@ describe("Edit projects", () => {
   });
 
   after(() => {
+    cy.viewport(1920, 1080);
     cy.intercept("POST", "http://localhost:3000/api/auth/login").as(
       "loginRequest"
     );

@@ -25,3 +25,11 @@ input[type="email"]:focus{
   outline: 2px solid black;
   border: 1px solid transparent;
 }
+
+input[type="submit"]:hover{
+  cursor: pointer;
+}
+
+button{
+  cursor: pointer;
+}

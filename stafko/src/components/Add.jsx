@@ -14,7 +14,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch("http://localhost:3000/api/staff");
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/staff`);
         if (response.ok) {
           const userData = await response.json();
           setUsers(userData);
@@ -31,7 +31,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
     async function fetchOwner() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staff/username/${localStorage.getItem(
+          `${import.meta.env.VITE_BACKEND_URL}/staff/username/${localStorage.getItem(
             "username"
           )}`
         );
@@ -78,7 +78,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
       formData.append("project_owner", projectOwner);
       formData.append("project_file", projectFile);
 
-      const response = await fetch("http://localhost:3000/api/projects", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/projects`, {
         method: "POST",
         body: formData,
       });
@@ -110,7 +110,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
     } else {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staff/username/${selectedUser}`
+          `${import.meta.env.VITE_BACKEND_URL}/staff/username/${selectedUser}`
         );
         if (response.ok) {
           const userData = await response.json();
@@ -140,7 +140,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
         )
       ) {
         const response = await fetch(
-          `http://localhost:3000/api/staff/username/${localStorage.getItem(
+          `${import.meta.env.VITE_BACKEND_URL}/staff/username/${localStorage.getItem(
             "username"
           )}`
         );
@@ -163,7 +163,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
 
   async function createStaffProject(projectId, staffId) {
     try {
-      const response = await fetch("http://localhost:3000/api/staffProject", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/staffProject`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
