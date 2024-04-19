@@ -1,0 +1,32 @@
+.navbar-container {
+  position: relative;
+  z-index: 3;
+}
+
+.mobile-navbar {
+  display: block;
+  position: absolute;
+  top: -100px;
+  transition: top 0.3s ease-out;
+  background: linear-gradient(to left, #eee4cc 0%, #eeddb3 20%, #ffc400 100%);
+  height: 80px;
+}
+
+.show-navbar {
+  display: block;
+  top: 0;
+}
+
+.search-bar-div-mobile {
+  margin: 25px;
+}
+
+.search-bar-input-mobile {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid black;
+  box-sizing: border-box;
+  padding: 6px;
+  margin-top: auto;
+  margin-bottom: auto;
+}

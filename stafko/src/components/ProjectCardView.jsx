@@ -132,6 +132,7 @@ export default function ProjectCardView({ project }) {
             <img src="src/assets/project-icon.png" alt="project-img" />
             <h1>{project.project.project_name}</h1>
           </div>
+          <div className="info-div-container">
           <div className="info-div">
             <p>Owner: {projectOwner}</p>
           </div>
@@ -140,6 +141,7 @@ export default function ProjectCardView({ project }) {
           </div>
           <div className="info-div">
             <p>Creation date: {projectDate}</p>
+          </div>
           </div>
           <button
             className="view-button"

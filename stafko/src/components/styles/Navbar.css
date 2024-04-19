@@ -4,7 +4,6 @@
 nav {
   display: flex;
   width: 100%;
-  justify-content: left;
   margin-bottom: 10px;
   bottom: 0;
   background: linear-gradient(to left, #eee4cc 0%, #eeddb3 20%, #ffc400 100%);
@@ -48,15 +47,21 @@ nav {
 
 .search-bar-icon {
   display: none;
+  cursor: pointer;
 }
 
-nav img {
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo-container img {
   margin: 0;
   width: 80px;
   height: 80px;
 }
 
-nav h3 {
+.logo-container h3 {
   padding: 16px;
   padding-right: 0;
   padding-left: 0;
@@ -138,6 +143,8 @@ nav h3 {
   position: absolute;
   margin-top: 60px;
   z-index: 2;
+  right: 0;
+  margin-right: 20px;
   background: linear-gradient(to bottom, #fcf9f3 0%, #efe8d6 100%);
   box-shadow: 0px 0px 5px 5px rgb(176, 176, 176);
   opacity: 0;
@@ -149,10 +156,10 @@ nav h3 {
 .dropdown-content.show {
   opacity: 1;
   pointer-events: all;
-  transform: translateY(10px);
+  transform: translateY(0px);
 }
 
-.dropdown-content img{
+.dropdown-content img {
   width: 35px;
   height: 35px;
   margin-top: auto;
@@ -220,7 +227,11 @@ nav h3 {
   background-color: white;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1024px) and (min-width: 430px) {
+  nav {
+    justify-content: space-between;
+  }
+
   .search-bar-input {
     display: none;
   }
@@ -232,5 +243,165 @@ nav h3 {
     margin-top: auto;
     margin-bottom: auto;
     margin-right: 10px;
+  }
+
+  .logo-container {
+    display: flex;
+    width: auto;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .logo-container img {
+    margin: -20px;
+    width: 120px;
+    height: 120px;
+  }
+
+  .nav-link {
+    order: -1;
+    margin-right: 0;
+    font-size: 23px;
+  }
+
+  .right-side-div {
+    width: auto;
+    order: 2;
+    margin: 0;
+  }
+
+  .search-bar-div,
+  .user-name {
+    display: none;
+  }
+
+  .search-bar-icon {
+    display: flex;
+    width: 30px;
+    height: 30px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 10px;
+  }
+
+  .separation-div {
+    display: none;
+  }
+
+  .dropdown-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dropdown-container.show {
+    overflow: visible;
+  }
+
+  .dropdown-content {
+    min-width: 150px;
+    visibility: hidden;
+    right: -200px;
+    opacity: 0;
+    margin-top: 80px;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out, right 0.3s ease-in-out,
+      visibility 0.3s ease-in-out;
+  }
+
+  .dropdown-content.show {
+    opacity: 1;
+    pointer-events: all;
+    right: 0;
+    margin-right: 10px;
+    visibility: visible;
+    margin-top: 70px;
+  }
+}
+
+@media (max-width: 429px) {
+  nav {
+    justify-content: space-between;
+  }
+
+  .logo-container {
+    display: flex;
+    width: auto;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .logo-container img {
+    margin: -20px;
+    width: 120px;
+    height: 120px;
+  }
+
+  .nav-link {
+    order: -1;
+    margin-right: 0;
+    font-size: 23px;
+  }
+  .right-side-div {
+    width: auto;
+    order: 2;
+    margin: 0;
+  }
+
+  .search-bar-div,
+  .user-name {
+    display: none;
+  }
+
+  .search-bar-icon {
+    display: flex;
+    width: 30px;
+    height: 30px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 10px;
+  }
+
+  .separation-div {
+    display: none;
+  }
+  .logo-container h3 {
+    display: none;
+  }
+
+  .dropdown-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dropdown-container.show {
+    overflow: visible;
+  }
+
+  .dropdown-content {
+    min-width: 150px;
+    visibility: hidden;
+    right: -200px;
+    opacity: 0;
+    margin-top: 80px;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out, right 0.3s ease-in-out,
+      visibility 0.3s ease-in-out;
+  }
+
+  .dropdown-content.show {
+    opacity: 1;
+    pointer-events: all;
+    right: 0;
+    margin-right: 10px;
+    visibility: visible;
+    margin-top: 70px;
   }
 }

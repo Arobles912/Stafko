@@ -4,6 +4,7 @@ import Add from "./components/Add";
 import ProjectCard from "./components/ProjectCard";
 import ProjectCardView from "./components/ProjectCardView";
 import "./components/styles/Home.css";
+import MobileNavbar from "./components/MobileNavbar";
 
 export default function Home({ setIsLoggedIn }) {
   const [isAddProjectVisible, setIsAddProjectVisible] = useState(false);
@@ -15,6 +16,7 @@ export default function Home({ setIsLoggedIn }) {
   const [token, setToken] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [isMobileNavbarVisible, setIsMobileNavbarVisible] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -75,7 +77,9 @@ export default function Home({ setIsLoggedIn }) {
             const projectsData = await Promise.all(
               staffProjectsData.map(async (staffProject) => {
                 const projectResponse = await fetch(
-                  `${import.meta.env.VITE_BACKEND_URL}/projects/${staffProject.project_id}`,
+                  `${import.meta.env.VITE_BACKEND_URL}/projects/${
+                    staffProject.project_id
+                  }`,
                   {
                     headers: {
                       Authorization: `Bearer ${token}`,
@@ -138,6 +142,11 @@ export default function Home({ setIsLoggedIn }) {
   return (
     <main>
       <div className="bg-div-home">
+        <MobileNavbar
+          setSearchTerm={setSearchTerm}
+          isMobileNavbarVisible={isMobileNavbarVisible}
+          setIsMobileNavbarVisible={setIsMobileNavbarVisible}
+        />
         <Navbar
           username={username}
           toggleAddProject={toggleAddProject}
@@ -148,6 +157,8 @@ export default function Home({ setIsLoggedIn }) {
           setUsername={setUsername}
           setToken={setToken}
           setSearchTerm={setSearchTerm}
+          isMobileNavbarVisible={isMobileNavbarVisible}
+          setIsMobileNavbarVisible={setIsMobileNavbarVisible}
         />
         <div
           className={`main-add-div ${

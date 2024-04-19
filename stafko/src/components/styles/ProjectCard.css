@@ -40,6 +40,13 @@
   width: 50%;
 }
 
+.info-div-container {
+  display: flex;
+  margin-left: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 .info-div {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
@@ -273,7 +280,7 @@ hr {
   margin-left: 10px;
 }
 
-.owner-color-span{
+.owner-color-span {
   color: #da620d;
   font-weight: 600;
 }
@@ -341,7 +348,7 @@ hr {
   transition: 0.2s;
 }
 
-.edit-project-button-div{
+.edit-project-button-div {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -349,7 +356,7 @@ hr {
   margin-bottom: 20px;
 }
 
-.edit-project-button-div button{
+.edit-project-button-div button {
   color: white;
   font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
@@ -365,7 +372,7 @@ hr {
   width: auto;
 }
 
-.edit-project-button-div button:hover{
+.edit-project-button-div button:hover {
   border-color: #e97e19;
   background-color: #ff9900;
   transition: 0.2s;
@@ -395,4 +402,77 @@ hr {
   border-color: #e97e19;
   background-color: #ff9900;
   transition: 0.2s;
+}
+
+@media (max-width: 1024px) and (min-width: 430px) {
+  .project-card-main-div {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .title-div {
+    box-sizing: border-box;
+    width: auto;
+    margin: 0 auto;
+  }
+
+  .info-div-container {
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .info-div {
+    width: 100%;
+    margin-right: 0;
+    margin-left: 20px;
+  }
+
+  .project-card-main-div h1 {
+    font-size: 26px;
+    font-family: "Poppins", sans-serif;
+    margin-left: 10px;
+    padding-top: 5px;
+  }
+
+  .project-card-main-div img {
+    padding: 0;
+    width: 70px;
+    height: 70px;
+  }
+
+  .buttons-div {
+    margin: 0 auto;
+  }
+
+  .edit-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 35px;
+    font-size: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+  }
+
+  .download-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 35px;
+    font-size: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+  }
+
+  .view-button{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 35px;
+    font-size: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+  }
 }

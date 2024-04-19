@@ -319,6 +319,7 @@ export default function ProjectCard({ project }) {
             <img src="src/assets/project-icon.png" alt="project-img" />
             <h1 name="projecttitle">{project.project.project_name}</h1>
           </div>
+          <div className="info-div-container">
           <div className="info-div">
             <p>
               Owner: <span className="project-owner-span">{projectOwner}</span>
@@ -329,6 +330,7 @@ export default function ProjectCard({ project }) {
           </div>
           <div className="info-div">
             <p>Creation date: {projectDate}</p>
+          </div>
           </div>
           <button
             className="edit-button"

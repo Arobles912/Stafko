@@ -11,10 +11,11 @@ export default function Navbar({
   setToken,
   setUsername,
   setSearchTerm,
+  isMobileNavbarVisible,
+  setIsMobileNavbarVisible,
 }) {
   const navigate = useNavigate();
   const [menuVisible, setMenuVisible] = useState(false);
-  const [searchBarVisible, setSearchBarVisible] = useState(false);
   const dropdownRef = useRef(null);
 
   const handleLogout = () => {
@@ -37,6 +38,10 @@ export default function Navbar({
     setMenuVisible(!menuVisible);
   };
 
+  const toggleMobileNavbar = () => {
+    setIsMobileNavbarVisible(!isMobileNavbarVisible);
+  };
+
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setMenuVisible(false);
@@ -52,8 +57,14 @@ export default function Navbar({
 
   return (
     <nav>
-      <img src="src/assets/example-logo.png" alt="example-logo" />
-      <h3>Stafko</h3>
+      <div className="logo-container">
+        <img
+          className="navbar-logo"
+          src="src/assets/example-logo.png"
+          alt="example-logo"
+        />
+        <h3>Stafko</h3>
+      </div>
       <div className="separation-div"></div>
       <button onClick={toggleAddProject} className="nav-link" name="addproject">
         {addButtonText}
@@ -69,9 +80,14 @@ export default function Navbar({
         />
       </div>
       <div className="right-side-div">
-      <img className="search-bar-icon" src="src/assets/search-icon2.png" alt="search-icon"></img>
         <img
-        className="user-icon-img"
+          className="search-bar-icon"
+          src="src/assets/search-icon2.png"
+          alt="search-icon"
+          onClick={toggleMobileNavbar}
+        ></img>
+        <img
+          className="user-icon-img"
           src="src/assets/user-icon.png"
           alt="user-icon"
           onClick={toggleMenu}
@@ -80,6 +96,7 @@ export default function Navbar({
         <p className="user-name" onClick={toggleMenu} ref={dropdownRef}>
           Logged as: {username}
         </p>
+        <div className={menuVisible ? "dropdown-container show" : "dropdown-container"}>
         <div
           className={menuVisible ? "dropdown-content show" : "dropdown-content"}
         >
@@ -107,6 +124,7 @@ export default function Navbar({
           <button name="logoutbutton" onClick={handleLogout}>
             Logout
           </button>
+        </div>
         </div>
       </div>
     </nav>
