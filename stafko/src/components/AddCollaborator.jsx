@@ -150,13 +150,15 @@ export default function AddCollaborator({
               <ul>
                 {selectedUsers.map((user, index) => (
                   <li key={index}>
-                    -{user.username}
-                    <button
-                      type="button"
-                      onClick={() => deleteUser(user.username)}
-                    >
-                      Delete
-                    </button>
+                    <div className="user-container">
+                      <span>-{user.username}</span>
+                      <button
+                        type="button"
+                        onClick={() => deleteUser(user.username)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </li>
                 ))}
               </ul>

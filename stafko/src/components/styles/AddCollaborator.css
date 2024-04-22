@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 .main-add-collaborator-div {
   position: absolute;
@@ -30,7 +29,8 @@
 
 .confirm-button {
   color: white;
-  font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
   font-weight: bold;
   border-radius: 10px;
   background-color: #ffcc00;
@@ -47,7 +47,7 @@
   border-radius: 10px;
 }
 
-.confirm-button:hover{
+.confirm-button:hover {
   border-color: #e97e19;
   background-color: #ff9d00;
   transition: 0.2s;
@@ -115,6 +115,26 @@
   margin-bottom: 10px;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-container > button {
+  width: auto;
+  height: auto;
+  color: white;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+  font-weight: bold;
+  border-radius: 10px;
+  background-color: #ff0000;
+  border: 2px solid #ce2020;
+  outline: none;
+  font-size: 15px;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-left: 20px;
 }
 
 .add-collaborator-div p {
@@ -122,4 +142,98 @@
   font-size: 20px;
   text-decoration: underline;
   font-family: "Poppins", sans-serif;
+}
+
+@media (max-width: 1024px) and (min-width: 430px) {
+  .add-collaborator-div {
+    width: 50%;
+  }
+
+  .users-added-div li {
+    box-sizing: border-box;
+    margin-right: 40px;
+    margin-bottom: 20px;
+  }
+
+  .user-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .user-container > span {
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .user-container > button {
+    width: auto;
+    height: auto;
+    color: white;
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+      "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+    font-weight: bold;
+    border-radius: 10px;
+    background-color: #ff0000;
+    border: 2px solid #ce2020;
+    outline: none;
+    font-size: 14px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-top: 5px;
+  }
+}
+
+@media (max-width: 429px) {
+  .add-collaborator-div {
+    width: 50%;
+  }
+
+  .users-added-div li {
+    box-sizing: border-box;
+    margin-right: 45px;
+    margin-bottom: 20px;
+  }
+
+  .user-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .user-container > span {
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .user-container > button {
+    width: auto;
+    height: auto;
+    color: white;
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+      "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+    font-weight: bold;
+    border-radius: 10px;
+    background-color: #ff0000;
+    border: 2px solid #ce2020;
+    outline: none;
+    font-size: 14px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-top: 5px;
+  }
 }

@@ -3,6 +3,7 @@
   width: 100vw;
   height: 100vh;
   position: fixed;
+  overflow-x: hidden;
   top: 0;
   left: 0;
   background-image: url("src/assets/bg-image-home.jpg");
@@ -33,3 +34,5 @@ input[type="submit"]:hover{
 button{
   cursor: pointer;
 }
+
+

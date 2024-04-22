@@ -27,7 +27,9 @@ export default function ProjectCard({ project }) {
     async function fetchData() {
       try {
         const staffProjectsResponse = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${project.staffProject.project_id}`
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+            project.staffProject.project_id
+          }`
         );
         if (staffProjectsResponse.ok) {
           const data = await staffProjectsResponse.json();
@@ -48,7 +50,9 @@ export default function ProjectCard({ project }) {
     async function fetchDescription() {
       try {
         const staffProjectsResponse = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/projects/${project.staffProject.project_id}`
+          `${import.meta.env.VITE_BACKEND_URL}/projects/${
+            project.staffProject.project_id
+          }`
         );
         if (staffProjectsResponse.ok) {
           const data = await staffProjectsResponse.json();
@@ -68,7 +72,9 @@ export default function ProjectCard({ project }) {
     async function fetchCollaborators() {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${project.staffProject.project_id}/users`
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+            project.staffProject.project_id
+          }/users`
         );
         if (response.ok) {
           const data = await response.json();
@@ -129,7 +135,9 @@ export default function ProjectCard({ project }) {
   async function handleDownloadButton() {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/projects/${project.staffProject.project_id}/download`
+        `${import.meta.env.VITE_BACKEND_URL}/projects/${
+          project.staffProject.project_id
+        }/download`
       );
       if (response.ok) {
         const blob = await response.blob();
@@ -169,7 +177,9 @@ export default function ProjectCard({ project }) {
         const staffData = await response.json();
         const staffId = staffData.staff_id;
         const staffProjectResponse = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/${staffId}/${project.staffProject.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/${staffId}/${
+            project.staffProject.project_id
+          }`,
           {
             method: "DELETE",
           }
@@ -196,7 +206,9 @@ export default function ProjectCard({ project }) {
 
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${project.staffProject.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+            project.staffProject.project_id
+          }`,
           {
             method: "DELETE",
           }
@@ -209,7 +221,9 @@ export default function ProjectCard({ project }) {
         staffProjectData = { ...project };
 
         const projectResponse = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/projects/${project.project.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/projects/${
+            project.project.project_id
+          }`,
           {
             method: "DELETE",
           }
@@ -257,7 +271,9 @@ export default function ProjectCard({ project }) {
     if (confirmed) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/projects/${project.project.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/projects/${
+            project.project.project_id
+          }`,
           {
             method: "PUT",
             headers: {
@@ -320,17 +336,18 @@ export default function ProjectCard({ project }) {
             <h1 name="projecttitle">{project.project.project_name}</h1>
           </div>
           <div className="info-div-container">
-          <div className="info-div">
-            <p>
-              Owner: <span className="project-owner-span">{projectOwner}</span>
-            </p>
-          </div>
-          <div className="info-div">
-            <p>Number of collaborators: {numberOfCollaborators}</p>
-          </div>
-          <div className="info-div">
-            <p>Creation date: {projectDate}</p>
-          </div>
+            <div className="info-div">
+              <p>
+                Owner:{" "}
+                <span className="project-owner-span">{projectOwner}</span>
+              </p>
+            </div>
+            <div className="info-div">
+              <p>Number of collaborators: {numberOfCollaborators}</p>
+            </div>
+            <div className="info-div">
+              <p>Creation date: {projectDate}</p>
+            </div>
           </div>
           <button
             className="edit-button"
@@ -346,12 +363,14 @@ export default function ProjectCard({ project }) {
           >
             Download File
           </button>
+          <hr className="mobile-hr" />
         </section>
         <section
           className={`project-cardEx-main-div ${
             extendedCard ? "extended" : ""
           }`}
         >
+
           <div
             className={`main-add-collaborator-div ${
               isAddCollaboratorVisible ? "visible" : "hidden"
@@ -381,7 +400,6 @@ export default function ProjectCard({ project }) {
               />
             )}
           </div>
-
           <div className="description-div">
             <h3>ReadME</h3>
             <hr />

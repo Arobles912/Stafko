@@ -7,8 +7,8 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-nestjs-basic-project/api/node_modules
 stafko/node_modules
+nestjs-basic-project/api/node_modules
 dist
 dist-ssr
 *.local

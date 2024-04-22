@@ -157,6 +157,7 @@ export default function ProjectCardView({ project }) {
           >
             Download File
           </button>
+          <hr className="mobile-hr" />
         </section>
         <section
           className={`project-cardEx-main-div ${
