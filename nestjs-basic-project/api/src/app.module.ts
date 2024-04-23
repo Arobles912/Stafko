@@ -7,6 +7,10 @@ import { StaffModule } from "./staff/staff.module";
 import { AuthModule } from "./auth/auth.module";
 import { StaffProjectModule } from "./staff_project/staff_project.module";
 import { MulterModule } from "@nestjs/platform-express";
+import  config  from "./config";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 @Module({
   imports: [
@@ -15,12 +19,12 @@ import { MulterModule } from "@nestjs/platform-express";
     AuthModule,
     StaffProjectModule,
     TypeOrmModule.forRoot({
-      type: "postgres",
-      host: "db",
-      port: 5432,
-      username: "user",
-      password: "password",
-      database: "dbname",
+      type: config.dbType,
+      host: config.dbHost,
+      port: config.dbPort,
+      username: config.dbUsername,
+      password: config.dbPassword,
+      database: config.dbName,
       autoLoadEntities: true,
       synchronize: true,
     }),

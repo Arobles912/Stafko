@@ -93,7 +93,7 @@ form p {
   text-decoration: none;
   font-weight: 700;
   text-align: center;
-  color: #ffcc00;
+  color: #ffc400;
 }
 
 .register-link:hover {
@@ -128,13 +128,14 @@ form h2 {
   width: 20px;
   height: 20px;
   border: 1px solid #ce9720;
-  border-radius: 0px;
+  border-radius: 10px;
   position: relative; 
 }
 
 .checkbox-container input:checked::after {
   content: ""; 
-  background-color: #ce9720; 
+  background-color: #ce9720;
+  border-radius: 10px; 
   width: 10px; 
   height: 10px; 
   position: absolute; 

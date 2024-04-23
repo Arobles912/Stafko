@@ -27,7 +27,9 @@ export default function ProjectCard({ project }) {
     async function fetchData() {
       try {
         const staffProjectsResponse = await fetch(
-          `http://localhost:3000/api/staffProject/project/${project.staffProject.project_id}`
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+            project.staffProject.project_id
+          }`
         );
         if (staffProjectsResponse.ok) {
           const data = await staffProjectsResponse.json();
@@ -48,7 +50,9 @@ export default function ProjectCard({ project }) {
     async function fetchDescription() {
       try {
         const staffProjectsResponse = await fetch(
-          `http://localhost:3000/api/projects/${project.staffProject.project_id}`
+          `${import.meta.env.VITE_BACKEND_URL}/projects/${
+            project.staffProject.project_id
+          }`
         );
         if (staffProjectsResponse.ok) {
           const data = await staffProjectsResponse.json();
@@ -68,7 +72,9 @@ export default function ProjectCard({ project }) {
     async function fetchCollaborators() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staffProject/project/${project.staffProject.project_id}/users`
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+            project.staffProject.project_id
+          }/users`
         );
         if (response.ok) {
           const data = await response.json();
@@ -90,7 +96,7 @@ export default function ProjectCard({ project }) {
     async function fetchOwner() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staff/${projectOwner}`
+          `${import.meta.env.VITE_BACKEND_URL}/staff/${projectOwner}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -129,7 +135,9 @@ export default function ProjectCard({ project }) {
   async function handleDownloadButton() {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/projects/${project.staffProject.project_id}/download`
+        `${import.meta.env.VITE_BACKEND_URL}/projects/${
+          project.staffProject.project_id
+        }/download`
       );
       if (response.ok) {
         const blob = await response.blob();
@@ -162,14 +170,16 @@ export default function ProjectCard({ project }) {
   async function deleteCollaborators(collaborator) {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/staff/username/${collaborator}`
+        `${import.meta.env.VITE_BACKEND_URL}/staff/username/${collaborator}`
       );
 
       if (response.ok) {
         const staffData = await response.json();
         const staffId = staffData.staff_id;
         const staffProjectResponse = await fetch(
-          `http://localhost:3000/api/staffProject/${staffId}/${project.staffProject.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/${staffId}/${
+            project.staffProject.project_id
+          }`,
           {
             method: "DELETE",
           }
@@ -196,7 +206,9 @@ export default function ProjectCard({ project }) {
 
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staffProject/project/${project.staffProject.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+            project.staffProject.project_id
+          }`,
           {
             method: "DELETE",
           }
@@ -209,7 +221,9 @@ export default function ProjectCard({ project }) {
         staffProjectData = { ...project };
 
         const projectResponse = await fetch(
-          `http://localhost:3000/api/projects/${project.project.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/projects/${
+            project.project.project_id
+          }`,
           {
             method: "DELETE",
           }
@@ -226,7 +240,7 @@ export default function ProjectCard({ project }) {
         if (staffProjectData) {
           try {
             const restoreResponse = await fetch(
-              `http://localhost:3000/api/projects`,
+              `${import.meta.env.VITE_BACKEND_URL}/projects`,
               {
                 method: "POST",
                 headers: {
@@ -257,7 +271,9 @@ export default function ProjectCard({ project }) {
     if (confirmed) {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/projects/${project.project.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/projects/${
+            project.project.project_id
+          }`,
           {
             method: "PUT",
             headers: {
@@ -319,16 +335,19 @@ export default function ProjectCard({ project }) {
             <img src="src/assets/project-icon.png" alt="project-img" />
             <h1 name="projecttitle">{project.project.project_name}</h1>
           </div>
-          <div className="info-div">
-            <p>
-              Owner: <span className="project-owner-span">{projectOwner}</span>
-            </p>
-          </div>
-          <div className="info-div">
-            <p>Number of collaborators: {numberOfCollaborators}</p>
-          </div>
-          <div className="info-div">
-            <p>Creation date: {projectDate}</p>
+          <div className="info-div-container">
+            <div className="info-div">
+              <p>
+                Owner:{" "}
+                <span className="project-owner-span">{projectOwner}</span>
+              </p>
+            </div>
+            <div className="info-div">
+              <p>Number of collaborators: {numberOfCollaborators}</p>
+            </div>
+            <div className="info-div">
+              <p>Creation date: {projectDate}</p>
+            </div>
           </div>
           <button
             className="edit-button"
@@ -344,12 +363,14 @@ export default function ProjectCard({ project }) {
           >
             Download File
           </button>
+          <hr className="mobile-hr" />
         </section>
         <section
           className={`project-cardEx-main-div ${
             extendedCard ? "extended" : ""
           }`}
         >
+
           <div
             className={`main-add-collaborator-div ${
               isAddCollaboratorVisible ? "visible" : "hidden"
@@ -379,7 +400,6 @@ export default function ProjectCard({ project }) {
               />
             )}
           </div>
-
           <div className="description-div">
             <h3>ReadME</h3>
             <hr />
@@ -399,14 +419,22 @@ export default function ProjectCard({ project }) {
               <div className="user-card" key={index}>
                 <div>
                   <img src="src/assets/user-icon.png" alt="colaborators-icon" />
-                  <span>{collaborator}</span>
+                  <span
+                    className={
+                      collaborator === projectOwner ? "owner-color-span" : ""
+                    }
+                  >
+                    {collaborator}
+                  </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => modifyCollaborators(collaborator)}
-                >
-                  Delete collaborator
-                </button>
+                {collaborator !== projectOwner && (
+                  <button
+                    type="button"
+                    onClick={() => modifyCollaborators(collaborator)}
+                  >
+                    Delete collaborator
+                  </button>
+                )}
               </div>
             ))}
             <button
@@ -431,7 +459,11 @@ export default function ProjectCard({ project }) {
             </div>
           )}
           <div className="edit-project-button-div">
-            <button type="button" name="editprojectnamebutton" onClick={() => setIsEditProjectName(true)}>
+            <button
+              type="button"
+              name="editprojectnamebutton"
+              onClick={() => setIsEditProjectName(true)}
+            >
               Edit project name
             </button>
           </div>

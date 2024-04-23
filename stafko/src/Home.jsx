@@ -4,6 +4,7 @@ import Add from "./components/Add";
 import ProjectCard from "./components/ProjectCard";
 import ProjectCardView from "./components/ProjectCardView";
 import "./components/styles/Home.css";
+import MobileNavbar from "./components/MobileNavbar";
 
 export default function Home({ setIsLoggedIn }) {
   const [isAddProjectVisible, setIsAddProjectVisible] = useState(false);
@@ -13,7 +14,9 @@ export default function Home({ setIsLoggedIn }) {
     localStorage.getItem("username")
   );
   const [token, setToken] = useState("");
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [isMobileNavbarVisible, setIsMobileNavbarVisible] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -33,7 +36,7 @@ export default function Home({ setIsLoggedIn }) {
     async function fetchOwner() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staff/username/${projectOwner}`
+          `${import.meta.env.VITE_BACKEND_URL}/staff/username/${projectOwner}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -51,7 +54,7 @@ export default function Home({ setIsLoggedIn }) {
     const fetchProjects = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staff/username/${username}`,
+          `${import.meta.env.VITE_BACKEND_URL}/staff/username/${username}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -62,7 +65,7 @@ export default function Home({ setIsLoggedIn }) {
           const userData = await response.json();
           const staffId = userData.staff_id;
           const staffProjectsResponse = await fetch(
-            `http://localhost:3000/api/staffProject/staff/${staffId}`,
+            `${import.meta.env.VITE_BACKEND_URL}/staffProject/staff/${staffId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -74,7 +77,9 @@ export default function Home({ setIsLoggedIn }) {
             const projectsData = await Promise.all(
               staffProjectsData.map(async (staffProject) => {
                 const projectResponse = await fetch(
-                  `http://localhost:3000/api/projects/${staffProject.project_id}`,
+                  `${import.meta.env.VITE_BACKEND_URL}/projects/${
+                    staffProject.project_id
+                  }`,
                   {
                     headers: {
                       Authorization: `Bearer ${token}`,
@@ -113,6 +118,7 @@ export default function Home({ setIsLoggedIn }) {
 
   const toggleAddProject = () => {
     setIsAddProjectVisible(!isAddProjectVisible);
+    selectedUsers.splice(1, 1);
   };
 
   const compareProjects = (a, b) => {
@@ -128,12 +134,19 @@ export default function Home({ setIsLoggedIn }) {
   projects.sort(compareProjects);
 
   const filteredProjects = projects.filter((project) =>
-    project.project.project_name.toLowerCase().includes(searchTerm.toLowerCase())
+    project.project.project_name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
 
   return (
     <main>
       <div className="bg-div-home">
+        <MobileNavbar
+          setSearchTerm={setSearchTerm}
+          isMobileNavbarVisible={isMobileNavbarVisible}
+          setIsMobileNavbarVisible={setIsMobileNavbarVisible}
+        />
         <Navbar
           username={username}
           toggleAddProject={toggleAddProject}
@@ -144,13 +157,18 @@ export default function Home({ setIsLoggedIn }) {
           setUsername={setUsername}
           setToken={setToken}
           setSearchTerm={setSearchTerm}
+          isMobileNavbarVisible={isMobileNavbarVisible}
+          setIsMobileNavbarVisible={setIsMobileNavbarVisible}
         />
         <div
           className={`main-add-div ${
             isAddProjectVisible ? "visible" : "hidden"
           }`}
         >
-          <Add />
+          <Add
+            selectedUsers={selectedUsers}
+            setSelectedUsers={setSelectedUsers}
+          />
         </div>
         {filteredProjects.map((project) =>
           projectOwner === project.project.project_owner ? (

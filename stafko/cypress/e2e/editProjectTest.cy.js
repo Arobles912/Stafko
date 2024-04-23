@@ -1,5 +1,7 @@
 import "cypress-file-upload";
 
+// Sometimes these tests bugs, execute them until they work properly.
+
 describe("Edit projects", () => {
   beforeEach(() => {
     cy.viewport(1920, 1080);
@@ -59,12 +61,16 @@ describe("Edit projects", () => {
 
     cy.visit("http://localhost:5173/home");
 
+    cy.get(".right-side-div p").click();
     cy.get('button[name="logoutbutton"]').click();
+    cy.on("window:confirm", () => true);
   });
 
   afterEach(() => {
 
+    cy.get(".right-side-div p").click();
     cy.get('button[name="logoutbutton"]').click();
+    cy.on("window:confirm", () => true);
   });
 
   it("Should save without changes", () => {
@@ -167,7 +173,7 @@ describe("Edit projects", () => {
     cy.get(".main-container-div")
       .eq(0)
       .within(() => {
-        cy.get(".user-card button").eq(1).click();
+        cy.get(".user-card button").eq(0).click();
         cy.get(".save-button").click();
       });
       cy.on("window:confirm", () => true);
@@ -202,7 +208,7 @@ describe("Edit projects", () => {
     cy.get(".main-container-div")
       .eq(0)
       .within(() => {
-        cy.get(".user-list button").eq(1).click();
+        cy.get(".user-list button").eq(0).click();
         cy.wait(400);
         cy.get(".select-collaborator").select("buenas");
         cy.get(".add-user-button").click();
@@ -285,6 +291,7 @@ describe("Edit projects", () => {
   });
 
   after(() => {
+    cy.viewport(1920, 1080);
     cy.intercept("POST", "http://localhost:3000/api/auth/login").as(
       "loginRequest"
     );

@@ -3,6 +3,7 @@
   width: 100vw;
   height: 100vh;
   position: fixed;
+  overflow-x: hidden;
   top: 0;
   left: 0;
   background-image: url("src/assets/bg-image-home.jpg");
@@ -10,3 +11,28 @@
   background-size: cover;
   background-position: center center;
 }
+
+input[type="text"]:focus{
+  outline: 2px solid black;
+  border: 1px solid transparent;
+}
+
+input[type="password"]:focus{
+  outline: 2px solid black;
+  border: 1px solid transparent;
+}
+
+input[type="email"]:focus{
+  outline: 2px solid black;
+  border: 1px solid transparent;
+}
+
+input[type="submit"]:hover{
+  cursor: pointer;
+}
+
+button{
+  cursor: pointer;
+}
+
+

@@ -5,7 +5,9 @@ export default function ProjectCardView({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
   const [viewButtonText, setViewButtonText] = useState("View");
   const [description, setDescription] = useState(project.project.description);
-  const [projectOwner, setProjectOwner] = useState(project.project.project_owner);
+  const [projectOwner, setProjectOwner] = useState(
+    project.project.project_owner
+  );
   const [staffProjectsData, setStaffProjectsData] = useState(null);
   const [collaborators, setCollaborators] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +18,7 @@ export default function ProjectCardView({ project }) {
     async function fetchData() {
       try {
         const staffProjectsResponse = await fetch(
-          `http://localhost:3000/api/staffProject/project/${project.staffProject.project_id}`
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${project.staffProject.project_id}`
         );
         if (staffProjectsResponse.ok) {
           const data = await staffProjectsResponse.json();
@@ -36,7 +38,7 @@ export default function ProjectCardView({ project }) {
     async function fetchCollaborators() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staffProject/project/${project.staffProject.project_id}/users`
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${project.staffProject.project_id}/users`
         );
         if (response.ok) {
           const data = await response.json();
@@ -57,16 +59,15 @@ export default function ProjectCardView({ project }) {
     async function fetchOwner() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/staff/${projectOwner}`
+          `${import.meta.env.VITE_BACKEND_URL}/staff/${projectOwner}`
         );
         if (response.ok) {
           const data = await response.json();
-          setProjectOwner(data.username); 
+          setProjectOwner(data.username);
         }
       } catch (error) {
         console.error("Failed to fetch project owner: ", error);
       }
-      
     }
     fetchOwner();
   }, []);
@@ -83,14 +84,14 @@ export default function ProjectCardView({ project }) {
   };
 
   function handleViewButton() {
-      setExtendedCard(!extendedCard);
-      setViewButtonText(extendedCard ? "View" : "Close");
+    setExtendedCard(!extendedCard);
+    setViewButtonText(extendedCard ? "View" : "Close");
   }
 
-  async function handleDownloadButton() {  
+  async function handleDownloadButton() {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/projects/${project.staffProject.project_id}/download`
+        `${import.meta.env.VITE_BACKEND_URL}/projects/${project.staffProject.project_id}/download`
       );
       if (response.ok) {
         const blob = await response.blob();
@@ -123,7 +124,6 @@ export default function ProjectCardView({ project }) {
     ? staffProjectsData.length
     : 0;
 
-
   return (
     <div className="main-container-div">
       <div className="container-div">
@@ -132,6 +132,7 @@ export default function ProjectCardView({ project }) {
             <img src="src/assets/project-icon.png" alt="project-img" />
             <h1>{project.project.project_name}</h1>
           </div>
+          <div className="info-div-container">
           <div className="info-div">
             <p>Owner: {projectOwner}</p>
           </div>
@@ -140,6 +141,7 @@ export default function ProjectCardView({ project }) {
           </div>
           <div className="info-div">
             <p>Creation date: {projectDate}</p>
+          </div>
           </div>
           <button
             className="view-button"
@@ -155,6 +157,7 @@ export default function ProjectCardView({ project }) {
           >
             Download File
           </button>
+          <hr className="mobile-hr" />
         </section>
         <section
           className={`project-cardEx-main-div ${
@@ -181,7 +184,13 @@ export default function ProjectCardView({ project }) {
               <div className="user-card" key={index}>
                 <div>
                   <img src="src/assets/user-icon.png" alt="colaborators-icon" />
-                  <span>{collaborator}</span>
+                  <span
+                    className={
+                      collaborator === projectOwner ? "owner-color-span" : ""
+                    }
+                  >
+                    {collaborator}
+                  </span>
                 </div>
               </div>
             ))}

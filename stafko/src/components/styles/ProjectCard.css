@@ -2,7 +2,6 @@
   padding-left: 10px;
   padding-right: 10px;
   background: linear-gradient(to bottom, #fcf9f3 0%, #efe8d6 100%);
-  /**background-color: white;**/
 }
 
 .container-div {
@@ -12,7 +11,7 @@
   margin-bottom: 20px;
   box-sizing: border-box;
   border-radius: 10px;
-  box-shadow: 0px 0px 3px 3px lightgray;
+  box-shadow: 0px 0px 3px 3px rgb(195, 195, 195);
 }
 
 .project-card-main-div {
@@ -39,6 +38,13 @@
   overflow-x: auto;
   display: flex;
   width: 50%;
+}
+
+.info-div-container {
+  display: flex;
+  margin-left: auto;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .info-div {
@@ -136,6 +142,10 @@
   transition: 0.2s;
 }
 
+.mobile-hr{
+  display: none;
+}
+
 /** Extended card **/
 
 .project-cardEx-main-div {
@@ -160,7 +170,7 @@
   padding-right: 20px;
   padding-left: 10px;
   margin-bottom: 20px;
-  box-shadow: 0px 3px 3px 3px lightgray;
+  box-shadow: 0px 3px 3px 3px rgb(195, 195, 195);
   background-color: rgb(232, 232, 232);
   border-radius: 10px;
   width: 100%;
@@ -207,7 +217,7 @@ hr {
 
 .user-list {
   margin-top: 18px;
-  box-shadow: 0px 3px 3px 3px lightgray;
+  box-shadow: 0px 3px 3px 3px rgb(195, 195, 195);
   background-color: rgb(232, 232, 232);
   border-radius: 10px;
   flex-basis: 30%;
@@ -274,6 +284,11 @@ hr {
   margin-left: 10px;
 }
 
+.owner-color-span {
+  color: #da620d;
+  font-weight: 600;
+}
+
 .user-card div > img {
   width: 50px;
   height: 50px;
@@ -337,7 +352,7 @@ hr {
   transition: 0.2s;
 }
 
-.edit-project-button-div{
+.edit-project-button-div {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -345,7 +360,7 @@ hr {
   margin-bottom: 20px;
 }
 
-.edit-project-button-div button{
+.edit-project-button-div button {
   color: white;
   font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
@@ -361,7 +376,7 @@ hr {
   width: auto;
 }
 
-.edit-project-button-div button:hover{
+.edit-project-button-div button:hover {
   border-color: #e97e19;
   background-color: #ff9900;
   transition: 0.2s;
@@ -391,4 +406,223 @@ hr {
   border-color: #e97e19;
   background-color: #ff9900;
   transition: 0.2s;
+}
+
+@media (max-width: 1024px) and (min-width: 430px) {
+  .project-card-main-div {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .title-div {
+    box-sizing: border-box;
+    width: auto;
+    margin: 0 auto;
+  }
+
+  .info-div-container {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+  }
+  
+  .info-div {
+    box-sizing: border-box;
+    width: auto;
+    padding-left: 60px;
+    width: 100%;
+  }
+
+  .project-card-main-div h1 {
+    font-size: 26px;
+    font-family: "Poppins", sans-serif;
+    margin-left: 10px;
+    padding-top: 5px;
+  }
+
+  .project-card-main-div img {
+    padding: 0;
+    width: 70px;
+    height: 70px;
+  }
+
+  .buttons-div {
+    margin: 0 auto;
+  }
+
+  .edit-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 35px;
+    font-size: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+  }
+
+  .download-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 35px;
+    font-size: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+  }
+
+  .view-button{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 35px;
+    font-size: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+  }
+  .description-div {
+    flex-basis: 50%;
+    padding-right: 0px;
+    padding-left: 10px;
+    max-height: 500px;
+    overflow-x: hidden;
+  }
+
+  .user-list {
+    flex-basis: 40%;
+    max-height: 300px;
+  }
+
+  .edit-project-button-div button{
+    width: 30%;
+  }
+
+  .save-button {
+    height: 35px;
+    width: 30%;
+  }
+
+  .delete-button {
+    height: 35px;
+    width: 30%;
+  }
+}
+
+@media (max-width: 429px) {
+  .project-card-main-div {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .title-div {
+    box-sizing: border-box;
+    width: auto;
+    margin: 0 auto;
+  }
+
+  .info-div-container {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+  }
+  
+  .info-div {
+    box-sizing: border-box;
+    width: auto;
+    padding-left: 0;
+    margin: 10px;
+    width: 100%;
+  }
+
+  .project-card-main-div h1 {
+    font-size: 26px;
+    font-family: "Poppins", sans-serif;
+    margin-left: 10px;
+    padding-top: 5px;
+  }
+
+  .project-card-main-div img {
+    padding: 0;
+    width: 70px;
+    height: 70px;
+  }
+
+  .buttons-div {
+    margin: 0 auto;
+  }
+
+  .edit-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 35px;
+    font-size: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+  }
+
+  .download-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: auto;
+    font-size: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+  }
+
+  .view-button{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 35px;
+    font-size: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+  }
+
+  .description-div {
+    margin-left: 20px;
+    margin-right: 20px;
+    flex-basis: 100%;
+    padding-right: 0px;
+    padding-left: 10px;
+    max-height: 500px;
+    overflow-x: hidden;
+  }
+
+  .user-list {
+    margin-left: 20px;
+    margin-right: 20px;
+    flex-basis: 100%;
+    max-height: 300px;
+  }
+
+  .edit-project-button-div button{
+    height: auto;
+    min-height: 35px;
+    width: auto;
+    font-size: 20px;
+  }
+
+  .save-button {
+    min-height: 35px;
+    height: auto;
+    width: auto;
+    font-size: 20px;
+  }
+
+  .delete-button {
+    min-height: 35px;
+    height: auto;
+    width: auto;
+    font-size: 20px;
+  }
+
+  .mobile-hr{
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
 }

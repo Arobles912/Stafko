@@ -8,7 +8,6 @@ import {
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./Home";
-import Add from "./components/Add";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -28,7 +27,6 @@ function App() {
         />
         <Route path="/register" element={<Register username={username} setUsername={setUsername} />} />
         <Route path="/home" element={<Home username={username} setIsLoggedIn={setIsLoggedIn}/>} />
-        <Route path="/add" element={<Add />} />
       </Routes>
     </Router>
   );
