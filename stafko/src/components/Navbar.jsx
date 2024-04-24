@@ -2,6 +2,7 @@ import React from "react";
 import "./styles/Navbar.css";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import SearchBar from "./SearchBar.jsx"
 
 export default function Navbar({
   username,
@@ -28,10 +29,6 @@ export default function Navbar({
       setIsLoggedIn(false);
       navigate("/");
     }
-  };
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
   };
 
   const toggleMenu = () => {
@@ -70,14 +67,7 @@ export default function Navbar({
         {addButtonText}
       </button>
       <div className="search-bar-div">
-        <input
-          type="text"
-          id="searchbar"
-          name="searchbar"
-          className="search-bar-input"
-          placeholder="Search project..."
-          onChange={handleSearchChange}
-        />
+        <SearchBar setSearchTerm={setSearchTerm}/>
       </div>
       <div className="right-side-div">
         <img

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles/ProjectCard.css";
-import AddCollaborator from "./AddCollaborator";
-import EditProjectName from "./EditProjectName";
+import AddCollaborator from "./floating_components/AddCollaborator";
+import EditProjectName from "./floating_components/EditProjectName";
 
 export default function ProjectCard({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
@@ -93,7 +93,7 @@ export default function ProjectCard({ project }) {
   }, [project.staffProject.project_id]);
 
   useEffect(() => {
-    async function fetchOwner() {
+    async function fetchOwnerName() {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_BACKEND_URL}/staff/${projectOwner}`
@@ -107,7 +107,7 @@ export default function ProjectCard({ project }) {
       }
     }
 
-    fetchOwner();
+    fetchOwnerName();
   }, []);
 
   useEffect(() => {

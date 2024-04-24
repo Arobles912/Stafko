@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import "./styles/MobileNavbar.css";
+import SearchBar from "./SearchBar";
 
 export default function MobileNavbar({
   setSearchTerm,
   isMobileNavbarVisible,
   setIsMobileNavbarVisible,
 }) {
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
 
   const handleClickOutside = (event) => {
     const dropdownRef = document.querySelector(".mobile-navbar");
@@ -32,14 +30,7 @@ export default function MobileNavbar({
         }`}
       >
         <div className="search-bar-div-mobile">
-          <input
-            type="text"
-            id="searchbar"
-            name="searchbar"
-            className="search-bar-input-mobile"
-            placeholder="Search project..."
-            onChange={handleSearchChange}
-          />
+          <SearchBar searchBarClass={"search-bar-input-mobile"} setSearchTerm={setSearchTerm}/>
         </div>
       </nav>
     </div>

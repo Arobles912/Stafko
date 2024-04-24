@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
-import Add from "./components/Add";
+import Add from "./components/floating_components/Add";
 import ProjectCard from "./components/ProjectCard";
 import ProjectCardView from "./components/ProjectCardView";
 import "./components/styles/Home.css";

@@ -56,7 +56,7 @@ export default function ProjectCardView({ project }) {
   }, [project.staffProject.project_id]);
 
   useEffect(() => {
-    async function fetchOwner() {
+    async function fetchOwnerName() {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_BACKEND_URL}/staff/${projectOwner}`
@@ -69,7 +69,7 @@ export default function ProjectCardView({ project }) {
         console.error("Failed to fetch project owner: ", error);
       }
     }
-    fetchOwner();
+    fetchOwnerName();
   }, []);
 
   useEffect(() => {

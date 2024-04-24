@@ -79,7 +79,6 @@
   font-size: 18px;
   max-width: 100%;
   width: auto;
-  border-radius: 10px;
 }
 
 .edit-button:hover {
@@ -106,7 +105,6 @@
   font-size: 18px;
   max-width: 100%;
   width: auto;
-  border-radius: 10px;
 }
 
 .view-button:hover {
@@ -133,7 +131,6 @@
   font-size: 18px;
   max-width: 100%;
   width: auto;
-  border-radius: 10px;
 }
 
 .download-button:hover {
@@ -142,7 +139,7 @@
   transition: 0.2s;
 }
 
-.mobile-hr{
+.mobile-hr {
   display: none;
 }
 
@@ -426,7 +423,7 @@ hr {
     justify-content: center;
     margin: auto;
   }
-  
+
   .info-div {
     box-sizing: border-box;
     width: auto;
@@ -471,7 +468,7 @@ hr {
     width: 30%;
   }
 
-  .view-button{
+  .view-button {
     margin-top: 10px;
     margin-bottom: 10px;
     height: 35px;
@@ -493,7 +490,7 @@ hr {
     max-height: 300px;
   }
 
-  .edit-project-button-div button{
+  .edit-project-button-div button {
     width: 30%;
   }
 
@@ -526,7 +523,7 @@ hr {
     justify-content: center;
     margin: auto;
   }
-  
+
   .info-div {
     box-sizing: border-box;
     width: auto;
@@ -572,7 +569,7 @@ hr {
     width: 30%;
   }
 
-  .view-button{
+  .view-button {
     margin-top: 10px;
     margin-bottom: 10px;
     height: 35px;
@@ -599,7 +596,7 @@ hr {
     max-height: 300px;
   }
 
-  .edit-project-button-div button{
+  .edit-project-button-div button {
     height: auto;
     min-height: 35px;
     width: auto;
@@ -620,7 +617,7 @@ hr {
     font-size: 20px;
   }
 
-  .mobile-hr{
+  .mobile-hr {
     display: block;
     margin-top: 20px;
     margin-bottom: 20px;
