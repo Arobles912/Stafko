@@ -1,6 +1,7 @@
-DROP TABLE IF EXISTS staff_project;
-DROP TABLE IF EXISTS staff;
-DROP TABLE IF EXISTS projects;
+DROP TABLE IF EXISTS staff_project CASCADE;
+DROP TABLE IF EXISTS projects CASCADE;
+DROP TABLE IF EXISTS customers CASCADE;
+DROP TABLE IF EXISTS staff CASCADE;
 
 CREATE TABLE staff (
     staff_id SERIAL PRIMARY KEY,
@@ -10,16 +11,27 @@ CREATE TABLE staff (
     user_role VARCHAR(50)
 );
 
+CREATE TABLE customers (
+    customer_id SERIAL PRIMARY KEY,
+    customer_name VARCHAR(50) NOT NULL,
+    city VARCHAR(50),
+    country VARCHAR(50) NOT NULL,
+    phone_number INTEGER NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    website VARCHAR(255),
+    sector VARCHAR(50) NOT NULL,
+    CIF VARCHAR(9) NOT NULL
+);
+
 CREATE TABLE projects (
     project_id SERIAL PRIMARY KEY,
     project_name VARCHAR(50) NOT NULL,
     description VARCHAR(3000),
     project_owner INTEGER NOT NULL REFERENCES staff(staff_id),
     creation_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    project_file BYTEA
+    project_file BYTEA,
+    associated_customer INTEGER NOT NULL REFERENCES customers(customer_id)
 );
-
-
 
 CREATE TABLE staff_project (
     staff_id INTEGER REFERENCES staff(staff_id),

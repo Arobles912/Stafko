@@ -6,8 +6,8 @@
   overflow-y: auto;
   width: 100vw;
   min-height: 100vh;
-  background-image: url("src/assets/bg-image.jpg");
-  background-size: cover;
+  background-image: url("src/assets/bg_images/bg-image.jpg");
+  background-size:cover;
   background-position: center center;
   background-repeat: no-repeat;
 }
@@ -40,7 +40,7 @@ input {
 }
 
 .submit {
-  width: 50%;
+  width: auto;
   font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
   font-weight: bold;
   background-color: #ffcc00;
@@ -51,6 +51,8 @@ input {
   display: block;
   margin: 10px auto;
   margin-top: 20px;
+  padding-left: 60px;
+  padding-right: 60px;
 }
 
 .submit:hover {
@@ -60,7 +62,7 @@ input {
 }
 
 .register-submit {
-  width: 70%;
+  width: auto;
   font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
   font-weight: bold;
   background-color: #ffcc00;
@@ -71,6 +73,8 @@ input {
   display: block;
   margin: 10px auto;
   margin-top: 10px;
+  padding-left: 60px;
+  padding-right: 60px;
 }
 
 .register-submit:hover {

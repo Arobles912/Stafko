@@ -1,17 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles/ProjectCard.css";
-import AddCollaborator from "./floating_components/AddCollaborator";
-import EditProjectName from "./floating_components/EditProjectName";
+import AddCollaborator from "../floating_components/AddCollaborator";
+import EditProjectName from "../floating_components/EditProjectName";
+import ChangeProjectCustomer from "../floating_components/ChangeProjectCustomer";
 
 export default function ProjectCard({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
   const [isAddCollaboratorVisible, setIsAddCollaboratorVisible] =
     useState(false);
   const [isEditProjectName, setIsEditProjectName] = useState(false);
+  const [isChangeProjectCustomer, setIsChangeProjectCustomer] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
   const [description, setDescription] = useState(project.project.description);
   const [projectOwner, setProjectOwner] = useState(
     project.project.project_owner
+  );
+  const [projectCustomer, setProjectCustomer] = useState(
+    project.project.associated_customer
   );
   const [staffProjectsData, setStaffProjectsData] = useState(null);
   const [collaborators, setCollaborators] = useState([]);
@@ -108,6 +113,24 @@ export default function ProjectCard({ project }) {
     }
 
     fetchOwnerName();
+  }, []);
+
+  useEffect(() => {
+    async function fetchCustomerName() {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/customers/${projectCustomer}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setProjectCustomer(data.customer_name);
+        }
+      } catch (error) {
+        console.error("Failed to fetch project customer: ", error);
+      }
+    }
+
+    fetchCustomerName();
   }, []);
 
   useEffect(() => {
@@ -332,7 +355,10 @@ export default function ProjectCard({ project }) {
       <div className="container-div">
         <section className="project-card-main-div">
           <div className="title-div">
-            <img src="src/assets/project-icon.png" alt="project-img" />
+            <img
+              src="src/assets/project_images/project-icon.png"
+              alt="project-img"
+            />
             <h1 name="projecttitle">{project.project.project_name}</h1>
           </div>
           <div className="info-div-container">
@@ -340,6 +366,12 @@ export default function ProjectCard({ project }) {
               <p>
                 Owner:{" "}
                 <span className="project-owner-span">{projectOwner}</span>
+              </p>
+            </div>
+            <div className="info-div">
+              <p>
+                Customer:{" "}
+                <span className="project-customer-span">{projectCustomer}</span>
               </p>
             </div>
             <div className="info-div">
@@ -370,7 +402,6 @@ export default function ProjectCard({ project }) {
             extendedCard ? "extended" : ""
           }`}
         >
-
           <div
             className={`main-add-collaborator-div ${
               isAddCollaboratorVisible ? "visible" : "hidden"
@@ -400,6 +431,21 @@ export default function ProjectCard({ project }) {
               />
             )}
           </div>
+
+          <div
+            className={`main-edit-project-name-div ${
+              isChangeProjectCustomer ? "visible" : "hidden"
+            }`}
+          >
+            {loading ? (
+              <div>Loading...</div>
+            ) : (
+              <ChangeProjectCustomer
+                setIsChangeProjectCustomer={setIsChangeProjectCustomer}
+                project={project}
+              />
+            )}
+          </div>
           <div className="description-div">
             <h3>ReadME</h3>
             <hr />
@@ -418,7 +464,10 @@ export default function ProjectCard({ project }) {
             {collaborators.map((collaborator, index) => (
               <div className="user-card" key={index}>
                 <div>
-                  <img src="src/assets/user-icon.png" alt="colaborators-icon" />
+                  <img
+                    src="src/assets/user_images/user-icon.png"
+                    alt="colaborators-icon"
+                  />
                   <span
                     className={
                       collaborator === projectOwner ? "owner-color-span" : ""
@@ -458,16 +507,24 @@ export default function ProjectCard({ project }) {
               </p>
             </div>
           )}
-          <div className="edit-project-button-div">
+          <div className="buttons-div">
             <button
               type="button"
               name="editprojectnamebutton"
+              className="edit-project-button"
               onClick={() => setIsEditProjectName(true)}
             >
               Edit project name
             </button>
+            <button
+              type="button"
+              name="changeprojectcustomerbutton"
+              className="edit-project-button"
+              onClick={() => setIsChangeProjectCustomer(true)}
+            >
+              Edit project customer
+            </button>
           </div>
-
           <div className="buttons-div">
             <button
               type="button"

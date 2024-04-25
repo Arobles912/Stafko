@@ -51,6 +51,18 @@
     font-family: "Poppins", sans-serif;
   }
 
+  .select-project-customer{
+    background-color: rgb(245, 245, 245);
+    padding: 6px;
+    font-size: 15px;
+    width: 50%;
+    border: 1px solid gray;
+    margin-top: 0px;
+    margin-bottom: 30px;
+    margin-right: 0;
+    border-radius: 10px;
+  }
+
   @media (max-width: 429px) {
     .edit-project-name-div {
       width: 50%;

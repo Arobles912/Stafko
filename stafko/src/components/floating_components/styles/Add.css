@@ -60,13 +60,25 @@
   margin-top: 10px;
 }
 
-.add-form textarea:focus{
+.add-form textarea:focus {
   outline: 2px solid black;
   border: 1px solid transparent;
 }
 
 .add-form .project-name-input {
   padding: 7.5px;
+}
+
+.select-customer {
+  background-color: rgb(245, 245, 245);
+  padding: 6px;
+  font-size: 15px;
+  width: 90%;
+  border: 1px solid gray;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  border-radius: 10px;
 }
 
 .select-user {
@@ -146,7 +158,6 @@
   margin-left: 20px;
   padding: 5px;
   margin-top: 10px;
-
 }
 
 .add-form .clear-all-button:hover {

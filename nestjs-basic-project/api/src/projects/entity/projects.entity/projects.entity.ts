@@ -29,4 +29,8 @@ export class ProjectsEntity {
   @ApiProperty({ description: 'The project owner' })
   @Column({ nullable: true })
   project_owner: number;
+
+  @ApiProperty({ description: 'The customer associated with the project' })
+  @Column({ nullable: false })
+  associated_customer: number;
 }

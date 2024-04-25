@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "./components/Navbar";
-import Add from "./components/floating_components/Add";
-import ProjectCard from "./components/ProjectCard";
-import ProjectCardView from "./components/ProjectCardView";
-import "./components/styles/Home.css";
-import MobileNavbar from "./components/MobileNavbar";
+import Navbar from "../navbar_components/Navbar";
+import Add from "../floating_components/Add";
+import ProjectCard from "./ProjectCard";
+import ProjectCardView from "./ProjectCardView";
+import "./styles/Home.css";
+import MobileNavbar from "../navbar_components/MobileNavbar";
 
 export default function Home({ setIsLoggedIn }) {
   const [isAddProjectVisible, setIsAddProjectVisible] = useState(false);
@@ -153,6 +153,9 @@ export default function Home({ setIsLoggedIn }) {
           setIsLoggedIn={setIsLoggedIn}
           addButtonText={
             isAddProjectVisible ? "Cancel add project" : "Add project"
+          }
+          addCustomerText={
+            isAddProjectVisible ? "Cancel add customer" : "Add customer"
           }
           setUsername={setUsername}
           setToken={setToken}

@@ -21,4 +21,7 @@ export class ProjectsDto {
 
   @ApiProperty({ description: 'The project owner', type: 'number', example: 5 })
   project_owner: number;
+
+  @ApiProperty({ description: 'The customer associated with the project', type: 'number', example: 10 })
+  associated_customer: number;
 }

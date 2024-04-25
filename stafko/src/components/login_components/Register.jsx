@@ -53,7 +53,7 @@ export default function Register({ username, setUsername }) {
           <h2>Sign Up</h2>
           <img
             className="icon-img"
-            src="src/assets/user-icon.png"
+            src="src/assets/user_images/user-icon.png"
             alt="user-icon"
           />
           <label htmlFor="username">Username:</label>
@@ -69,7 +69,7 @@ export default function Register({ username, setUsername }) {
           <br />
           <img
             className="icon-img"
-            src="src/assets/password-icon.png"
+            src="src/assets/user_images/password-icon.png"
             alt="password-icon"
           />
           <label htmlFor="password">Password:</label>
@@ -85,7 +85,7 @@ export default function Register({ username, setUsername }) {
           <br />
           <img
             className="icon-img"
-            src="src/assets/email-icon.png"
+            src="src/assets/user_images/email-icon.png"
             alt="email-icon"
           />
           <label htmlFor="email">Email:</label>

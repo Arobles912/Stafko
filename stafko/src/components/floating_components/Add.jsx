@@ -5,7 +5,9 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
   const [projectFile, setProjectFile] = useState(null);
+  const [projectCustomer, setProjectCustomer] = useState("");
   const [projectOwner, setProjectOwner] = useState();
+  const [customers, setCustomers] = useState([]);
   const [users, setUsers] = useState([]);
   const [shouldReload, setShouldReload] = useState(false);
   const [error, setError] = useState(null);
@@ -14,7 +16,9 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/staff`);
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/staff`
+        );
         if (response.ok) {
           const userData = await response.json();
           setUsers(userData);
@@ -28,12 +32,30 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
   }, []);
 
   useEffect(() => {
+    async function fetchCustomers() {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/customers`
+        );
+        if (response.ok) {
+          const customerData = await response.json();
+          setCustomers(customerData);
+        }
+      } catch (error) {
+        console.error("Failed to fetch customers: ", error);
+      }
+    }
+
+    fetchCustomers();
+  }, []);
+
+  useEffect(() => {
     async function fetchOwner() {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staff/username/${localStorage.getItem(
-            "username"
-          )}`
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/staff/username/${localStorage.getItem("username")}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -66,6 +88,10 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
       return;
     }
 
+    if (projectCustomer === null) {
+      setError("The project customer is required.");
+    }
+
     if (projectFile === null) {
       setError("The project file is required.");
       return;
@@ -76,12 +102,16 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
       formData.append("project_name", projectName);
       formData.append("description", description);
       formData.append("project_owner", projectOwner);
+      formData.append("associated_customer", projectCustomer);
       formData.append("project_file", projectFile);
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/projects`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/projects`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -140,9 +170,9 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
         )
       ) {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staff/username/${localStorage.getItem(
-            "username"
-          )}`
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/staff/username/${localStorage.getItem("username")}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -163,16 +193,19 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
 
   async function createStaffProject(projectId, staffId) {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/staffProject`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          staff_id: staffId,
-          project_id: projectId,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/staffProject`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            staff_id: staffId,
+            project_id: projectId,
+          }),
+        }
+      );
       if (response.ok) {
         console.log("User-project relation created.");
       } else {
@@ -191,6 +224,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
       setProjectName("");
       setDescription("");
       setProjectFile(null);
+      setProjectCustomer("");
 
       setSelectedUsers((prevUsers) => {
         const userToKeep = localStorage.getItem("username");
@@ -200,9 +234,9 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
         return filteredUsers;
       });
       setSuccessMessage("All fields cleared.");
-      setTimeout(function() {
+      setTimeout(function () {
         setSuccessMessage("");
-    }, 3000);
+      }, 3000);
     }
   }
 
@@ -224,7 +258,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
       >
         <img
           className="icon-img"
-          src="src/assets/project-icon.png"
+          src="src/assets/project_images/project-icon.png"
           alt="user-icon"
         />
         <label htmlFor="projectName">Project Name:</label>
@@ -241,7 +275,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
         <br />
         <img
           className="icon-img"
-          src="src/assets/description-icon.png"
+          src="src/assets/project_images/description-icon.png"
           alt="user-icon"
         />
         <label htmlFor="projectDesc">Project Description:</label>
@@ -257,7 +291,30 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
         <br />
         <img
           className="icon-img"
-          src="src/assets/staff-icon.png"
+          src="src/assets/project_images/deal-icon.png"
+          alt="user-icon"
+        />
+        <label htmlFor="projectCustomer">Project Customer:</label>
+        <br />
+        <select
+          name="customers"
+          id="customers"
+          className="select-customer"
+          value={projectCustomer}
+          onChange={(e) => setProjectCustomer(e.target.value)}
+        >
+          <option>Select customer</option>
+          {customers.map((customer) => (
+            <option key={customer.customer_id} value={customer.customer_id}>
+              {customer.customer_name}
+            </option>
+          ))}
+        </select>
+
+        <br />
+        <img
+          className="icon-img"
+          src="src/assets/project_images/staff-icon.png"
           alt="desc-icon"
         />
         <label htmlFor="projectStaff">Project Staff:</label>
@@ -298,7 +355,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
         <div className="list-div-bar"></div>
         <img
           className="icon-img"
-          src="src/assets/files-icon.png"
+          src="src/assets/project_images/files-icon.png"
           alt="user-icon"
         />
         <label htmlFor="projectFile">Project File:</label>

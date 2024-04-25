@@ -7,6 +7,7 @@ import { StaffModule } from "./staff/staff.module";
 import { AuthModule } from "./auth/auth.module";
 import { StaffProjectModule } from "./staff_project/staff_project.module";
 import { MulterModule } from "@nestjs/platform-express";
+import { CustomersModule } from './customers/customers.module';
 import  config  from "./config";
 import * as dotenv from "dotenv";
 
@@ -31,6 +32,7 @@ dotenv.config();
     MulterModule.register({
       dest: './uploads', 
     }),
+    CustomersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

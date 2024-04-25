@@ -52,7 +52,7 @@ export default function Login({ setIsLoggedIn, username, setUsername }) {
             <h2>Welcome</h2>
             <img
               className="icon-img"
-              src="src/assets/user-icon.png"
+              src="src/assets/user_images/user-icon.png"
               alt="user-icon"
             />
             <label htmlFor="username">Username:</label>
@@ -68,7 +68,7 @@ export default function Login({ setIsLoggedIn, username, setUsername }) {
             <br />
             <img
               className="icon-img"
-              src="src/assets/password-icon.png"
+              src="src/assets/user_images/password-icon.png"
               alt="user-icon"
             />
             <label htmlFor="password">Password:</label>

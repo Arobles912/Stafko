@@ -8,6 +8,9 @@ export default function ProjectCardView({ project }) {
   const [projectOwner, setProjectOwner] = useState(
     project.project.project_owner
   );
+  const [projectCustomer, setProjectCustomer] = useState(
+    project.project.associated_customer
+  );
   const [staffProjectsData, setStaffProjectsData] = useState(null);
   const [collaborators, setCollaborators] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,7 +21,9 @@ export default function ProjectCardView({ project }) {
     async function fetchData() {
       try {
         const staffProjectsResponse = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${project.staffProject.project_id}`
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+            project.staffProject.project_id
+          }`
         );
         if (staffProjectsResponse.ok) {
           const data = await staffProjectsResponse.json();
@@ -38,7 +43,9 @@ export default function ProjectCardView({ project }) {
     async function fetchCollaborators() {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${project.staffProject.project_id}/users`
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+            project.staffProject.project_id
+          }/users`
         );
         if (response.ok) {
           const data = await response.json();
@@ -73,6 +80,24 @@ export default function ProjectCardView({ project }) {
   }, []);
 
   useEffect(() => {
+    async function fetchCustomerName() {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/customers/${projectCustomer}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setProjectCustomer(data.customer_name);
+        }
+      } catch (error) {
+        console.error("Failed to fetch project customer: ", error);
+      }
+    }
+
+    fetchCustomerName();
+  }, []);
+
+  useEffect(() => {
     adjustTextareaHeight();
   }, [description]);
 
@@ -91,7 +116,9 @@ export default function ProjectCardView({ project }) {
   async function handleDownloadButton() {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/projects/${project.staffProject.project_id}/download`
+        `${import.meta.env.VITE_BACKEND_URL}/projects/${
+          project.staffProject.project_id
+        }/download`
       );
       if (response.ok) {
         const blob = await response.blob();
@@ -129,19 +156,29 @@ export default function ProjectCardView({ project }) {
       <div className="container-div">
         <section className="project-card-main-div">
           <div className="title-div">
-            <img src="src/assets/project-icon.png" alt="project-img" />
+            <img
+              src="src/assets/project_images/project-icon.png"
+              alt="project-img"
+            />
             <h1>{project.project.project_name}</h1>
           </div>
           <div className="info-div-container">
-          <div className="info-div">
-            <p>Owner: {projectOwner}</p>
-          </div>
-          <div className="info-div">
-            <p>Number of collaborators: {numberOfCollaborators}</p>
-          </div>
-          <div className="info-div">
-            <p>Creation date: {projectDate}</p>
-          </div>
+            <div className="info-div">
+              <p>
+                Owner: <span>{projectOwner}</span>
+              </p>
+            </div>
+            <div className="info-div">
+              <p>
+                Customer: <span className="project-owner-span">{projectCustomer}</span>
+              </p>
+            </div>
+            <div className="info-div">
+              <p>Number of collaborators: {numberOfCollaborators}</p>
+            </div>
+            <div className="info-div">
+              <p>Creation date: {projectDate}</p>
+            </div>
           </div>
           <button
             className="view-button"
@@ -183,7 +220,10 @@ export default function ProjectCardView({ project }) {
             {collaborators.map((collaborator, index) => (
               <div className="user-card" key={index}>
                 <div>
-                  <img src="src/assets/user-icon.png" alt="colaborators-icon" />
+                  <img
+                    src="src/assets/user_images/user-icon.png"
+                    alt="colaborators-icon"
+                  />
                   <span
                     className={
                       collaborator === projectOwner ? "owner-color-span" : ""

@@ -9,6 +9,7 @@ export default function Navbar({
   toggleAddProject,
   setIsLoggedIn,
   addButtonText,
+  addCustomerText,
   setToken,
   setUsername,
   setSearchTerm,
@@ -57,7 +58,7 @@ export default function Navbar({
       <div className="logo-container">
         <img
           className="navbar-logo"
-          src="src/assets/example-logo.png"
+          src="src/assets/logos/example-logo.png"
           alt="example-logo"
         />
         <h3>Stafko</h3>
@@ -66,19 +67,22 @@ export default function Navbar({
       <button onClick={toggleAddProject} className="nav-link" name="addproject">
         {addButtonText}
       </button>
+      <button onClick={toggleAddProject} className="nav-link" name="addproject">
+        {addCustomerText}
+      </button>
       <div className="search-bar-div">
         <SearchBar setSearchTerm={setSearchTerm}/>
       </div>
       <div className="right-side-div">
         <img
           className="search-bar-icon"
-          src="src/assets/search-icon2.png"
+          src="src/assets/navbar_images/search-icon2.png"
           alt="search-icon"
           onClick={toggleMobileNavbar}
         ></img>
         <img
           className="user-icon-img"
-          src="src/assets/user-icon.png"
+          src="src/assets/user_images/user-icon.png"
           alt="user-icon"
           onClick={toggleMenu}
           ref={dropdownRef}
@@ -91,24 +95,24 @@ export default function Navbar({
           className={menuVisible ? "dropdown-content show" : "dropdown-content"}
         >
           <div>
-            <img src="src/assets/user-icon.png" alt="user-icon"></img>
+            <img src="src/assets/user_images/user-icon.png" alt="user-icon"></img>
             <span>{username}</span>
           </div>
           <hr />
           <div className="dropdown-link-div">
-            <img src="src/assets/user-icon2.png" alt="user-icon"></img>
+            <img src="src/assets/user_images/user-icon2.png" alt="user-icon"></img>
             <a href="">Profile</a>
           </div>
           <div className="dropdown-link-div">
-            <img src="src/assets/project-icon2.png" alt="user-icon"></img>
+            <img src="src/assets/project_images/project-icon2.png" alt="user-icon"></img>
             <a href="">Your projects</a>
           </div>
           <div className="dropdown-link-div">
-            <img src="src/assets/friends-icon.png" alt="user-icon"></img>
+            <img src="src/assets/navbar_images/friends-icon.png" alt="user-icon"></img>
             <a href="">Friends</a>
           </div>
           <div className="dropdown-link-div">
-            <img src="src/assets/settings-icon.png" alt="user-icon"></img>
+            <img src="src/assets/navbar_images/settings-icon.png" alt="user-icon"></img>
             <a href="">Settings</a>
           </div>
           <button name="logoutbutton" onClick={handleLogout}>
