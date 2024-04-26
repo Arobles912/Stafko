@@ -7,6 +7,7 @@ import SearchBar from "./SearchBar.jsx"
 export default function Navbar({
   username,
   toggleAddProject,
+  toggleAddCustomer,
   setIsLoggedIn,
   addButtonText,
   addCustomerText,
@@ -67,7 +68,7 @@ export default function Navbar({
       <button onClick={toggleAddProject} className="nav-link" name="addproject">
         {addButtonText}
       </button>
-      <button onClick={toggleAddProject} className="nav-link" name="addproject">
+      <button onClick={toggleAddCustomer} className="nav-link" name="addcustomer">
         {addCustomerText}
       </button>
       <div className="search-bar-div">

@@ -37,5 +37,5 @@ export class CustomersEntity {
 
   @ApiProperty({ description: 'The CIF (Tax Identification Code) of the customer' })
   @Column({ length: 9, nullable: false })
-  CIF: string;
+  cif: string;
 }

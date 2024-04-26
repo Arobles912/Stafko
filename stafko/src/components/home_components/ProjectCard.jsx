@@ -3,6 +3,7 @@ import "./styles/ProjectCard.css";
 import AddCollaborator from "../floating_components/AddCollaborator";
 import EditProjectName from "../floating_components/EditProjectName";
 import ChangeProjectCustomer from "../floating_components/ChangeProjectCustomer";
+import CustomerCard from "../floating_components/CustomerCard";
 
 export default function ProjectCard({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
@@ -10,6 +11,7 @@ export default function ProjectCard({ project }) {
     useState(false);
   const [isEditProjectName, setIsEditProjectName] = useState(false);
   const [isChangeProjectCustomer, setIsChangeProjectCustomer] = useState(false);
+  const [isEditCustomer, setIsEditCustomer] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
   const [description, setDescription] = useState(project.project.description);
   const [projectOwner, setProjectOwner] = useState(
@@ -371,7 +373,7 @@ export default function ProjectCard({ project }) {
             <div className="info-div">
               <p>
                 Customer:{" "}
-                <span className="project-customer-span">{projectCustomer}</span>
+                <span className="project-customer-span" onClick={() => setIsEditCustomer(true)}>{projectCustomer}</span>
               </p>
             </div>
             <div className="info-div">
@@ -442,6 +444,21 @@ export default function ProjectCard({ project }) {
             ) : (
               <ChangeProjectCustomer
                 setIsChangeProjectCustomer={setIsChangeProjectCustomer}
+                project={project}
+              />
+            )}
+          </div>
+
+          <div
+            className={`main-edit-customer-div ${
+              isEditCustomer ? "visible" : "hidden"
+            }`}
+          >
+                      {loading ? (
+              <div>Loading...</div>
+            ) : (
+              <CustomerCard
+                setIsEditCustomer={setIsEditCustomer}
                 project={project}
               />
             )}

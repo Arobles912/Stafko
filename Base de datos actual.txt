@@ -8,7 +8,7 @@ CREATE TABLE staff (
     username VARCHAR(30) NOT NULL,
     pass VARCHAR(255) NOT NULL,
     email VARCHAR(50) NOT NULL,
-    user_role VARCHAR(50)
+    user_role VARCHAR(50) DEFAULT 'Usuario'
 );
 
 CREATE TABLE customers (
@@ -20,7 +20,7 @@ CREATE TABLE customers (
     email VARCHAR(50) NOT NULL,
     website VARCHAR(255),
     sector VARCHAR(50) NOT NULL,
-    CIF VARCHAR(9) NOT NULL
+    cif VARCHAR(9) NOT NULL
 );
 
 CREATE TABLE projects (

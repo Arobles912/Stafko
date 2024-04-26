@@ -35,5 +35,5 @@ export class CustomersDto {
 
   @ApiProperty({ description: 'The CIF (Tax Identification Code) of the customer.', example: '12345678Z' })
   @IsNotEmpty()
-  CIF: string;
+  cif: string;
 }

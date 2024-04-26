@@ -5,9 +5,11 @@ import ProjectCard from "./ProjectCard";
 import ProjectCardView from "./ProjectCardView";
 import "./styles/Home.css";
 import MobileNavbar from "../navbar_components/MobileNavbar";
+import AddCustomer from "../floating_components/AddCustomer";
 
 export default function Home({ setIsLoggedIn }) {
   const [isAddProjectVisible, setIsAddProjectVisible] = useState(false);
+  const [isAddCustomerVisible, setIsAddCustomerVisible] = useState(false);
   const [projects, setProjects] = useState([]);
   const [username, setUsername] = useState("");
   const [projectOwner, setProjectOwner] = useState(
@@ -121,6 +123,10 @@ export default function Home({ setIsLoggedIn }) {
     selectedUsers.splice(1, 1);
   };
 
+  const toggleAddCustomer = () => {
+    setIsAddCustomerVisible(!isAddCustomerVisible);
+  };
+
   const compareProjects = (a, b) => {
     if (a.project.creation_date > b.project.creation_date) {
       return -1;
@@ -150,12 +156,13 @@ export default function Home({ setIsLoggedIn }) {
         <Navbar
           username={username}
           toggleAddProject={toggleAddProject}
+          toggleAddCustomer={toggleAddCustomer}
           setIsLoggedIn={setIsLoggedIn}
           addButtonText={
             isAddProjectVisible ? "Cancel add project" : "Add project"
           }
           addCustomerText={
-            isAddProjectVisible ? "Cancel add customer" : "Add customer"
+            isAddCustomerVisible ? "Cancel add customer" : "Add customer"
           }
           setUsername={setUsername}
           setToken={setToken}
@@ -172,6 +179,13 @@ export default function Home({ setIsLoggedIn }) {
             selectedUsers={selectedUsers}
             setSelectedUsers={setSelectedUsers}
           />
+        </div>
+        <div
+          className={`main-add-customer-div ${
+            isAddCustomerVisible ? "visible" : "hidden"
+          }`}
+        >
+          <AddCustomer/>
         </div>
         {filteredProjects.map((project) =>
           projectOwner === project.project.project_owner ? (

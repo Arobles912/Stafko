@@ -88,8 +88,9 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
       return;
     }
 
-    if (projectCustomer === null) {
+    if (!projectCustomer) {
       setError("The project customer is required.");
+      return;
     }
 
     if (projectFile === null) {
@@ -256,160 +257,177 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
         onSubmit={addProject}
         encType="multipart/form-data"
       >
-        <img
-          className="icon-img"
-          src="src/assets/project_images/project-icon.png"
-          alt="user-icon"
-        />
-        <label htmlFor="projectName">Project Name:</label>
-        <br />
-        <input
-          type="text"
-          id="projectname"
-          name="projectname"
-          className="project-name-input"
-          value={projectName}
-          onChange={(e) => setProjectName(e.target.value)}
-          maxLength={50}
-        />
-        <br />
-        <img
-          className="icon-img"
-          src="src/assets/project_images/description-icon.png"
-          alt="user-icon"
-        />
-        <label htmlFor="projectDesc">Project Description:</label>
-        <br />
-        <textarea
-          id="projectdesc"
-          name="projectdesc"
-          className="project-desc-input"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          maxLength={3000}
-        />
-        <br />
-        <img
-          className="icon-img"
-          src="src/assets/project_images/deal-icon.png"
-          alt="user-icon"
-        />
-        <label htmlFor="projectCustomer">Project Customer:</label>
-        <br />
-        <select
-          name="customers"
-          id="customers"
-          className="select-customer"
-          value={projectCustomer}
-          onChange={(e) => setProjectCustomer(e.target.value)}
-        >
-          <option>Select customer</option>
-          {customers.map((customer) => (
-            <option key={customer.customer_id} value={customer.customer_id}>
-              {customer.customer_name}
-            </option>
-          ))}
-        </select>
-
-        <br />
-        <img
-          className="icon-img"
-          src="src/assets/project_images/staff-icon.png"
-          alt="desc-icon"
-        />
-        <label htmlFor="projectStaff">Project Staff:</label>
-        <br />
-        <select name="users" id="users" className="select-user">
-          <option>Select user</option>
-          {users.map((user) => (
-            <option key={user.id} value={user.username}>
-              {user.username}
-            </option>
-          ))}
-        </select>
-        <button className="add-user-button" type="button" onClick={addUser}>
-          Add user
-        </button>
-        <br />
-        <p>Users Selected:</p>
-        <div className="list-div-bar"></div>
-        {selectedUsers.length > 0 && (
-          <div className="users-added-div">
-            <ul>
-              {selectedUsers.map((user, index) => (
-                <li key={user.id}>
-                  - {user.username}
-                  {user.username !== localStorage.getItem("username") && (
-                    <button
-                      type="button"
-                      onClick={() => deleteUser(user.username)}
-                    >
-                      Delete
-                    </button>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        <div className="list-div-bar"></div>
-        <img
-          className="icon-img"
-          src="src/assets/project_images/files-icon.png"
-          alt="user-icon"
-        />
-        <label htmlFor="projectFile">Project File:</label>
-        <br />
-        <input
-          type="file"
-          id="projectfile"
-          name="projectfile"
-          onChange={(e) => setProjectFile(e.target.files[0])}
-        />
-        <br />
-        {error && (
-          <div style={{ textAlign: "center", width: "100%" }}>
-            <p
-              className="error-message"
-              style={{
-                color: "red",
-                fontFamily: "Anek Gurmukhi, sans-serif",
-                fontSize: "20px",
-                textDecoration: "none",
-              }}
-            >
-              {error}
-            </p>
-          </div>
-        )}
-        {successMessage && (
-          <div style={{ textAlign: "center", width: "100%" }}>
-            <p
-              className="success-message"
-              style={{
-                color: "green",
-                fontFamily: "Anek Gurmukhi, sans-serif",
-                fontSize: "20px",
-                textDecoration: "none",
-              }}
-            >
-              {successMessage}
-            </p>
-          </div>
-        )}
-        <div className="bottom-buttons">
-          <input
-            className="add-project-input"
-            type="submit"
-            id="addProject"
-            name="addProject"
-            value="Add project"
+        <h2 className="form-title">Add Project Form</h2>
+        <div className="form-container">
+          <img
+            className="icon-img"
+            src="src/assets/project_images/project-icon.png"
+            alt="user-icon"
           />
-          <button type="button" className="clear-all-button" onClick={clearAll}>
-            Clear all
+          <label htmlFor="projectName" className="required">
+            Project Name:
+          </label>
+          <br />
+          <input
+            type="text"
+            id="projectname"
+            name="projectname"
+            className="project-name-input"
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
+            maxLength={50}
+            required
+          />
+          <br />
+          <img
+            className="icon-img"
+            src="src/assets/project_images/description-icon.png"
+            alt="user-icon"
+          />
+          <label htmlFor="projectDesc">
+            Project Description:
+          </label>
+          <br />
+          <textarea
+            id="projectdesc"
+            name="projectdesc"
+            className="project-desc-input"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            maxLength={3000}
+          />
+          <br />
+          <img
+            className="icon-img"
+            src="src/assets/project_images/deal-icon.png"
+            alt="user-icon"
+          />
+          <label htmlFor="projectCustomer" className="required">
+            Project Customer:
+          </label>
+          <br />
+          <select
+            name="customers"
+            id="customers"
+            className="select-customer"
+            value={projectCustomer}
+            onChange={(e) => setProjectCustomer(e.target.value)}
+            required
+          >
+            <option>Select customer</option>
+            {customers.map((customer) => (
+              <option key={customer.customer_id} value={customer.customer_id}>
+                {customer.customer_name}
+              </option>
+            ))}
+          </select>
+  
+          <br />
+          <img
+            className="icon-img"
+            src="src/assets/project_images/staff-icon.png"
+            alt="desc-icon"
+          />
+          <label htmlFor="projectStaff" className="required">
+            Project Staff:
+          </label>
+          <br />
+          <select name="users" id="users" className="select-user">
+            <option>Select user</option>
+            {users.map((user) => (
+              <option key={user.id} value={user.username}>
+                {user.username}
+              </option>
+            ))}
+          </select>
+          <button className="add-user-button" type="button" onClick={addUser}>
+            Add user
           </button>
+          <br />
+          <p>Users Selected:</p>
+          <div className="list-div-bar"></div>
+          {selectedUsers.length > 0 && (
+            <div className="users-added-div">
+              <ul>
+                {selectedUsers.map((user, index) => (
+                  <li key={user.id}>
+                    - {user.username}
+                    {user.username !== localStorage.getItem("username") && (
+                      <button
+                        type="button"
+                        onClick={() => deleteUser(user.username)}
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <div className="list-div-bar"></div>
+          <img
+            className="icon-img"
+            src="src/assets/project_images/files-icon.png"
+            alt="user-icon"
+          />
+          <label htmlFor="projectFile" className="required">
+            Project File:
+          </label>
+          <br />
+          <input
+            type="file"
+            id="projectfile"
+            name="projectfile"
+            onChange={(e) => setProjectFile(e.target.files[0])}
+            required
+          />
+          <br />
+          {error && (
+            <div style={{ textAlign: "center", width: "100%" }}>
+              <p
+                className="error-message"
+                style={{
+                  color: "red",
+                  fontFamily: "Anek Gurmukhi, sans-serif",
+                  fontSize: "20px",
+                  textDecoration: "none",
+                }}
+              >
+                {error}
+              </p>
+            </div>
+          )}
+          {successMessage && (
+            <div style={{ textAlign: "center", width: "100%" }}>
+              <p
+                className="success-message"
+                style={{
+                  color: "green",
+                  fontFamily: "Anek Gurmukhi, sans-serif",
+                  fontSize: "20px",
+                  textDecoration: "none",
+                }}
+              >
+                {successMessage}
+              </p>
+            </div>
+          )}
+          <div className="bottom-buttons">
+            <input
+              className="add-project-input"
+              type="submit"
+              id="addProject"
+              name="addProject"
+              value="Add project"
+            />
+            <button type="button" className="clear-all-button" onClick={clearAll}>
+              Clear all
+            </button>
+          </div>
         </div>
       </form>
     </div>
   );
+  
 }

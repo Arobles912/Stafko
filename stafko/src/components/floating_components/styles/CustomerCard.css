@@ -1,4 +1,4 @@
-.main-edit-project-name-div {
+.main-edit-customer-div {
     position: absolute;
     min-height: 200px;
     width: 100%;
@@ -7,25 +7,25 @@
     font-size: larger;
     display: flex;
     flex-direction: column;
-    z-index: 2;
+    z-index: 5;
     align-items: center;
     box-sizing: border-box;
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
     transform-origin: center;
   }
 
-  .main-edit-project-name-div.visible {
+  .main-edit-customer-div.visible {
     opacity: 1;
     transform: scale(1);
   }
   
-  .main-edit-project-name-div.hidden {
+  .main-edit-customer-div.hidden {
     opacity: 0;
     transform: scale(0);
     overflow: hidden;
   }
 
-  .edit-project-name-div {
+  .edit-customer-div {
     text-align: center;
     justify-content: center;
     box-shadow: 0px 0px 8px 8px lightgray;
@@ -36,7 +36,7 @@
     border-radius: 15px;
   }
 
-  .edit-project-name-div input {
+  .edit-customer-div input {
     background-color: rgb(245, 245, 245);
     padding: 6px;
     font-size: 15px;
@@ -48,27 +48,15 @@
     border-radius: 10px;
   }
 
-  .edit-project-name-div h3 {
+  .edit-customer-div h3 {
     margin-top: 0;
     font-size: 25px;
     text-align: center;
     font-family: "Poppins", sans-serif;
   }
 
-  .select-project-customer{
-    background-color: rgb(245, 245, 245);
-    padding: 6px;
-    font-size: 15px;
-    width: 50%;
-    border: 1px solid gray;
-    margin-top: 0px;
-    margin-bottom: 30px;
-    margin-right: 0;
-    border-radius: 10px;
-  }
-
   @media (max-width: 429px) {
-    .edit-project-name-div {
+    .edit-customer-div {
       width: 50%;
     }
     

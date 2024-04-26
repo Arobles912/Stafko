@@ -14,7 +14,7 @@ Stafko is a simple web application made with **React** and **NestJS** that allow
 
 ### Homescreen
 
-<img src="screenshots/homescreen.png">
+<img src="screenshots/home-screen.png">
 
 ### Navbar
 
@@ -27,6 +27,10 @@ Stafko is a simple web application made with **React** and **NestJS** that allow
 ### Add project
 
 <img src="screenshots/add-project.png">
+
+### Add customer
+
+<img src="screenshots/add-customer.png">
 
 ### Project card
 
