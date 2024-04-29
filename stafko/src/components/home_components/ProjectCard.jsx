@@ -7,16 +7,15 @@ import CustomerCard from "../floating_components/CustomerCard";
 
 export default function ProjectCard({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
-  const [isAddCollaboratorVisible, setIsAddCollaboratorVisible] =
-    useState(false);
+  const [isAddCollaboratorVisible, setIsAddCollaboratorVisible] = useState(
+    false
+  );
   const [isEditProjectName, setIsEditProjectName] = useState(false);
   const [isChangeProjectCustomer, setIsChangeProjectCustomer] = useState(false);
   const [isEditCustomer, setIsEditCustomer] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
   const [description, setDescription] = useState(project.project.description);
-  const [projectOwner, setProjectOwner] = useState(
-    project.project.project_owner
-  );
+  const [projectOwner, setProjectOwner] = useState(project.project.project_owner);
   const [projectCustomer, setProjectCustomer] = useState(
     project.project.associated_customer
   );
@@ -27,6 +26,8 @@ export default function ProjectCard({ project }) {
   const [shouldReload, setShouldReload] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [timer, setTimer] = useState(null);
+  const [time, setTime] = useState(0);
 
   const textareaRef = useRef(null);
 
@@ -138,6 +139,15 @@ export default function ProjectCard({ project }) {
   useEffect(() => {
     adjustTextareaHeight();
   }, [description]);
+
+  useEffect(() => {
+    if (timer !== null) {
+      const interval = setInterval(() => {
+        setTime((prevTime) => prevTime + 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [timer]);
 
   const adjustTextareaHeight = () => {
     if (textareaRef.current) {
@@ -335,6 +345,17 @@ export default function ProjectCard({ project }) {
     }
   }
 
+  function startTimer() {
+    setTimer(Date.now());
+  }
+
+  function stopTimer() {
+    const elapsedTime = Math.floor((Date.now() - timer) / 1000);
+    setTime(elapsedTime);
+    setTimer(null);
+    // Here you can send `elapsedTime` to Clockify
+  }
+
   const projectDate =
     project.project.creation_date.substring(8, 10) +
     "-" +
@@ -373,7 +394,12 @@ export default function ProjectCard({ project }) {
             <div className="info-div">
               <p>
                 Customer:{" "}
-                <span className="project-customer-span" onClick={() => setIsEditCustomer(true)}>{projectCustomer}</span>
+                <span
+                  className="project-customer-span"
+                  onClick={() => setIsEditCustomer(true)}
+                >
+                  {projectCustomer}
+                </span>
               </p>
             </div>
             <div className="info-div">
@@ -454,7 +480,7 @@ export default function ProjectCard({ project }) {
               isEditCustomer ? "visible" : "hidden"
             }`}
           >
-                      {loading ? (
+            {loading ? (
               <div>Loading...</div>
             ) : (
               <CustomerCard
@@ -541,18 +567,58 @@ export default function ProjectCard({ project }) {
             >
               Edit project customer
             </button>
+            {timer === null ? (
+              <button
+                type="button"
+                name="counttimebutton"
+                className="count-time-button"
+                onClick={startTimer}
+              >
+                Start counting
+              </button>
+            ) : (
+              <button
+                type="button"
+                name="stoptimebutton"
+                className="count-time-button"
+                onClick={stopTimer}
+              >
+                Stop counting
+              </button>
+            )}
           </div>
-          <div className="buttons-div">
-            <button
-              type="button"
-              onClick={deleteProject}
-              className="delete-button"
-            >
-              Delete project
-            </button>
-            <button type="button" onClick={saveChanges} className="save-button">
-              Save changes
-            </button>
+          <div className="action-buttons-div">
+            <div className="empty-div"></div>
+            <div className="action-buttons">
+              <button
+                type="button"
+                onClick={deleteProject}
+                className="delete-button"
+              >
+                Delete project
+              </button>
+              <button
+                type="button"
+                onClick={saveChanges}
+                className="save-button"
+              >
+                Save changes
+              </button>
+            </div>
+            <div className="time-counter-container">
+              <p className="time-counter">
+                Time working:{" "}
+                <span>
+                  {Math.floor(time / 3600)
+                    .toString()
+                    .padStart(2, "0")}:
+                  {Math.floor((time % 3600) / 60)
+                    .toString()
+                    .padStart(2, "0")}:
+                  {Math.floor(time % 60).toString().padStart(2, "0")}
+                </span>
+              </p>
+            </div>
           </div>
         </section>
       </div>

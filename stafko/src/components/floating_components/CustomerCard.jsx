@@ -10,6 +10,7 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
   const [website, setWebsite] = useState("");
   const [sector, setSector] = useState("");
   const [cif, setCif] = useState("");
+  const [formValues, setFormValues] = useState({});
   const [shouldReload, setShouldReload] = useState(false);
 
   useEffect(() => {
@@ -36,6 +37,16 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
           setWebsite(data.website);
           setSector(data.sector);
           setCif(data.cif);
+          setFormValues({
+            customer_name: data.customer_name,
+            city: data.city,
+            country: data.country,
+            phone_number: data.phone_number,
+            email: data.email,
+            website: data.website,
+            sector: data.sector,
+            cif: data.cif,
+          });
           console.log("Customer data fetched succesfully.");
         } else {
           console.log("Customer data couldn't be fetched.");
@@ -62,9 +73,7 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              customer_name: customerName,
-            }),
+            body: JSON.stringify(formValues),
           }
         );
         if (response.ok) {
@@ -81,6 +90,11 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
     }
   }
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
   return (
     <div className="main-edit-customer-div">
       <div className="edit-customer-div">
@@ -90,16 +104,97 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
           </button>
         </div>
         <h3>{customerName}</h3>
-        <input
-          type="text"
-          id="customernameinput"
-          name="customernameinput"
-          className="customer-name-input"
-          value={customerName}
-          onChange={(e) => setCustomerName(e.target.value)}
-          maxLength={50}
-        />
-        <br />
+        <div className="left-row-div">
+          <h5>Customer name</h5>
+          <input
+            type="text"
+            id="customernameinput"
+            name="customer_name"
+            className="customer-name-input"
+            value={formValues.customer_name || ""}
+            onChange={handleInputChange}
+            maxLength={50}
+          />
+          <br />
+          <h5>CIF</h5>
+          <input
+            type="text"
+            id="customercifinput"
+            name="cif"
+            className="customer-cif-input"
+            value={formValues.cif || ""}
+            readOnly
+            maxLength={9}
+          />
+          <br />
+          <h5>Country</h5>
+          <input
+            type="text"
+            id="customercountryinput"
+            name="country"
+            className="customer-country-input"
+            value={formValues.country || ""}
+            onChange={handleInputChange}
+            maxLength={50}
+          />
+          <br />
+          <h5>Sector</h5>
+          <input
+            type="text"
+            id="customersectorinput"
+            name="sector"
+            className="customer-sector-input"
+            value={formValues.sector || ""}
+            onChange={handleInputChange}
+            maxLength={50}
+          />
+          <br />
+        </div>
+        <div className="right-row-div">
+          <h5>City</h5>
+          <input
+            type="text"
+            id="customercityinput"
+            name="city"
+            className="customer-city-input"
+            value={formValues.city || ""}
+            onChange={handleInputChange}
+            maxLength={50}
+          />
+          <br />
+          <h5>Phone number</h5>
+          <input
+            type="number"
+            id="customernumberinput"
+            name="phone_number"
+            className="customer-number-input"
+            value={formValues.phone_number || ""}
+            onChange={handleInputChange}
+          />
+          <br />
+          <h5>Website</h5>
+          <input
+            type="url"
+            id="customerwebsiteinput"
+            name="website"
+            className="customer-website-input"
+            value={formValues.website || ""}
+            onChange={handleInputChange}
+            maxLength={255}
+          />
+          <br />
+          <h5>Email</h5>
+          <input
+            type="email"
+            id="customeremailinput"
+            name="email"
+            className="customer-email-input"
+            value={formValues.email || ""}
+            onChange={handleInputChange}
+            maxLength={50}
+          />
+          <br />
+        </div>
         <button
           type="button"
           className="confirm-button"

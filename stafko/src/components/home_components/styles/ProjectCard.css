@@ -176,6 +176,17 @@
   max-height: 600px;
 }
 
+.project-cardEx-main-div h3 {
+  text-shadow: 2px 2px 2px rgb(89, 89, 89);
+  font-family: "Poppins", sans-serif;
+  color: #ffcc00;
+  font-weight: 600;
+  margin-top: 20px;
+  font-size: 26px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
 .description-div {
   flex-basis: 65%;
   margin-top: 18px;
@@ -188,19 +199,8 @@
   border-radius: 10px;
   width: 100%;
   min-height: 300px;
-  max-height: 600px;
+  max-height: 400px;
   overflow-y: scroll;
-}
-
-.description-div h3 {
-  text-shadow: 2px 2px 1px rgb(89, 89, 89);
-  font-family: "Anek Gurmukhi", sans-serif;
-  color: #ffcc00;
-  font-weight: 600;
-  margin-top: 20px;
-  font-size: 30px;
-  text-align: center;
-  margin-bottom: 15px;
 }
 
 .description-div textarea {
@@ -238,18 +238,6 @@ hr {
   max-height: 300px;
   overflow-y: auto;
   text-align: center;
-}
-
-.user-list h3 {
-  text-shadow: 2px 2px 1px rgb(89, 89, 89);
-  font-family: "Anek Gurmukhi", sans-serif;
-  color: #ffcc00;
-  font-weight: 600;
-  margin-top: 20px;
-  font-size: 30px;
-  text-align: center;
-  margin-bottom: 15px;
-  display: block;
 }
 
 .user-list button {
@@ -333,27 +321,12 @@ hr {
   width: 100%;
 }
 
-.save-button {
-  color: white;
-  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
-  font-weight: bold;
-  height: 40px;
-  margin: 20px 10px;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-radius: 10px;
-  background-color: #ffcc00;
-  border: 2px solid #ce9720;
-  outline: none;
-  font-size: 20px;
-  width: auto;
-}
-
-.save-button:hover {
-  border-color: #e97e19;
-  background-color: #ff9900;
-  transition: 0.2s;
+.action-buttons-div {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: calc(100% - 20px); /* Considerando el espacio del padding */
+  margin: 0 auto;
+  grid-gap: 10px;
 }
 
 .edit-project-button {
@@ -373,7 +346,64 @@ hr {
   width: auto;
 }
 
+.count-time-button {
+  color: white;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+  font-weight: bold;
+  height: 35px;
+  margin: 20px 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  background-color: #00aeff;
+  border: 2px solid #0080ff;
+  outline: none;
+  font-size: 20px;
+  width: auto;
+}
+
+.count-time-button:hover {
+  border-color: #00c3ff;
+  background-color: #00ddff;
+  transition: 0.2s;
+}
+
 .edit-project-button:hover {
+  border-color: #e97e19;
+  background-color: #ff9900;
+  transition: 0.2s;
+}
+
+.empty-div {
+  display: none;
+  grid-column: 1 / 2;
+}
+
+.action-buttons {
+  grid-column: 2 / 3;
+  display: flex;
+  justify-content: center;
+}
+
+.save-button {
+  color: white;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+  font-weight: bold;
+  height: 40px;
+  margin: 20px 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  background-color: #ffcc00;
+  border: 2px solid #ce9720;
+  outline: none;
+  font-size: 20px;
+  width: auto;
+}
+
+.save-button:hover {
   border-color: #e97e19;
   background-color: #ff9900;
   transition: 0.2s;
@@ -400,6 +430,26 @@ hr {
   border-color: #e97e19;
   background-color: #ff9900;
   transition: 0.2s;
+}
+
+.time-counter-container {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 10px;
+  text-align: right;
+  grid-column: 3 / 4;
+}
+
+.time-counter {
+  font-weight: 500;
+  color: #0080ff;
+  padding-top: 10px;
+  font-size: 20px;
+  font-family: "Anek Gurmukhi", sans-serif;
+}
+
+.time-counter span{
+  color:#00aeff;
 }
 
 @media (max-width: 1024px) and (min-width: 430px) {

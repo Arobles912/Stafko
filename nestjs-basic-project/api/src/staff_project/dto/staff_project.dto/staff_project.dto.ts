@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class StaffProjectDto {
@@ -9,4 +9,8 @@ export class StaffProjectDto {
   @ApiProperty({ description: 'Project ID', example: 1 })
   @IsNotEmpty()
   project_id: number;
+
+  @ApiProperty({ description: 'Total hours', example: '00:00:00' })
+  @IsOptional()
+  total_hours?: string;
 }

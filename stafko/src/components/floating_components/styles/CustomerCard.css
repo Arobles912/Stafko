@@ -1,64 +1,158 @@
 .main-edit-customer-div {
-    position: absolute;
-    min-height: 200px;
-    width: 100%;
-    margin-top: 20px;
-    justify-content: center;
-    font-size: larger;
-    display: flex;
-    flex-direction: column;
-    z-index: 5;
-    align-items: center;
-    box-sizing: border-box;
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    transform-origin: center;
-  }
+  position: absolute;
+  min-height: 200px;
+  top: 10%;
+  width: 100%;
+  justify-content: center;
+  font-size: larger;
+  display: flex;
+  flex-direction: column;
+  z-index: 5;
+  align-items: center;
+  box-sizing: border-box;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transform-origin: center;
+}
 
-  .main-edit-customer-div.visible {
-    opacity: 1;
-    transform: scale(1);
-  }
-  
-  .main-edit-customer-div.hidden {
-    opacity: 0;
-    transform: scale(0);
-    overflow: hidden;
+.main-add-customer-div {
+  position: absolute;
+  width: 100%;
+  min-height: 700px;
+  margin-top: -10px;
+  padding-top: 10px;
+  padding-right: 50px;
+  padding-left: 50px;
+  padding-bottom: 40px;
+  justify-content: center;
+  font-size: larger;
+  display: flex;
+  z-index: 3;
+  align-items: flex-start;
+  box-sizing: border-box;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transform-origin: center;
+}
+
+.main-edit-customer-div.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.main-edit-customer-div.hidden {
+  opacity: 0;
+  transform: scale(0);
+  overflow: hidden;
+}
+
+.edit-customer-div {
+  text-align: center;
+  justify-content: center;
+  box-shadow: 0px 0px 8px 8px lightgray;
+  padding: 20px;
+  width: 30%;
+  border: none;
+  background: white;
+  border-radius: 15px;
+}
+
+.edit-customer-div h3 {
+  margin-top: 0;
+  font-size: 25px;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.edit-customer-div input {
+  width: 100%;
+  padding: 0;
+  font-size: 16px;
+  border: none;
+  border-bottom: 2px solid black;
+  outline: none;
+  background-color: transparent;
+  border-radius: 0;
+  margin-bottom: 20px;
+}
+
+.edit-customer-div input[type="text"]:focus{
+  width: 100%;
+  padding: 0;
+  font-size: 16px;
+  border: none;
+  border-bottom: 2px solid black;
+  outline: none;
+  background-color: transparent;
+  border-radius: 0;
+  margin-bottom: 20px;
+}
+
+.edit-customer-div input[type="email"]:focus{
+  width: 100%;
+  padding: 0;
+  font-size: 16px;
+  border: none;
+  border-bottom: 2px solid black;
+  outline: none;
+  background-color: transparent;
+  border-radius: 0;
+  margin-bottom: 20px;
+}
+
+.left-row-div {
+  padding: 0;
+  margin-bottom: 30px;
+  margin-top: 10px;
+  width: 40%;
+  display: block;
+  float: left;
+}
+
+.left-row-div h5 {
+  text-align: left;
+  margin-top: 20px;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 10px;
+  font-size: 23px;
+  font-family: "Anek Gurmukhi", sans-serif;
+}
+
+.right-row-div {
+  width: 40%;
+  margin-bottom: 30px;
+  margin-top: 10px;
+  display: block;
+  float: right;
+}
+
+.right-row-div h5 {
+  text-align: right;
+  margin-top: 20px;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 10px;
+  font-size: 23px;
+  font-family: "Anek Gurmukhi", sans-serif;
+}
+
+
+@media (max-width: 1024px) and (min-width: 430px) {
+  .main-edit-customer-div {
+    top: 60%;
   }
 
   .edit-customer-div {
-    text-align: center;
-    justify-content: center;
-    box-shadow: 0px 0px 8px 8px lightgray;
-    padding: 20px;
-    width: 30%;
-    border: none;
-    background: white;
-    border-radius: 15px;
+    width: 70%;
+  }
+}
+
+@media (max-width: 429px) {
+
+  .main-edit-customer-div {
+    top: 80%;
   }
 
-  .edit-customer-div input {
-    background-color: rgb(245, 245, 245);
-    padding: 6px;
-    font-size: 15px;
-    width: 50%;
-    border: 1px solid gray;
-    margin-top: 0px;
-    margin-bottom: 30px;
-    margin-right: 0;
-    border-radius: 10px;
+  .edit-customer-div {
+    width: 70%;
   }
-
-  .edit-customer-div h3 {
-    margin-top: 0;
-    font-size: 25px;
-    text-align: center;
-    font-family: "Poppins", sans-serif;
-  }
-
-  @media (max-width: 429px) {
-    .edit-customer-div {
-      width: 50%;
-    }
-    
-  }
-  
+}

@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
+import { Entity, ManyToOne, JoinColumn, PrimaryColumn, Column } from 'typeorm';
 import { StaffEntity } from 'src/staff/entity/staff.entity/staff.entity';
 import { ProjectsEntity } from 'src/projects/entity/projects.entity/projects.entity';
 import { ApiProperty } from '@nestjs/swagger';
@@ -12,6 +12,10 @@ export class StaffProjectEntity {
   @ApiProperty({ description: 'Project ID', example: 1 })
   @PrimaryColumn()
   project_id: number;
+
+  @ApiProperty({ description: 'Total hours worked on the project.', example: '00:00:00' })
+  @Column({ default: '00:00:00' })
+  total_hours: string;
 
   @ApiProperty({ description: 'Staff entity', type: StaffEntity })
   @ManyToOne(() => StaffEntity, { nullable: false })
