@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles/CustomerCard.css";
 
-export default function CustomerCard({ project, setIsEditCustomer }) {
+export default function CustomerCardView({ project, setIsEditCustomer }) {
   const [customerName, setCustomerName] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
@@ -57,43 +57,6 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
     fetchCustomerData();
   }, [project.project.associated_customer]);
 
-  async function handleConfirm() {
-    const confirmed = window.confirm(
-      "Are you sure you want to confirm the changes?"
-    );
-    if (confirmed) {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/customers/${
-            project.project.associated_customer
-          }`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formValues),
-          }
-        );
-        if (response.ok) {
-          console.log("Customer data updated succesfully.");
-          setShouldReload(true);
-          return true;
-        } else {
-          console.log("Customer data couldn't be updated.");
-          return false;
-        }
-      } catch (error) {
-        console.log("Couldn't update the customer data: ", error);
-      }
-    }
-  }
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
-
   return (
     <div className="main-edit-customer-div">
       <div className="edit-customer-div">
@@ -111,8 +74,8 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
             name="customer_name"
             className="customer-name-input"
             value={formValues.customer_name || ""}
-            onChange={handleInputChange}
             maxLength={50}
+            readOnly
           />
           <br />
           <h5>CIF</h5>
@@ -133,8 +96,8 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
             name="country"
             className="customer-country-input"
             value={formValues.country || ""}
-            onChange={handleInputChange}
             maxLength={50}
+            readOnly
           />
           <br />
           <h5>Sector</h5>
@@ -144,8 +107,8 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
             name="sector"
             className="customer-sector-input"
             value={formValues.sector || ""}
-            onChange={handleInputChange}
             maxLength={50}
+            readOnly
           />
           <br />
         </div>
@@ -157,8 +120,8 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
             name="city"
             className="customer-city-input"
             value={formValues.city || ""}
-            onChange={handleInputChange}
             maxLength={50}
+            readOnly
           />
           <br />
           <h5>Phone number</h5>
@@ -168,7 +131,7 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
             name="phone_number"
             className="customer-number-input"
             value={formValues.phone_number || ""}
-            onChange={handleInputChange}
+            readOnly
           />
           <br />
           <h5>Website</h5>
@@ -178,8 +141,8 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
             name="website"
             className="customer-website-input"
             value={formValues.website || ""}
-            onChange={handleInputChange}
             maxLength={255}
+            readOnly
           />
           <br />
           <h5>Email</h5>
@@ -189,18 +152,11 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
             name="email"
             className="customer-email-input"
             value={formValues.email || ""}
-            onChange={handleInputChange}
             maxLength={50}
+            readOnly
           />
           <br />
         </div>
-        <button
-          type="button"
-          className="confirm-button"
-          onClick={handleConfirm}
-        >
-          Confirm
-        </button>
       </div>
     </div>
   );

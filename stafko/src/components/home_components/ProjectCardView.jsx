@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles/ProjectCard.css";
+import CustomerCardView from "../floating_components/CustomerCardView";
 
 export default function ProjectCardView({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
@@ -11,23 +12,41 @@ export default function ProjectCardView({ project }) {
   const [projectCustomer, setProjectCustomer] = useState(
     project.project.associated_customer
   );
+  const [isEditCustomer, setIsEditCustomer] = useState(false);
   const [staffProjectsData, setStaffProjectsData] = useState(null);
   const [collaborators, setCollaborators] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [timer, setTimer] = useState(null);
+  const [time, setTime] = useState(0);
 
   const textareaRef = useRef(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const staffProjectsResponse = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-            project.staffProject.project_id
-          }`
-        );
-        if (staffProjectsResponse.ok) {
-          const data = await staffProjectsResponse.json();
-          setStaffProjectsData(data);
+        const [staffProjectsResponse, collaboratorsResponse] =
+          await Promise.all([
+            fetch(
+              `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+                project.staffProject.project_id
+              }`
+            ),
+            fetch(
+              `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+                project.staffProject.project_id
+              }/users`
+            ),
+          ]);
+
+        if (staffProjectsResponse.ok && collaboratorsResponse.ok) {
+          const [staffData, collaboratorsData] = await Promise.all([
+            staffProjectsResponse.json(),
+            collaboratorsResponse.json(),
+          ]);
+
+          setStaffProjectsData(staffData);
+          setCollaborators(collaboratorsData);
+          setLoading(false);
         } else {
           throw new Error("Failed to fetch data");
         }
@@ -37,65 +56,34 @@ export default function ProjectCardView({ project }) {
     }
 
     fetchData();
-  }, [project.project_id]);
-
-  useEffect(() => {
-    async function fetchCollaborators() {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-            project.staffProject.project_id
-          }/users`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setCollaborators(data);
-          setLoading(false);
-        } else {
-          throw new Error("Failed to fetch collaborators");
-        }
-      } catch (error) {
-        console.error("Error fetching collaborators:", error);
-      }
-    }
-
-    fetchCollaborators();
   }, [project.staffProject.project_id]);
 
   useEffect(() => {
-    async function fetchOwnerName() {
+    async function fetchOwnerAndCustomer() {
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staff/${projectOwner}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setProjectOwner(data.username);
-        }
-      } catch (error) {
-        console.error("Failed to fetch project owner: ", error);
-      }
-    }
-    fetchOwnerName();
-  }, []);
+        const [ownerResponse, customerResponse] = await Promise.all([
+          fetch(`${import.meta.env.VITE_BACKEND_URL}/staff/${projectOwner}`),
+          fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/customers/${projectCustomer}`
+          ),
+        ]);
 
-  useEffect(() => {
-    async function fetchCustomerName() {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/customers/${projectCustomer}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setProjectCustomer(data.customer_name);
+        if (ownerResponse.ok) {
+          const ownerData = await ownerResponse.json();
+          setProjectOwner(ownerData.username);
+        }
+
+        if (customerResponse.ok) {
+          const customerData = await customerResponse.json();
+          setProjectCustomer(customerData.customer_name);
         }
       } catch (error) {
-        console.error("Failed to fetch project customer: ", error);
+        console.error("Failed to fetch project owner or customer: ", error);
       }
     }
 
-    fetchCustomerName();
-  }, []);
+    fetchOwnerAndCustomer();
+  }, [projectOwner, projectCustomer]);
 
   useEffect(() => {
     adjustTextareaHeight();
@@ -140,6 +128,26 @@ export default function ProjectCardView({ project }) {
     }
   }
 
+  useEffect(() => {
+    if (timer !== null) {
+      const interval = setInterval(() => {
+        setTime((prevTime) => prevTime + 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [timer]);
+
+  function startTimer() {
+    setTime(0);
+    setTimer(Date.now());
+  }
+
+  function stopTimer() {
+    const elapsedTime = Math.floor((Date.now() - timer) / 1000);
+    setTime(elapsedTime);
+    setTimer(null);
+  }
+
   const projectDate =
     project.project.creation_date.substring(8, 10) +
     "-" +
@@ -170,7 +178,13 @@ export default function ProjectCardView({ project }) {
             </div>
             <div className="info-div">
               <p>
-                Customer: <span className="project-owner-span">{projectCustomer}</span>
+                Customer:{" "}
+                <span
+                  className="project-customer-span"
+                  onClick={() => setIsEditCustomer(true)}
+                >
+                  {projectCustomer}
+                </span>
               </p>
             </div>
             <div className="info-div">
@@ -201,6 +215,20 @@ export default function ProjectCardView({ project }) {
             extendedCard ? "extended" : ""
           }`}
         >
+          <div
+            className={`main-edit-customer-div ${
+              isEditCustomer ? "visible" : "hidden"
+            }`}
+          >
+            {loading ? (
+              <div>Loading...</div>
+            ) : (
+              <CustomerCardView
+                setIsEditCustomer={setIsEditCustomer}
+                project={project}
+              />
+            )}
+          </div>
           <div className="description-div">
             <h3>ReadME</h3>
             <hr />
@@ -234,6 +262,48 @@ export default function ProjectCardView({ project }) {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="action-buttons-div">
+            <div className="empty-div"></div>
+            <div className="action-buttons">
+              {timer === null ? (
+                <button
+                  type="button"
+                  name="counttimebutton"
+                  className="count-time-button"
+                  onClick={startTimer}
+                >
+                  Start counting
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  name="stoptimebutton"
+                  className="count-time-button"
+                  onClick={stopTimer}
+                >
+                  Stop counting
+                </button>
+              )}
+            </div>
+            <div className="time-counter-container">
+              <p className="time-counter">
+                Time working:{" "}
+                <span>
+                  {Math.floor(time / 3600)
+                    .toString()
+                    .padStart(2, "0")}
+                  :
+                  {Math.floor((time % 3600) / 60)
+                    .toString()
+                    .padStart(2, "0")}
+                  :
+                  {Math.floor(time % 60)
+                    .toString()
+                    .padStart(2, "0")}
+                </span>
+              </p>
+            </div>
           </div>
         </section>
       </div>

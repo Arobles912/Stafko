@@ -1,21 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles/ProjectCard.css";
-import AddCollaborator from "../floating_components/AddCollaborator";
-import EditProjectName from "../floating_components/EditProjectName";
-import ChangeProjectCustomer from "../floating_components/ChangeProjectCustomer";
-import CustomerCard from "../floating_components/CustomerCard";
+import ProjectCardMain from "./ProjectCardMain";
+import ProjectCardExtended from "./ProjectCardExtended";
 
 export default function ProjectCard({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
-  const [isAddCollaboratorVisible, setIsAddCollaboratorVisible] = useState(
-    false
-  );
+  const [isAddCollaboratorVisible, setIsAddCollaboratorVisible] =
+    useState(false);
   const [isEditProjectName, setIsEditProjectName] = useState(false);
   const [isChangeProjectCustomer, setIsChangeProjectCustomer] = useState(false);
   const [isEditCustomer, setIsEditCustomer] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
   const [description, setDescription] = useState(project.project.description);
-  const [projectOwner, setProjectOwner] = useState(project.project.project_owner);
+  const [projectOwner, setProjectOwner] = useState(
+    project.project.project_owner
+  );
   const [projectCustomer, setProjectCustomer] = useState(
     project.project.associated_customer
   );
@@ -26,23 +25,51 @@ export default function ProjectCard({ project }) {
   const [shouldReload, setShouldReload] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [timer, setTimer] = useState(null);
-  const [time, setTime] = useState(0);
 
   const textareaRef = useRef(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const staffProjectsResponse = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-            project.staffProject.project_id
-          }`
-        );
-        if (staffProjectsResponse.ok) {
-          const data = await staffProjectsResponse.json();
-          setStaffProjectsData(data);
-          setInitialDesc(data.description);
+        const [
+          staffProjectsResponse,
+          descriptionResponse,
+          collaboratorsResponse,
+        ] = await Promise.all([
+          fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+              project.staffProject.project_id
+            }`
+          ),
+          fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/projects/${
+              project.staffProject.project_id
+            }`
+          ),
+          fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+              project.staffProject.project_id
+            }/users`
+          ),
+        ]);
+
+        if (
+          staffProjectsResponse.ok &&
+          descriptionResponse.ok &&
+          collaboratorsResponse.ok
+        ) {
+          const [staffData, descriptionData, collaboratorsData] =
+            await Promise.all([
+              staffProjectsResponse.json(),
+              descriptionResponse.json(),
+              collaboratorsResponse.json(),
+            ]);
+
+          setStaffProjectsData(staffData);
+          setInitialDesc(descriptionData.description);
+          setCollaborators(collaboratorsData);
+          setAllCollaborators(collaboratorsData);
+          setLoading(false);
         } else {
           throw new Error("Failed to fetch data");
         }
@@ -52,102 +79,38 @@ export default function ProjectCard({ project }) {
     }
 
     fetchData();
-  }, [project.project_id]);
-
-  useEffect(() => {
-    async function fetchDescription() {
-      try {
-        const staffProjectsResponse = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/projects/${
-            project.staffProject.project_id
-          }`
-        );
-        if (staffProjectsResponse.ok) {
-          const data = await staffProjectsResponse.json();
-          setInitialDesc(data.description);
-        } else {
-          throw new Error("Failed to fetch description");
-        }
-      } catch (error) {
-        console.error("An error has occurred:", error);
-      }
-    }
-
-    fetchDescription();
-  }, [project.project_id]);
-
-  useEffect(() => {
-    async function fetchCollaborators() {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-            project.staffProject.project_id
-          }/users`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setCollaborators(data);
-          setAllCollaborators(data);
-          setLoading(false);
-        } else {
-          throw new Error("Failed to fetch collaborators");
-        }
-      } catch (error) {
-        console.error("Error fetching collaborators:", error);
-      }
-    }
-
-    fetchCollaborators();
   }, [project.staffProject.project_id]);
 
   useEffect(() => {
-    async function fetchOwnerName() {
+    async function fetchOwnerAndCustomer() {
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staff/${projectOwner}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setProjectOwner(data.username);
+        const [ownerResponse, customerResponse] = await Promise.all([
+          fetch(`${import.meta.env.VITE_BACKEND_URL}/staff/${projectOwner}`),
+          fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/customers/${projectCustomer}`
+          ),
+        ]);
+
+        if (ownerResponse.ok) {
+          const ownerData = await ownerResponse.json();
+          setProjectOwner(ownerData.username);
+        }
+
+        if (customerResponse.ok) {
+          const customerData = await customerResponse.json();
+          setProjectCustomer(customerData.customer_name);
         }
       } catch (error) {
-        console.error("Failed to fetch project owner: ", error);
+        console.error("Failed to fetch project owner or customer: ", error);
       }
     }
 
-    fetchOwnerName();
-  }, []);
-
-  useEffect(() => {
-    async function fetchCustomerName() {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/customers/${projectCustomer}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setProjectCustomer(data.customer_name);
-        }
-      } catch (error) {
-        console.error("Failed to fetch project customer: ", error);
-      }
-    }
-
-    fetchCustomerName();
-  }, []);
+    fetchOwnerAndCustomer();
+  }, [projectOwner, projectCustomer]);
 
   useEffect(() => {
     adjustTextareaHeight();
   }, [description]);
-
-  useEffect(() => {
-    if (timer !== null) {
-      const interval = setInterval(() => {
-        setTime((prevTime) => prevTime + 1);
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [timer]);
 
   const adjustTextareaHeight = () => {
     if (textareaRef.current) {
@@ -189,7 +152,7 @@ export default function ProjectCard({ project }) {
         throw new Error("Can't get file URL.");
       }
     } catch (error) {
-      setError("Error dowloading the file:", error);
+      setError("Error downloading the file:", error);
       console.error("Error downloading the file:", error);
     }
   }
@@ -240,29 +203,30 @@ export default function ProjectCard({ project }) {
       let staffProjectData;
 
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-            project.staffProject.project_id
-          }`,
-          {
-            method: "DELETE",
-          }
-        );
+        const [staffProjectResponse, projectResponse] = await Promise.all([
+          fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+              project.staffProject.project_id
+            }`,
+            {
+              method: "DELETE",
+            }
+          ),
+          fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/projects/${
+              project.project.project_id
+            }`,
+            {
+              method: "DELETE",
+            }
+          ),
+        ]);
 
-        if (!response.ok) {
+        if (!staffProjectResponse.ok) {
           throw new Error("Failed to delete staff project");
         }
 
         staffProjectData = { ...project };
-
-        const projectResponse = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/projects/${
-            project.project.project_id
-          }`,
-          {
-            method: "DELETE",
-          }
-        );
 
         if (!projectResponse.ok) {
           throw new Error("Failed to delete project");
@@ -345,16 +309,7 @@ export default function ProjectCard({ project }) {
     }
   }
 
-  function startTimer() {
-    setTimer(Date.now());
-  }
-
-  function stopTimer() {
-    const elapsedTime = Math.floor((Date.now() - timer) / 1000);
-    setTime(elapsedTime);
-    setTimer(null);
-    // Here you can send `elapsedTime` to Clockify
-  }
+  
 
   const projectDate =
     project.project.creation_date.substring(8, 10) +
@@ -376,251 +331,40 @@ export default function ProjectCard({ project }) {
   return (
     <div className="main-container-div">
       <div className="container-div">
-        <section className="project-card-main-div">
-          <div className="title-div">
-            <img
-              src="src/assets/project_images/project-icon.png"
-              alt="project-img"
-            />
-            <h1 name="projecttitle">{project.project.project_name}</h1>
-          </div>
-          <div className="info-div-container">
-            <div className="info-div">
-              <p>
-                Owner:{" "}
-                <span className="project-owner-span">{projectOwner}</span>
-              </p>
-            </div>
-            <div className="info-div">
-              <p>
-                Customer:{" "}
-                <span
-                  className="project-customer-span"
-                  onClick={() => setIsEditCustomer(true)}
-                >
-                  {projectCustomer}
-                </span>
-              </p>
-            </div>
-            <div className="info-div">
-              <p>Number of collaborators: {numberOfCollaborators}</p>
-            </div>
-            <div className="info-div">
-              <p>Creation date: {projectDate}</p>
-            </div>
-          </div>
-          <button
-            className="edit-button"
-            type="button"
-            onClick={handleEditButton}
-          >
-            {editButtonText}
-          </button>
-          <button
-            className="download-button"
-            type="button"
-            onClick={handleDownloadButton}
-          >
-            Download File
-          </button>
-          <hr className="mobile-hr" />
-        </section>
-        <section
-          className={`project-cardEx-main-div ${
-            extendedCard ? "extended" : ""
-          }`}
-        >
-          <div
-            className={`main-add-collaborator-div ${
-              isAddCollaboratorVisible ? "visible" : "hidden"
-            }`}
-          >
-            {loading ? (
-              <div>Loading...</div>
-            ) : (
-              <AddCollaborator
-                setIsAddCollaboratorVisible={setIsAddCollaboratorVisible}
-                collaborators={collaborators}
-                project={project}
-              />
-            )}
-          </div>
-          <div
-            className={`main-edit-project-name-div ${
-              isEditProjectName ? "visible" : "hidden"
-            }`}
-          >
-            {loading ? (
-              <div>Loading...</div>
-            ) : (
-              <EditProjectName
-                setIsEditProjectName={setIsEditProjectName}
-                project={project}
-              />
-            )}
-          </div>
-
-          <div
-            className={`main-edit-project-name-div ${
-              isChangeProjectCustomer ? "visible" : "hidden"
-            }`}
-          >
-            {loading ? (
-              <div>Loading...</div>
-            ) : (
-              <ChangeProjectCustomer
-                setIsChangeProjectCustomer={setIsChangeProjectCustomer}
-                project={project}
-              />
-            )}
-          </div>
-
-          <div
-            className={`main-edit-customer-div ${
-              isEditCustomer ? "visible" : "hidden"
-            }`}
-          >
-            {loading ? (
-              <div>Loading...</div>
-            ) : (
-              <CustomerCard
-                setIsEditCustomer={setIsEditCustomer}
-                project={project}
-              />
-            )}
-          </div>
-          <div className="description-div">
-            <h3>ReadME</h3>
-            <hr />
-            <textarea
-              name="desctextarea"
-              ref={textareaRef}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows="6"
-              onFocus={adjustTextareaHeight}
-            />
-          </div>
-          <div className="user-list">
-            <h3>Collaborators</h3>
-            <hr />
-            {collaborators.map((collaborator, index) => (
-              <div className="user-card" key={index}>
-                <div>
-                  <img
-                    src="src/assets/user_images/user-icon.png"
-                    alt="colaborators-icon"
-                  />
-                  <span
-                    className={
-                      collaborator === projectOwner ? "owner-color-span" : ""
-                    }
-                  >
-                    {collaborator}
-                  </span>
-                </div>
-                {collaborator !== projectOwner && (
-                  <button
-                    type="button"
-                    onClick={() => modifyCollaborators(collaborator)}
-                  >
-                    Delete collaborator
-                  </button>
-                )}
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => setIsAddCollaboratorVisible(true)}
-            >
-              Add collaborator
-            </button>
-          </div>
-          {error && (
-            <div style={{ textAlign: "center", width: "100%" }}>
-              <p
-                className="error-message"
-                style={{
-                  color: "red",
-                  fontFamily: "Anek Gurmukhi, sans-serif",
-                  fontSize: "20px",
-                }}
-              >
-                {error}
-              </p>
-            </div>
-          )}
-          <div className="buttons-div">
-            <button
-              type="button"
-              name="editprojectnamebutton"
-              className="edit-project-button"
-              onClick={() => setIsEditProjectName(true)}
-            >
-              Edit project name
-            </button>
-            <button
-              type="button"
-              name="changeprojectcustomerbutton"
-              className="edit-project-button"
-              onClick={() => setIsChangeProjectCustomer(true)}
-            >
-              Edit project customer
-            </button>
-            {timer === null ? (
-              <button
-                type="button"
-                name="counttimebutton"
-                className="count-time-button"
-                onClick={startTimer}
-              >
-                Start counting
-              </button>
-            ) : (
-              <button
-                type="button"
-                name="stoptimebutton"
-                className="count-time-button"
-                onClick={stopTimer}
-              >
-                Stop counting
-              </button>
-            )}
-          </div>
-          <div className="action-buttons-div">
-            <div className="empty-div"></div>
-            <div className="action-buttons">
-              <button
-                type="button"
-                onClick={deleteProject}
-                className="delete-button"
-              >
-                Delete project
-              </button>
-              <button
-                type="button"
-                onClick={saveChanges}
-                className="save-button"
-              >
-                Save changes
-              </button>
-            </div>
-            <div className="time-counter-container">
-              <p className="time-counter">
-                Time working:{" "}
-                <span>
-                  {Math.floor(time / 3600)
-                    .toString()
-                    .padStart(2, "0")}:
-                  {Math.floor((time % 3600) / 60)
-                    .toString()
-                    .padStart(2, "0")}:
-                  {Math.floor(time % 60).toString().padStart(2, "0")}
-                </span>
-              </p>
-            </div>
-          </div>
-        </section>
+        <ProjectCardMain
+          project={project}
+          extendedCard={extendedCard}
+          projectOwner={projectOwner}
+          projectCustomer={projectCustomer}
+          numberOfCollaborators={numberOfCollaborators}
+          projectDate={projectDate}
+          setIsEditCustomer={setIsEditCustomer}
+          handleEditButton={handleEditButton}
+          handleDownloadButton={handleDownloadButton}
+        />
+        <ProjectCardExtended
+          extendedCard={extendedCard}
+          setDescription={setDescription}
+          isAddCollaboratorVisible={isAddCollaboratorVisible}
+          isEditProjectName={isEditProjectName}
+          setIsEditProjectName={setIsEditProjectName}
+          setIsChangeProjectCustomer={setIsChangeProjectCustomer}
+          setIsEditCustomer={setIsEditCustomer}
+          isChangeProjectCustomer={isChangeProjectCustomer}
+          isEditCustomer={isEditCustomer}
+          error={error}
+          loading={loading}
+          textareaRef={textareaRef}
+          description={description}
+          setIsAddCollaboratorVisible={setIsAddCollaboratorVisible}
+          adjustTextareaHeight={adjustTextareaHeight}
+          project={project}
+          collaborators={collaborators}
+          projectOwner={projectOwner}
+          modifyCollaborators={modifyCollaborators}
+          deleteProject={deleteProject}
+          saveChanges={saveChanges}
+        />
       </div>
     </div>
   );

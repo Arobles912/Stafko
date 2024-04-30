@@ -335,7 +335,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
           <select name="users" id="users" className="select-user">
             <option>Select user</option>
             {users.map((user) => (
-              <option key={user.id} value={user.username}>
+              <option key={user.staff_id} value={user.username}>
                 {user.username}
               </option>
             ))}

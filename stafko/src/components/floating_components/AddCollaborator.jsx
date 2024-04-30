@@ -134,7 +134,7 @@ export default function AddCollaborator({
           >
             <option value="">Select user</option>
             {users.map((user) => (
-              <option key={user.id} value={user.username}>
+              <option key={user.staff_id} value={user.username}>
                 {user.username}
               </option>
             ))}

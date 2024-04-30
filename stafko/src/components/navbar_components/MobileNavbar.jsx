@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import "./styles/MobileNavbar.css";
 import SearchBar from "./SearchBar";
 

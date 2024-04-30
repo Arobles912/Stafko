@@ -5,7 +5,7 @@ export default function AddCustomer() {
   const [customerName, setCustomerName] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [website, setWebsite] = useState("");
   const [sector, setSector] = useState("");
