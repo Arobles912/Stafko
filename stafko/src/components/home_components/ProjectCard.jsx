@@ -5,10 +5,6 @@ import ProjectCardExtended from "./ProjectCardExtended";
 
 export default function ProjectCard({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
-  const [isAddCollaboratorVisible, setIsAddCollaboratorVisible] =
-    useState(false);
-  const [isEditProjectName, setIsEditProjectName] = useState(false);
-  const [isChangeProjectCustomer, setIsChangeProjectCustomer] = useState(false);
   const [isEditCustomer, setIsEditCustomer] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
   const [description, setDescription] = useState(project.project.description);
@@ -108,16 +104,7 @@ export default function ProjectCard({ project }) {
     fetchOwnerAndCustomer();
   }, [projectOwner, projectCustomer]);
 
-  useEffect(() => {
-    adjustTextareaHeight();
-  }, [description]);
 
-  const adjustTextareaHeight = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
-  };
 
   function handleEditButton() {
     if (editButtonText === "Cancel") {
@@ -309,15 +296,6 @@ export default function ProjectCard({ project }) {
     }
   }
 
-  
-
-  const projectDate =
-    project.project.creation_date.substring(8, 10) +
-    "-" +
-    project.project.creation_date.substring(5, 7) +
-    "-" +
-    project.project.creation_date.substring(0, 4);
-
   const numberOfCollaborators = staffProjectsData
     ? staffProjectsData.length
     : 0;
@@ -337,7 +315,6 @@ export default function ProjectCard({ project }) {
           projectOwner={projectOwner}
           projectCustomer={projectCustomer}
           numberOfCollaborators={numberOfCollaborators}
-          projectDate={projectDate}
           setIsEditCustomer={setIsEditCustomer}
           handleEditButton={handleEditButton}
           handleDownloadButton={handleDownloadButton}
@@ -345,19 +322,12 @@ export default function ProjectCard({ project }) {
         <ProjectCardExtended
           extendedCard={extendedCard}
           setDescription={setDescription}
-          isAddCollaboratorVisible={isAddCollaboratorVisible}
-          isEditProjectName={isEditProjectName}
-          setIsEditProjectName={setIsEditProjectName}
-          setIsChangeProjectCustomer={setIsChangeProjectCustomer}
           setIsEditCustomer={setIsEditCustomer}
-          isChangeProjectCustomer={isChangeProjectCustomer}
           isEditCustomer={isEditCustomer}
           error={error}
           loading={loading}
           textareaRef={textareaRef}
           description={description}
-          setIsAddCollaboratorVisible={setIsAddCollaboratorVisible}
-          adjustTextareaHeight={adjustTextareaHeight}
           project={project}
           collaborators={collaborators}
           projectOwner={projectOwner}

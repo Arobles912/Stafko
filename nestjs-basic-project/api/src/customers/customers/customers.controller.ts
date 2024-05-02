@@ -90,7 +90,7 @@ export class CustomersController {
   })
   @ApiResponse({ status: 404, description: "Customer not found" })
   @ApiResponse({ status: 500, description: "Internal server error" })
-  async findByProjectName(@Param("customer_name") customer_name: string) {
-    return this.customersService.findByProjectName(customer_name);
+  async findByCustomerName(@Param("customer_name") customer_name: string) {
+    return this.customersService.findByCustomerName(customer_name);
   }
 }

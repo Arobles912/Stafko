@@ -1,37 +1,48 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "./styles/ProjectCard.css";
 import AddCollaborator from "../floating_components/AddCollaborator";
 import EditProjectName from "../floating_components/EditProjectName";
 import ChangeProjectCustomer from "../floating_components/ChangeProjectCustomer";
 import CustomerCard from "../floating_components/CustomerCard";
-import { startTimer, stopTimer } from "../clockify/ClockifyFunctions";
+import {
+  startTimer,
+  stopTimer,
+  getActiveTimer,
+} from "../clockify/ClockifyFunctions";
 
 export default function ProjectCardExtended({
   extendedCard,
-  isAddCollaboratorVisible,
-  isEditProjectName,
-  isChangeProjectCustomer,
-  setIsChangeProjectCustomer,
   isEditCustomer,
   error,
   loading,
-  setIsEditProjectName,
   textareaRef,
   description,
   setDescription,
   setIsEditCustomer,
-  adjustTextareaHeight,
-  setIsAddCollaboratorVisible,
   project,
   collaborators,
   projectOwner,
   modifyCollaborators,
   deleteProject,
-  saveChanges
+  saveChanges,
 }) {
-
+  const [isChangeProjectCustomer, setIsChangeProjectCustomer] = useState(false);
+  const [isEditProjectName, setIsEditProjectName] = useState(false);
+  const [isAddCollaboratorVisible, setIsAddCollaboratorVisible] =
+    useState(false);
   const [timer, setTimer] = useState(null);
   const [time, setTime] = useState(0);
+
+  const username = localStorage.getItem("username");
+
+  useEffect(() => {
+    getActiveTimer().then((elapsedTimeInSeconds) => {
+      if (elapsedTimeInSeconds > 0) {
+        setTimer(1); 
+        setTime(elapsedTimeInSeconds); 
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (timer !== null) {
@@ -41,6 +52,17 @@ export default function ProjectCardExtended({
       return () => clearInterval(interval);
     }
   }, [timer]);
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [description]);
+
+  const adjustTextareaHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  };
 
   return (
     <section
@@ -185,7 +207,7 @@ export default function ProjectCardExtended({
             type="button"
             name="counttimebutton"
             className="count-time-button"
-            onClick={() => startTimer(project, setTimer, setTime)}
+            onClick={() => startTimer(project, setTimer, setTime, username)}
           >
             Start counting
           </button>
@@ -194,7 +216,7 @@ export default function ProjectCardExtended({
             type="button"
             name="stoptimebutton"
             className="count-time-button"
-            onClick={() => stopTimer(time, setTimer, setTime)}
+            onClick={() => stopTimer(timer, setTimer, setTime)}
           >
             Stop counting
           </button>

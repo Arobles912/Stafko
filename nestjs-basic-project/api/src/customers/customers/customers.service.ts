@@ -65,7 +65,7 @@ export class CustomersService {
       @ApiNotFoundResponse({ description: 'Customer not found' })
       @ApiInternalServerErrorResponse({ description: 'Internal server error' })
     
-      async findByProjectName(customer_name: string): Promise<CustomersEntity> {
+      async findByCustomerName(customer_name: string): Promise<CustomersEntity> {
         return this.customersRepository.findOneBy({ customer_name });
       }
 }

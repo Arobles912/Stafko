@@ -6,11 +6,18 @@ export default function ProjectCardMain({
   projectOwner,
   projectCustomer,
   numberOfCollaborators,
-  projectDate,
   setIsEditCustomer,
   handleEditButton,
   handleDownloadButton,
 }) {
+
+  const projectDate =
+    project.project.creation_date.substring(8, 10) +
+    "-" +
+    project.project.creation_date.substring(5, 7) +
+    "-" +
+    project.project.creation_date.substring(0, 4);
+
   return (
     <section className="project-card-main-div">
       <div className="title-div">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles/ProjectCard.css";
 import CustomerCardView from "../floating_components/CustomerCardView";
+import { startTimer, stopTimer } from "../clockify/ClockifyFunctions";
 
 export default function ProjectCardView({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
@@ -19,6 +20,7 @@ export default function ProjectCardView({ project }) {
   const [timer, setTimer] = useState(null);
   const [time, setTime] = useState(0);
 
+  const username = localStorage.getItem("username");
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -136,17 +138,6 @@ export default function ProjectCardView({ project }) {
       return () => clearInterval(interval);
     }
   }, [timer]);
-
-  function startTimer() {
-    setTime(0);
-    setTimer(Date.now());
-  }
-
-  function stopTimer() {
-    const elapsedTime = Math.floor((Date.now() - timer) / 1000);
-    setTime(elapsedTime);
-    setTimer(null);
-  }
 
   const projectDate =
     project.project.creation_date.substring(8, 10) +
@@ -271,7 +262,7 @@ export default function ProjectCardView({ project }) {
                   type="button"
                   name="counttimebutton"
                   className="count-time-button"
-                  onClick={startTimer}
+                  onClick={() => startTimer(project, setTimer, setTime, username)}
                 >
                   Start counting
                 </button>
@@ -280,7 +271,7 @@ export default function ProjectCardView({ project }) {
                   type="button"
                   name="stoptimebutton"
                   className="count-time-button"
-                  onClick={stopTimer}
+                  onClick={() => stopTimer(timer, setTimer, setTime)}
                 >
                   Stop counting
                 </button>
