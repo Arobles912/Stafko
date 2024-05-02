@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./styles/Login.css";
-import Header from "./Header.jsx";
-import Footer from "./Footer.jsx";
+import Header from "../components/login_components/Header.jsx";
+import Footer from "../components/login_components/Footer.jsx";
 
 export default function Login({ setIsLoggedIn, username, setUsername }) {
   const [pass, setPassword] = useState("");

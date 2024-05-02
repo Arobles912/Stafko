@@ -5,9 +5,9 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Login from "./components/login_components/Login";
-import Register from "./components/login_components/Register";
-import Home from "./components/home_components/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Home from "./pages/Home";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

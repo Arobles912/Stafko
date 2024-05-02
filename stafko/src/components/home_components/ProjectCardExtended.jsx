@@ -35,13 +35,17 @@ export default function ProjectCardExtended({
 
   const username = localStorage.getItem("username");
 
+
   useEffect(() => {
-    getActiveTimer().then((elapsedTimeInSeconds) => {
-      if (elapsedTimeInSeconds > 0) {
-        setTimer(1); 
-        setTime(elapsedTimeInSeconds); 
-      }
-    });
+    const timerState = localStorage.getItem("timerstate");
+    if (timerState === "active") {
+      getActiveTimer().then((elapsedTimeInSeconds) => {
+        if (elapsedTimeInSeconds > 0) {
+          setTimer(1);
+          setTime(elapsedTimeInSeconds);
+        }
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -64,6 +68,20 @@ export default function ProjectCardExtended({
     }
   };
 
+  const handleStartTimer = () => {
+    startTimer(project, setTimer, setTime, username);
+    localStorage.setItem("timerstate", "active");
+  };
+  
+  const handleStopTimer = () => {
+    stopTimer(
+      timer,
+      setTimer,
+      setTime
+    );
+    localStorage.removeItem("timerstate");
+  };
+  
   return (
     <section
       className={`project-cardEx-main-div ${extendedCard ? "extended" : ""}`}
@@ -207,7 +225,7 @@ export default function ProjectCardExtended({
             type="button"
             name="counttimebutton"
             className="count-time-button"
-            onClick={() => startTimer(project, setTimer, setTime, username)}
+            onClick={handleStartTimer}
           >
             Start counting
           </button>
@@ -216,7 +234,7 @@ export default function ProjectCardExtended({
             type="button"
             name="stoptimebutton"
             className="count-time-button"
-            onClick={() => stopTimer(timer, setTimer, setTime)}
+            onClick={handleStopTimer}
           >
             Stop counting
           </button>

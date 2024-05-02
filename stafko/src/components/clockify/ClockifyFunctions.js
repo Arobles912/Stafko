@@ -96,73 +96,73 @@ export async function startTimer(project, setTimer, setTime, username) {
   }
 }
 
-  
-  export async function stopTimer(timer, setTimer, setTime) {
-    setTime(0);
-    try {
-      if (!timer) {
-        throw new Error("Timer is not running.");
-      }
-      const response = await fetch(
-        `https://api.clockify.me/api/v1/workspaces/662f52726feaaf7addde49f8/user/662f52726feaaf7addde49f7/time-entries`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Api-Key": `ODFjNTBlYzMtNWVjMi00OGIyLTllZTQtNTdhOGM2MzRhNzlh`,
-          },
-          body: JSON.stringify({
-            end: new Date().toISOString(),
-          }),
-        }
-      );
-  
-      if (!response.ok) {
-        throw new Error("Failed to stop time entry");
-      }
-  
-      console.log("Time entry stopped successfully.");
-    } catch (error) {
-      console.error("Error stopping time entry:", error);
-    } finally {
-      setTimer(null);
+export async function stopTimer(timer, setTimer, setTime) {
+  try {
+    if (!timer) {
+      throw new Error("Timer is not running.");
     }
-  }
+    const response = await fetch(
+      `https://api.clockify.me/api/v1/workspaces/662f52726feaaf7addde49f8/user/662f52726feaaf7addde49f7/time-entries`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Api-Key": `ODFjNTBlYzMtNWVjMi00OGIyLTllZTQtNTdhOGM2MzRhNzlh`,
+        },
+        body: JSON.stringify({
+          end: new Date().toISOString(),
+        }),
+      }
+    );
 
-  export async function getActiveTimer() {
-    try {
-      const response = await fetch(
-        `https://api.clockify.me/api/v1/workspaces/662f52726feaaf7addde49f8/user/662f52726feaaf7addde49f7/time-entries`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Api-Key": `ODFjNTBlYzMtNWVjMi00OGIyLTllZTQtNTdhOGM2MzRhNzlh`,
-          },
-        }
-      );
-  
-      if (!response.ok) {
-        throw new Error("Failed to get active timer");
-      }
-  
-      const responseData = await response.json();
-  
-      if (responseData.length === 0) {
-        return 0;
-      }
-  
-      const activeTimer = responseData[0];
-      const startTime = new Date(activeTimer.timeInterval.start);
-      const currentTime = new Date();
-      const elapsedTimeInSeconds = Math.floor(
-        (currentTime - startTime) / 1000
-      );
-  
-      return elapsedTimeInSeconds;
-    } catch (error) {
-      console.error("Error getting active timer:", error);
-      return null;
+    if (!response.ok) {
+      throw new Error("Failed to stop time entry");
     }
+
+    const elapsedTime = await getActiveTimer();
+
+    console.log("Time entry stopped successfully.");
+    return elapsedTime;
+  } catch (error) {
+    console.error("Error stopping time entry:", error);
+    return null;
+  } finally {
+    setTimer(null);
+    setTime(0);
   }
-  
+}
+
+export async function getActiveTimer() {
+  try {
+    const response = await fetch(
+      `https://api.clockify.me/api/v1/workspaces/662f52726feaaf7addde49f8/user/662f52726feaaf7addde49f7/time-entries`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Api-Key": `ODFjNTBlYzMtNWVjMi00OGIyLTllZTQtNTdhOGM2MzRhNzlh`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to get active timer");
+    }
+
+    const responseData = await response.json();
+
+    if (responseData.length === 0) {
+      return 0;
+    }
+
+    const activeTimer = responseData[0];
+    const startTime = new Date(activeTimer.timeInterval.start);
+    const currentTime = new Date();
+    const elapsedTimeInSeconds = Math.floor((currentTime - startTime) / 1000);
+
+    return elapsedTimeInSeconds;
+  } catch (error) {
+    console.error("Error getting active timer:", error);
+    return null;
+  }
+}

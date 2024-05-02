@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles/ProjectCard.css";
 import CustomerCardView from "../floating_components/CustomerCardView";
-import { startTimer, stopTimer } from "../clockify/ClockifyFunctions";
+import { startTimer, stopTimer, getActiveTimer } from "../clockify/ClockifyFunctions";
 
 export default function ProjectCardView({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
@@ -131,6 +131,18 @@ export default function ProjectCardView({ project }) {
   }
 
   useEffect(() => {
+    const timerState = localStorage.getItem("timerstate");
+    if (timerState === "active") {
+      getActiveTimer().then((elapsedTimeInSeconds) => {
+        if (elapsedTimeInSeconds > 0) {
+          setTimer(1);
+          setTime(elapsedTimeInSeconds);
+        }
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     if (timer !== null) {
       const interval = setInterval(() => {
         setTime((prevTime) => prevTime + 1);
@@ -138,6 +150,22 @@ export default function ProjectCardView({ project }) {
       return () => clearInterval(interval);
     }
   }, [timer]);
+
+  const handleStartTimer = () => {
+    startTimer(project, setTimer, setTime, username);
+    localStorage.setItem("timerstate", "active");
+  };
+  
+  const handleStopTimer = () => {
+    stopTimer(
+      project.staffProject.project_id,
+      project.staffProject.staff_id,
+      timer,
+      setTimer,
+      setTime
+    );
+    localStorage.removeItem("timerstate");
+  };
 
   const projectDate =
     project.project.creation_date.substring(8, 10) +
@@ -262,7 +290,7 @@ export default function ProjectCardView({ project }) {
                   type="button"
                   name="counttimebutton"
                   className="count-time-button"
-                  onClick={() => startTimer(project, setTimer, setTime, username)}
+                  onClick={handleStartTimer}
                 >
                   Start counting
                 </button>
@@ -271,7 +299,7 @@ export default function ProjectCardView({ project }) {
                   type="button"
                   name="stoptimebutton"
                   className="count-time-button"
-                  onClick={() => stopTimer(timer, setTimer, setTime)}
+                  onClick={handleStopTimer}
                 >
                   Stop counting
                 </button>
