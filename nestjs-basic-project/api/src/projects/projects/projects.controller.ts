@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Res, UseInterceptors, UploadedFile } from "@nestjs/common";
 import { ProjectsService } from "./projects.service";
-import { ProjectsDto } from "../dto/projects.dto/projects.dto";
-import { ProjectsEntity } from "../entity/projects.entity/projects.entity";
+import { ProjectsDto } from "../domain/dto/projects.dto/projects.dto";
+import { ProjectsEntity } from "../domain/entities/projects.entity";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { MulterFile } from "multer";
 import { Response } from 'express';

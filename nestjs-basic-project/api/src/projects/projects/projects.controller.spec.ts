@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { ProjectsController } from "./projects.controller";
 import { ProjectsService } from "./projects.service";
-import { ProjectsEntity } from "../entity/projects.entity/projects.entity";
+import { ProjectsEntity } from "../domain/entities/projects.entity/projects.entity";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { MulterFile } from "multer";
 

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { ProjectsService } from "./projects.service";
-import { ProjectsEntity } from "../entity/projects.entity/projects.entity";
+import { ProjectsEntity } from "../domain/entities/projects.entity";
 import { MulterFile } from "multer";
 import { Repository } from "typeorm";
 import { getRepositoryToken } from "@nestjs/typeorm";

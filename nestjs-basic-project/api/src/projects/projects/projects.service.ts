@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProjectsEntity } from '../entity/projects.entity/projects.entity';
-import { ProjectsDto } from '../dto/projects.dto/projects.dto';
+import { ProjectsEntity } from '../domain/entities/projects.entity/projects.entity';
+import { ProjectsDto } from '../domain/dto/projects.dto/projects.dto';
 import { MulterFile } from 'multer';
 import { ApiTags, ApiOperation, ApiBody, ApiOkResponse, ApiCreatedResponse, ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 
