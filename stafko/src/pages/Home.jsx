@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../navbar_components/Navbar";
-import Add from "../floating_components/Add";
-import ProjectCard from "./ProjectCard";
-import ProjectCardView from "./ProjectCardView";
+import Navbar from "../components/navbar_components/Navbar";
+import Add from "../components/floating_components/Add";
+import ProjectCard from "../components/home_components/ProjectCard";
+import ProjectCardView from "../components/home_components/ProjectCardView";
 import "./styles/Home.css";
-import MobileNavbar from "../navbar_components/MobileNavbar";
-import AddCustomer from "../floating_components/AddCustomer";
+import MobileNavbar from "../components/navbar_components/MobileNavbar";
+import AddCustomer from "../components/floating_components/AddCustomer";
 
 export default function Home({ setIsLoggedIn }) {
   const [isAddProjectVisible, setIsAddProjectVisible] = useState(false);

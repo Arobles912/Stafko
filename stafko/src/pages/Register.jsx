@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./styles/Login.css";
-import Header from "./Header.jsx";
-import Footer from "./Footer.jsx";
+import Header from "../components/login_components/Header.jsx";
+import Footer from "../components/login_components/Footer.jsx";
 
 export default function Register({ username, setUsername }) {
   const [pass, setPassword] = useState("");
