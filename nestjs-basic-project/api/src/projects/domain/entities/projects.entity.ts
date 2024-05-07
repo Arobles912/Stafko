@@ -23,7 +23,7 @@ export class ProjectsEntity {
   creation_date: Date;
 
   @ApiProperty({ description: 'The file associated with the project as a byte array' })
-  @Column('bytea', { nullable: false })
+  @Column('bytea', { nullable: true })
   project_file: Buffer;
 
   @ApiProperty({ description: 'The project owner' })

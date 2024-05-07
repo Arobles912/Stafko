@@ -17,28 +17,14 @@ export class ProjectsRepository implements IProjectsRepository {
   }
 
   async findOne(project_id: number): Promise<ProjectsEntity> {
-    return await this.findOne(project_id);
-}
-
-  async create(projectDto: ProjectsDto): Promise<ProjectsEntity> {
-    const {
-      project_name,
-      description,
-      creation_date,
-      project_file,
-      project_owner,
-      associated_customer,
-    } = projectDto;
-    const project = new ProjectsEntity();
-    project.project_name = project_name;
-    project.description = description;
-    project.creation_date = creation_date;
-    project.project_file = project_file;
-    project.project_owner = project_owner;
-    project.associated_customer = associated_customer;
-    return await this.projectsRepository.save(project);
+    return await this.projectsRepository.findOne({where: {project_id}});
   }
 
+  async create(projectDto: ProjectsDto): Promise<ProjectsEntity> {
+    const project = this.projectsRepository.create(projectDto);
+    return await this.projectsRepository.save(project);
+  }
+  
   async update(
     project_id: number,
     projectDto: ProjectsDto
@@ -49,5 +35,14 @@ export class ProjectsRepository implements IProjectsRepository {
 
   async delete(project_id: number): Promise<void> {
     await this.projectsRepository.delete(project_id);
+  }
+
+  async findByProjectName(project_name: string): Promise<ProjectsEntity> {
+    return this.projectsRepository.findOne({ where: { project_name } });
+  }
+
+  async save(project: ProjectsEntity): Promise<ProjectsEntity> {
+    const savedProject = await this.projectsRepository.save(project);
+    return savedProject;
   }
 }

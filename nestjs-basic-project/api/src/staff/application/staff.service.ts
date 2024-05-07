@@ -1,16 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { StaffEntity } from '../entity/staff.entity/staff.entity';
-import { StaffDto } from '../dto/staff.dto/staff.dto';
+import { Injectable, Inject } from '@nestjs/common';
+import { StaffEntity } from '../domain/entities/staff.entity';
+import { StaffDto } from '../domain/dto/staff.dto/staff.dto';
 import { ApiTags, ApiOperation, ApiBody, ApiOkResponse, ApiCreatedResponse, ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import { IStaffService } from './staff.service.interface';
+import { IStaffRepository } from '../domain/repositories/staff.repository.interface';
 
 @ApiTags('Staff')
 @Injectable()
-export class StaffService {
+export class StaffService implements IStaffService {
   constructor(
-    @InjectRepository(StaffEntity)
-    private staffRepository: Repository<StaffEntity>,
+    @Inject('StaffRepository')
+    private readonly staffRepository: IStaffRepository
   ) {}
 
   @ApiOperation({ summary: 'Creates a new staff member' })
@@ -20,7 +20,7 @@ export class StaffService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async create(staffDto: StaffDto): Promise<StaffEntity> {
-    return this.staffRepository.save(staffDto);
+    return this.staffRepository.create(staffDto);
   }
 
   @ApiOperation({ summary: 'Gets all staff members' })
@@ -28,7 +28,7 @@ export class StaffService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async findAll(): Promise<StaffEntity[]> {
-    return this.staffRepository.find();
+    return this.staffRepository.findAll();
   }
 
   @ApiOperation({ summary: 'Gets a staff member specified by the ID' })
@@ -37,7 +37,7 @@ export class StaffService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async findOne(id: number): Promise<StaffEntity> {
-    return this.staffRepository.findOne({ where: { staff_id: id } });
+    return this.staffRepository.findOne(id);
   }
 
   @ApiOperation({ summary: 'Updates a staff member specified by the ID' })
@@ -58,7 +58,7 @@ export class StaffService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async remove(id: number): Promise<void> {
-    await this.staffRepository.delete(id);
+    await this.staffRepository.remove(id);
   }
 
   @ApiOperation({ summary: 'Gets a staff member specified by the username' })
@@ -66,8 +66,8 @@ export class StaffService {
   @ApiNotFoundResponse({ description: 'Staff member not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
-  async findOneByUserName(username: string): Promise<StaffEntity> {
-    return this.staffRepository.findOneBy({ username });
+  async findOneByUsername(username: string): Promise<StaffEntity> {
+    return this.staffRepository.findOneByUsername(username);
     //return this.staffRepository.findOne({ where: { username } });
   }
 }

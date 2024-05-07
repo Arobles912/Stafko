@@ -1,16 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { StaffProjectEntity } from '../entity/staff_project.entity/staff_project.entity';
-import { StaffProjectDto } from '../dto/staff_project.dto/staff_project.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { StaffProjectDto } from '../domain/dto/staff_project.dto/staff_project.dto';
+import { StaffProjectEntity } from '../domain/entities/staff_project.entity';
+import { IStaffProjectService } from './staff_project.service.interface';
+import { IStaffProjectRepository } from '../domain/repositories/staff_project.repository.interface';
 import { ApiInternalServerErrorResponse, ApiOkResponse, ApiNotFoundResponse, ApiBadRequestResponse, ApiCreatedResponse, ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 
 @Injectable()
 @ApiTags('StaffProject')
-export class StaffProjectService {
+export class StaffProjectService implements IStaffProjectService {
   constructor(
-    @InjectRepository(StaffProjectEntity)
-    private staffProjectRepository: Repository<StaffProjectEntity>,
+    @Inject('StaffProjectRepository')
+    private readonly staffProjectRepository: IStaffProjectRepository,
   ) {}
 
   @ApiOperation({ summary: 'Creates a relationship between a staff member and a project' })
@@ -19,8 +19,8 @@ export class StaffProjectService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async create(staffProjectDto: StaffProjectDto): Promise<StaffProjectEntity> {
-    const staffProject = this.staffProjectRepository.create(staffProjectDto);
-    return this.staffProjectRepository.save(staffProject);
+    const staffProject = await this.staffProjectRepository.create(staffProjectDto);
+    return staffProject;
   }
 
   @ApiOperation({ summary: 'Gets all staff projects' })
@@ -28,7 +28,7 @@ export class StaffProjectService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async findAll(): Promise<StaffProjectEntity[]> {
-    return this.staffProjectRepository.find();
+    return this.staffProjectRepository.findAll();
   }
 
   @ApiOperation({ summary: 'Gets a staff project by staff ID and project ID' })
@@ -38,7 +38,7 @@ export class StaffProjectService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async findOne(staffId: number, projectId: number): Promise<StaffProjectEntity> {
-    return this.staffProjectRepository.findOne({ where: { staff_id: staffId, project_id: projectId } });
+    return this.staffProjectRepository.findOne(staffId, projectId);
   }
 
   @ApiOperation({ summary: 'Gets staff projects by staff ID' })
@@ -47,7 +47,7 @@ export class StaffProjectService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async findByStaffId(staffId: number): Promise<StaffProjectEntity[]> {
-    return this.staffProjectRepository.find({ where: { staff_id: staffId } });
+    return this.staffProjectRepository.findByStaffId(staffId);
   }
 
   @ApiOperation({ summary: 'Gets staff projects by project ID' })
@@ -56,7 +56,7 @@ export class StaffProjectService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async findByProjectId(projectId: number): Promise<StaffProjectEntity[]> {
-    return this.staffProjectRepository.find({ where: { project_id: projectId } });
+    return this.staffProjectRepository.findByProjectId(projectId);
   }
 
   @ApiOperation({ summary: 'Updates a staff project by staff ID and project ID' })
@@ -66,8 +66,7 @@ export class StaffProjectService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async update(staffId: number, projectId: number, staffProjectDto: StaffProjectDto): Promise<StaffProjectEntity> {
-    await this.staffProjectRepository.update({ staff_id: staffId, project_id: projectId }, staffProjectDto);
-    return this.findOne(staffId, projectId);
+    return this.staffProjectRepository.update(staffId, projectId, staffProjectDto);
   }
 
   @ApiOperation({ summary: 'Removes a staff project by staff ID and project ID' })
@@ -76,8 +75,8 @@ export class StaffProjectService {
   @ApiOkResponse({ description: 'Staff project successfully deleted' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
-  async remove(staffId: number, projectId: number): Promise<void> {
-    await this.staffProjectRepository.delete({ staff_id: staffId, project_id: projectId });
+  async delete(staffId: number, projectId: number): Promise<void> {
+    await this.staffProjectRepository.delete(staffId, projectId);
   }
 
   @ApiOperation({ summary: 'Removes staff projects by project ID' })
@@ -87,7 +86,7 @@ export class StaffProjectService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async removeByProjectId(projectId: number): Promise<void> {
-    await this.staffProjectRepository.delete({ project_id: projectId });
+    await this.staffProjectRepository.removeByProjectId(projectId);
   }
 
   @ApiOperation({ summary: 'Finds a user from the staff table by staff ID' })
@@ -96,7 +95,6 @@ export class StaffProjectService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async findUserById(userId: number): Promise<{ username: string } | null> {
-    const user = await this.staffProjectRepository.query(`SELECT username FROM staff WHERE staff_id = $1`, [userId]);
-    return user[0] || null;
+    return this.staffProjectRepository.findUserById(userId);
   }
 }

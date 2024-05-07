@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcryptjs from "bcryptjs";
-import { StaffService } from "src/staff/staff/staff.service";
+import { StaffService } from "src/staff/application/staff.service";
 import { LoginDto } from "../dto/login.dto";
 import { RegisterDto } from "../dto/register.dto";
 import { ApiResponse, ApiTags, ApiOperation, ApiBody, ApiUnauthorizedResponse, ApiBadRequestResponse } from '@nestjs/swagger';
@@ -19,7 +19,7 @@ export class AuthService {
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiBadRequestResponse({ description: 'Username already exists or invalid data provided' })
   async register({ username, pass, email }: RegisterDto) {
-    const user = await this.staffService.findOneByUserName(username);
+    const user = await this.staffService.findOneByUsername(username);
 
     if (user) {
       throw new BadRequestException("Username already exists.");
@@ -43,7 +43,7 @@ export class AuthService {
   @ApiResponse({ status: 200, description: 'User authenticated' })
   @ApiUnauthorizedResponse({ description: 'Invalid username or password' })
   async login({ username, pass }: LoginDto) {
-    const user = await this.staffService.findOneByUserName(username);
+    const user = await this.staffService.findOneByUsername(username);
 
     if (!user) {
       throw new UnauthorizedException("Invalid username.");

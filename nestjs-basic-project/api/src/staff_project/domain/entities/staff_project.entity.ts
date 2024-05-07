@@ -1,6 +1,6 @@
 import { Entity, ManyToOne, JoinColumn, PrimaryColumn, Column } from 'typeorm';
-import { StaffEntity } from 'src/staff/entity/staff.entity/staff.entity';
-import { ProjectsEntity } from 'src/projects/commons/domain/entities/projects.entity/projects.entity';
+import { StaffEntity } from 'src/staff/domain/entities/staff.entity';
+import { ProjectsEntity } from 'src/projects/domain/entities/projects.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'staff_project' })

@@ -1,17 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ProjectsEntity } from '../domain/entities/projects.entity/projects.entity';
+import { Injectable, Inject } from '@nestjs/common';
 import { ProjectsDto } from '../domain/dto/projects.dto/projects.dto';
+import { ProjectsEntity } from '../domain/entities/projects.entity';
+import { IProjectsRepository } from '../domain/repositories/projects.respository.interface';
 import { MulterFile } from 'multer';
 import { ApiTags, ApiOperation, ApiBody, ApiOkResponse, ApiCreatedResponse, ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import { IProjectsService } from './projects.service.interface';
 
 @Injectable()
 @ApiTags('Projects')
-export class ProjectsService {
+export class ProjectsService implements IProjectsService {
   constructor(
-    @InjectRepository(ProjectsEntity)
-    private projectsRepository: Repository<ProjectsEntity>,
+    @Inject('ProjectsRepository')
+    private readonly projectsRepository: IProjectsRepository,
   ) {}
 
   @ApiOperation({ summary: 'Creates a new project' })
@@ -21,19 +21,19 @@ export class ProjectsService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async create(projectDto: ProjectsDto, file: MulterFile): Promise<ProjectsEntity> {
-      const project = this.projectsRepository.create({
-        ...projectDto,
-        project_file: file.buffer,
-      });
-      return this.projectsRepository.save(project);
-  }
-
+    const project = await this.projectsRepository.create({
+      ...projectDto,
+      project_file: file.buffer,
+    });
+    return this.projectsRepository.save(project);
+}
+  
   @ApiOperation({ summary: 'Gets all the projects in the database' })
   @ApiOkResponse({ description: 'An array with all the projects', type: [ProjectsEntity] })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async findAll(): Promise<ProjectsEntity[]> {
-    return this.projectsRepository.find();
+    return this.projectsRepository.findAll();
   }
 
   @ApiOperation({ summary: 'Gets a project specified by the ID' })
@@ -42,7 +42,7 @@ export class ProjectsService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async findOne(id: number): Promise<ProjectsEntity> {
-    return this.projectsRepository.findOne({ where: { project_id: id } });
+    return this.projectsRepository.findOne(id);
   }
   
   @ApiOperation({ summary: 'Updates a project specified by the ID' })
@@ -61,12 +61,17 @@ export class ProjectsService {
   @ApiOkResponse({ description: 'Project successfully deleted' })
   @ApiNotFoundResponse({ description: 'Project not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  
-  async remove(id: number): Promise<void> {
+
+  async delete(id: number): Promise<void> {
     await this.projectsRepository.delete(id);
   }
 
+  @ApiOperation({ summary: 'Gets a project specified by the name' })
+  @ApiOkResponse({ description: 'The project specified by the name', type: ProjectsEntity })
+  @ApiNotFoundResponse({ description: 'Project not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+
   async findByProjectName(project_name: string): Promise<ProjectsEntity> {
-    return this.projectsRepository.findOneBy({ project_name });
+    return this.projectsRepository.findByProjectName(project_name);
   }
 }

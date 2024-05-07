@@ -1,13 +1,16 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
-import { StaffService } from './staff.service';
-import { StaffDto } from '../dto/staff.dto/staff.dto';
-import { StaffEntity } from '../entity/staff.entity/staff.entity';
+import { Controller, Get, Post, Body, Param, Put, Delete, Inject } from '@nestjs/common';
+import { StaffDto } from '../domain/dto/staff.dto/staff.dto';
+import { StaffEntity } from '../domain/entities/staff.entity';
 import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiResponse } from '@nestjs/swagger';
+import { IStaffService } from '../application/staff.service.interface';
 
 @ApiTags('staff')
 @Controller('api/staff')
 export class StaffController {
-  constructor(private readonly staffService: StaffService) {}
+  constructor(
+    @Inject('StaffRepository')
+    private readonly staffService: IStaffService
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new staff member.' })
@@ -63,7 +66,7 @@ export class StaffController {
   @ApiParam({ name: 'username', description: 'Staff member username.' })
   @ApiResponse({ status: 200, description: 'Returns the staff member specified by the username.' })
   
-  async findOneByUserName(@Param('username') username: string): Promise<StaffEntity> {
-    return this.staffService.findOneByUserName(username);
+  async findOneByUsername(@Param('username') username: string): Promise<StaffEntity> {
+    return this.staffService.findOneByUsername(username);
   }
 }

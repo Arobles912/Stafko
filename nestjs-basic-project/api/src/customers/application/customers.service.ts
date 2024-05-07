@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBody, ApiOkResponse, ApiCreatedResponse, ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse } from '@nestjs/swagger';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CustomersEntity } from '../entity/customers.entity/customers.entity';
-import { Repository } from 'typeorm';
-import { CustomersDto } from '../dto/customers/customers.dto';
+import { CustomersEntity } from '../domain/entities/customers.entity';
+import { CustomersDto } from '../domain/dto/customers/customers.dto';
+import { ICustomersService } from './customers.service.interface';
+import { CustomersRepository } from '../domain/repositories/customers.repository';
 
 @Injectable()
-export class CustomersService {
+export class CustomersService implements ICustomersService {
     constructor(
-        @InjectRepository(CustomersEntity)
-        private customersRepository: Repository<CustomersEntity>,
+      @Inject('CustomersRepository')
+        private customersRepository: CustomersRepository,
       ) {}
     
       @ApiOperation({ summary: 'Creates a new customer' })
@@ -19,7 +19,7 @@ export class CustomersService {
       @ApiInternalServerErrorResponse({ description: 'Internal server error' })
     
       async create(customersDto: CustomersDto): Promise<CustomersEntity> {
-        return this.customersRepository.save(customersDto);
+        return this.customersRepository.create(customersDto);
       }
     
       @ApiOperation({ summary: 'Gets all the customers in the database' })
@@ -27,7 +27,7 @@ export class CustomersService {
       @ApiInternalServerErrorResponse({ description: 'Internal server error' })
     
       async findAll(): Promise<CustomersEntity[]> {
-        return this.customersRepository.find();
+        return this.customersRepository.findAll();
       }
     
       @ApiOperation({ summary: 'Gets a customer specified by the ID' })
@@ -36,7 +36,7 @@ export class CustomersService {
       @ApiInternalServerErrorResponse({ description: 'Internal server error' })
     
       async findOne(id: number): Promise<CustomersEntity> {
-        return this.customersRepository.findOne({ where: { customer_id: id } });
+        return this.customersRepository.findOne(id);
       }
       
       @ApiOperation({ summary: 'Updates a customer specified by the ID' })
@@ -46,9 +46,8 @@ export class CustomersService {
       @ApiBadRequestResponse({ description: 'Bad request' })
       @ApiInternalServerErrorResponse({ description: 'Internal server error' })
     
-      async update(id: number, projectDto: CustomersDto): Promise<CustomersEntity> {
-        await this.customersRepository.update(id, projectDto);
-        return this.findOne(id);
+      async update(id: number, customersDto: CustomersDto): Promise<CustomersEntity> {
+        return this.customersRepository.update(id, customersDto);
       }
     
       @ApiOperation({ summary: 'Deletes the customer specified by the ID' })
@@ -57,7 +56,7 @@ export class CustomersService {
       @ApiInternalServerErrorResponse({ description: 'Internal server error' })
       
       async remove(id: number): Promise<void> {
-        await this.customersRepository.delete(id);
+        return this.customersRepository.remove(id);
       }
 
       @ApiOperation({ summary: 'Gets a customer specified by the name' })
@@ -66,6 +65,6 @@ export class CustomersService {
       @ApiInternalServerErrorResponse({ description: 'Internal server error' })
     
       async findByCustomerName(customer_name: string): Promise<CustomersEntity> {
-        return this.customersRepository.findOneBy({ customer_name });
+        return this.customersRepository.findByCustomerName(customer_name);
       }
 }

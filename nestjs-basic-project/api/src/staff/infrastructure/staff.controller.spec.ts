@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { StaffController } from "./staff.controller";
-import { StaffService } from "./staff.service";
-import { StaffEntity } from "../entity/staff.entity/staff.entity";
+import { StaffService } from "../application/staff.service";
+import { StaffEntity } from "../domain/entities/staff.entity";
 import { getRepositoryToken } from "@nestjs/typeorm";
 
 describe("StaffController", () => {

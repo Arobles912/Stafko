@@ -6,15 +6,18 @@ import {
   Delete,
   Param,
   Body,
+  Inject,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from "@nestjs/swagger";
-import { CustomersService } from "./customers.service";
-import { CustomersDto } from "../dto/customers/customers.dto";
+import { CustomersService } from "../application/customers.service";
+import { CustomersDto } from "../domain/dto/customers/customers.dto";
 
 @ApiTags("customers")
 @Controller("api/customers")
 export class CustomersController {
-  constructor(private readonly customersService: CustomersService) {}
+  constructor(
+    @Inject('CustomersRepository')
+    private readonly customersService: CustomersService) {}
 
   @Post()
   @ApiOperation({ summary: "Creates a new customer" })

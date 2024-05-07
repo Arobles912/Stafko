@@ -6,16 +6,19 @@ import {
   Param,
   Put,
   Delete,
+  Inject,
 } from "@nestjs/common";
-import { StaffProjectService } from "./staff_project.service";
-import { StaffProjectDto } from "../dto/staff_project.dto/staff_project.dto";
-import { StaffProjectEntity } from "../entity/staff_project.entity/staff_project.entity";
+import { StaffProjectService } from "../application/staff_project.service";
+import { StaffProjectDto } from "../domain/dto/staff_project.dto/staff_project.dto";
+import { StaffProjectEntity } from "../domain/entities/staff_project.entity";
 import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiResponse, ApiInternalServerErrorResponse } from '@nestjs/swagger';
 
 @ApiTags('Staff Project')
 @Controller("api/staffProject")
 export class StaffProjectController {
-  constructor(private readonly staffProjectService: StaffProjectService) {}
+  constructor(
+    @Inject('StaffProjectRepository')
+    private readonly staffProjectService: StaffProjectService) {}
 
   @Post()
   @ApiOperation({ summary: 'Creates a relationship between a staff member and a project' })
@@ -143,10 +146,10 @@ export class StaffProjectController {
   @ApiResponse({ status: 204, description: 'Staff project removed successfully' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
-  async remove(
+  async delete(
     @Param("staffId") staffId: number,
     @Param("projectId") projectId: number
   ): Promise<void> {
-    return this.staffProjectService.remove(+staffId, +projectId);
+    return this.staffProjectService.delete(+staffId, +projectId);
   }
 }
