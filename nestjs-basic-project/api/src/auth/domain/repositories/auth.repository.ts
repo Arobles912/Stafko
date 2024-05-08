@@ -1,24 +1,22 @@
 import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcryptjs from "bcryptjs";
-import { StaffService } from "src/staff/application/staff.service";
 import { LoginDto } from "../dto/login.dto";
 import { RegisterDto } from "../dto/register.dto";
-import { ApiResponse, ApiTags, ApiOperation, ApiBody, ApiUnauthorizedResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import { StaffService } from "src/staff/application/staff.service";
+import { IAuthRepository } from "./auth.repository.interface";
+import { StaffEntity } from "src/staff/domain/entities/staff.entity";
 
-@ApiTags('Auth')
 @Injectable()
-export class AuthService {
+export class AuthRepository implements IAuthRepository {
   constructor(
     private readonly staffService: StaffService,
     private readonly jwtService: JwtService
   ) {}
 
-  @ApiOperation({ summary: 'Register a new user' })
-  @ApiBody({ type: RegisterDto, description: 'User registration data' })
-  @ApiResponse({ status: 201, description: 'User created successfully' })
-  @ApiBadRequestResponse({ description: 'Username already exists or invalid data provided' })
-  async register({ username, pass, email }: RegisterDto) {
+  async register(registerDto: RegisterDto): Promise<{ message: string }> {
+    const { username, pass, email } = registerDto;
+
     const user = await this.staffService.findOneByUsername(username);
 
     if (user) {
@@ -33,16 +31,11 @@ export class AuthService {
       email
     });
 
-    return {
-      message: "User created successfully.",
-    };
+    return { message: "User created successfully." };
   }
 
-  @ApiOperation({ summary: 'Login user' })
-  @ApiBody({ type: LoginDto, description: 'User login data' })
-  @ApiResponse({ status: 200, description: 'User authenticated' })
-  @ApiUnauthorizedResponse({ description: 'Invalid username or password' })
-  async login({ username, pass }: LoginDto) {
+  async login(loginDto: LoginDto): Promise<{ token: string; username: string }> {
+    const { username, pass } = loginDto;
     const user = await this.staffService.findOneByUsername(username);
 
     if (!user) {
@@ -61,5 +54,9 @@ export class AuthService {
       token: token,
       username: user.username,
     };
+  }
+
+  async findOneByUsername(username: string): Promise<StaffEntity> {
+    return this.staffService.findOneByUsername(username);
   }
 }

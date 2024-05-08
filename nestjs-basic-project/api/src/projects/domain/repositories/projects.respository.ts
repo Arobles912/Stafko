@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import { ProjectsEntity } from "../entities/projects.entity";
 import { ProjectsDto } from "../dto/projects.dto/projects.dto";
 import { IProjectsRepository } from "./projects.respository.interface";
+import { MulterFile } from "multer";
 
 @Injectable()
 export class ProjectsRepository implements IProjectsRepository {
@@ -20,10 +21,14 @@ export class ProjectsRepository implements IProjectsRepository {
     return await this.projectsRepository.findOne({where: {project_id}});
   }
 
-  async create(projectDto: ProjectsDto): Promise<ProjectsEntity> {
-    const project = this.projectsRepository.create(projectDto);
+  async create(projectDto: ProjectsDto, file: MulterFile): Promise<ProjectsEntity> {
+    const project = this.projectsRepository.create({
+      ...projectDto,
+      project_file: file.buffer,
+    });
     return await this.projectsRepository.save(project);
   }
+  
   
   async update(
     project_id: number,

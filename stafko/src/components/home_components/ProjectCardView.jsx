@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles/ProjectCard.css";
 import CustomerCardView from "../floating_components/CustomerCardView";
-import { startTimer, stopTimer, getActiveTimer } from "../clockify/ClockifyFunctions";
+import {
+  startTimer,
+  stopTimer,
+  getActiveTimer,
+} from "../clockify/ClockifyFunctions";
 
 export default function ProjectCardView({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
@@ -158,15 +162,12 @@ export default function ProjectCardView({ project }) {
   
   const handleStopTimer = () => {
     stopTimer(
-      project.staffProject.project_id,
-      project.staffProject.staff_id,
       timer,
       setTimer,
       setTime
     );
     localStorage.removeItem("timerstate");
   };
-
   const projectDate =
     project.project.creation_date.substring(8, 10) +
     "-" +

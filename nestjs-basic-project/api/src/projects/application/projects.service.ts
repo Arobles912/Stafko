@@ -21,12 +21,12 @@ export class ProjectsService implements IProjectsService {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
 
   async create(projectDto: ProjectsDto, file: MulterFile): Promise<ProjectsEntity> {
-    const project = await this.projectsRepository.create({
-      ...projectDto,
-      project_file: file.buffer,
-    });
-    return this.projectsRepository.save(project);
-}
+    const project = new ProjectsEntity();
+    project.project_name = projectDto.project_name;
+    project.project_file = file.buffer;
+
+    return await this.projectsRepository.save(project);
+  }
   
   @ApiOperation({ summary: 'Gets all the projects in the database' })
   @ApiOkResponse({ description: 'An array with all the projects', type: [ProjectsEntity] })
