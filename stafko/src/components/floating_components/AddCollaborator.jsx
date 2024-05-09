@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./styles/AddCollaborator.css";
+import { createStaffProject } from "../../utils/api_calls/ApiCalls";
 
 export default function AddCollaborator({
   setIsAddCollaboratorVisible,
@@ -60,31 +61,11 @@ export default function AddCollaborator({
     }
   }
 
-  async function createStaffProject(projectId, staffId) {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/staffProject`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          staff_id: staffId,
-          project_id: projectId,
-        }),
-      });
-      if (response.ok) {
-        console.log("User-project relation created.");
-        return true;
-      } else {
-        console.log("User-project error.");
-        return false;
-      }
-    } catch (error) {
-      console.error("An error has occurred: ", error);
-      return false;
-    }
+  const handleCreateStaffProject = (staffId, projectId) => {
+    return createStaffProject({staffId, projectId});
   }
 
+  
   useEffect(() => {
     if (shouldReload) {
       window.location.reload();
@@ -98,7 +79,7 @@ export default function AddCollaborator({
     if (confirmed) {
       try {
         const createProjectPromises = selectedUsers.map((user) =>
-          createStaffProject(project.project.project_id, user.id)
+          handleCreateStaffProject(user.id, project.project.project_id)
         );
         const results = await Promise.all(createProjectPromises);
         const allSuccess = results.every((result) => result);

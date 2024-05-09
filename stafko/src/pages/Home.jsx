@@ -6,6 +6,7 @@ import ProjectCardView from "../components/home_components/ProjectCardView";
 import "./styles/Home.css";
 import MobileNavbar from "../components/navbar_components/MobileNavbar";
 import AddCustomer from "../components/floating_components/AddCustomer";
+import { fetchProjects, fetchOwner } from "../utils/api_calls/ApiCalls";
 
 export default function Home({ setIsLoggedIn }) {
   const [isAddProjectVisible, setIsAddProjectVisible] = useState(false);
@@ -35,86 +36,14 @@ export default function Home({ setIsLoggedIn }) {
   }, []);
 
   useEffect(() => {
-    async function fetchOwner() {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staff/username/${projectOwner}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setProjectOwner(data.staff_id);
-        }
-      } catch (error) {
-        console.error("Failed to fetch project owner: ", error);
-      }
+    if (projectOwner && token) {
+      fetchOwner({ projectOwner, token, setProjectOwner });
     }
-
-    fetchOwner();
-  }, []);
+  }, );
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staff/username/${username}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (response.ok) {
-          const userData = await response.json();
-          const staffId = userData.staff_id;
-          const staffProjectsResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/staffProject/staff/${staffId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          if (staffProjectsResponse.ok) {
-            const staffProjectsData = await staffProjectsResponse.json();
-            const projectsData = await Promise.all(
-              staffProjectsData.map(async (staffProject) => {
-                const projectResponse = await fetch(
-                  `${import.meta.env.VITE_BACKEND_URL}/projects/${
-                    staffProject.project_id
-                  }`,
-                  {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
-                  }
-                );
-                if (projectResponse.ok) {
-                  const projectData = await projectResponse.json();
-                  return {
-                    project: projectData,
-                    staffProject: staffProject,
-                  };
-                } else {
-                  console.log(
-                    `Project not found with the id: ${staffProject.project_id}`
-                  );
-                  return null;
-                }
-              })
-            );
-            setProjects(projectsData.filter((project) => project !== null));
-          } else {
-            console.log("Could not find any projects.");
-          }
-        } else {
-          console.log("An error has occurred");
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
     if (username && token) {
-      fetchProjects();
+      fetchProjects({ username, token, setProjects });
     }
   }, [username, token]);
 
@@ -178,6 +107,7 @@ export default function Home({ setIsLoggedIn }) {
           <Add
             selectedUsers={selectedUsers}
             setSelectedUsers={setSelectedUsers}
+            projectOwner={projectOwner}
           />
         </div>
         <div
@@ -185,7 +115,7 @@ export default function Home({ setIsLoggedIn }) {
             isAddCustomerVisible ? "visible" : "hidden"
           }`}
         >
-          <AddCustomer/>
+          <AddCustomer />
         </div>
         {filteredProjects.map((project) =>
           projectOwner === project.project.project_owner ? (

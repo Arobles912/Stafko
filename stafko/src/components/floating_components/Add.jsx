@@ -1,57 +1,40 @@
 import React, { useState, useEffect } from "react";
 import "./styles/Add.css";
+import {
+  addUser,
+  createStaffProject,
+  fetchCustomers,
+  fetchUsers,
+} from "../../utils/api_calls/ApiCalls";
 
-export default function Add({ selectedUsers, setSelectedUsers }) {
+export default function Add({ selectedUsers, setSelectedUsers, projectOwner }) {
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
   const [projectFile, setProjectFile] = useState(null);
   const [projectCustomer, setProjectCustomer] = useState("");
-  const [projectOwner, setProjectOwner] = useState();
   const [customers, setCustomers] = useState([]);
   const [users, setUsers] = useState([]);
-  const [shouldReload, setShouldReload] = useState(false);
   const [error, setError] = useState(null);
+  const [shouldReload, setShouldReload] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
-    async function fetchUsers() {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staff`
-        );
-        if (response.ok) {
-          const userData = await response.json();
-          setUsers(userData);
-        }
-      } catch (error) {
-        console.error("Failed to fetch users: ", error);
-      }
-    }
+    fetchUsers(setUsers);
+    fetchCustomers(setCustomers);
+    autoAddOwnerToCollaborators();
+  }, [selectedUsers, setSelectedUsers]);
 
-    fetchUsers();
-  }, []);
+  const handleStaffProject = ( staffId, projectId ) => {
+    createStaffProject({ staffId, projectId });
+  };
 
-  useEffect(() => {
-    async function fetchCustomers() {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/customers`
-        );
-        if (response.ok) {
-          const customerData = await response.json();
-          setCustomers(customerData);
-        }
-      } catch (error) {
-        console.error("Failed to fetch customers: ", error);
-      }
-    }
-
-    fetchCustomers();
-  }, []);
-
-  useEffect(() => {
-    async function fetchOwner() {
-      try {
+  async function autoAddOwnerToCollaborators() {
+    try {
+      if (
+        !selectedUsers.some(
+          (user) => user.username === localStorage.getItem("username")
+        )
+      ) {
         const response = await fetch(
           `${
             import.meta.env.VITE_BACKEND_URL
@@ -59,16 +42,20 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
         );
         if (response.ok) {
           const data = await response.json();
-          setProjectOwner(data.staff_id);
-          await autoAddOwnerToCollaborators();
+          const ownerStaffId = data.staff_id;
+          const ownerUsername = data.username;
+          setSelectedUsers((prevUsers) => [
+            ...prevUsers,
+            { username: ownerUsername, id: ownerStaffId },
+          ]);
         }
-      } catch (error) {
-        console.error("Failed to fetch project owner: ", error);
+      } else {
+        console.log("Owner already exists in the list of collaborators.");
       }
+    } catch (error) {
+      console.error("Failed to fetch project owner: ", error);
     }
-
-    fetchOwner();
-  }, []);
+  }
 
   async function addProject(event) {
     event.preventDefault();
@@ -119,7 +106,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
         const projectId = data.project_id;
         for (let i = 0; i < selectedUsers.length; i++) {
           const staffId = selectedUsers[i].id;
-          await createStaffProject(projectId, staffId);
+          await handleStaffProject(staffId, projectId);
         }
         setSuccessMessage("Project created successfully.");
         setProjectName("");
@@ -132,92 +119,15 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
       console.error("Failed to create project: ", error);
     }
   }
-
-  async function addUser() {
-    const userSelect = document.getElementById("users");
-    const selectedUser = userSelect.value;
-    if (selectedUsers.some((user) => user.username === selectedUser)) {
-      console.log("User already exists in the list.");
-    } else {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staff/username/${selectedUser}`
-        );
-        if (response.ok) {
-          const userData = await response.json();
-          const staffId = userData.staff_id;
-          setSelectedUsers((prevUsers) => [
-            ...prevUsers,
-            { username: selectedUser, id: staffId },
-          ]);
-        }
-      } catch (error) {
-        console.error("Failed to fetch staff ID: ", error);
-      }
-    }
-  }
-
+  
   async function deleteUser(username) {
     setSelectedUsers((prevUsers) =>
       prevUsers.filter((user) => user.username !== username)
     );
   }
 
-  async function autoAddOwnerToCollaborators() {
-    try {
-      if (
-        !selectedUsers.some(
-          (user) => user.username === localStorage.getItem("username")
-        )
-      ) {
-        const response = await fetch(
-          `${
-            import.meta.env.VITE_BACKEND_URL
-          }/staff/username/${localStorage.getItem("username")}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          const ownerStaffId = data.staff_id;
-          const ownerUsername = data.username;
-          setSelectedUsers((prevUsers) => [
-            ...prevUsers,
-            { username: ownerUsername, id: ownerStaffId },
-          ]);
-        }
-      } else {
-        console.log("Owner already exists in the list of collaborators.");
-      }
-    } catch (error) {
-      console.error("Failed to fetch project owner: ", error);
-    }
-  }
-
-  async function createStaffProject(projectId, staffId) {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/staffProject`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            staff_id: staffId,
-            project_id: projectId,
-          }),
-        }
-      );
-      if (response.ok) {
-        console.log("User-project relation created.");
-      } else {
-        console.log("User-project error.");
-      }
-    } catch (error) {
-      console.error("An error has occurred: ", error);
-    }
-  }
-
   function clearAll() {
+    const userToKeep = localStorage.getItem("username");
     const confirmed = window.confirm(
       "Are you sure you want to clear all fields?"
     );
@@ -228,7 +138,6 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
       setProjectCustomer("");
 
       setSelectedUsers((prevUsers) => {
-        const userToKeep = localStorage.getItem("username");
         const filteredUsers = prevUsers.filter(
           (user) => user.username === userToKeep
         );
@@ -284,9 +193,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
             src="src/assets/project_images/description-icon.png"
             alt="user-icon"
           />
-          <label htmlFor="projectDesc">
-            Project Description:
-          </label>
+          <label htmlFor="projectDesc">Project Description:</label>
           <br />
           <textarea
             id="projectdesc"
@@ -321,7 +228,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
               </option>
             ))}
           </select>
-  
+
           <br />
           <img
             className="icon-img"
@@ -340,7 +247,11 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
               </option>
             ))}
           </select>
-          <button className="add-user-button" type="button" onClick={addUser}>
+          <button
+            className="add-user-button"
+            type="button"
+            onClick={() => addUser(selectedUsers, setSelectedUsers)}
+          >
             Add user
           </button>
           <br />
@@ -350,7 +261,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
             <div className="users-added-div">
               <ul>
                 {selectedUsers.map((user, index) => (
-                  <li key={user.id}>
+                  <li key={index}>
                     - {user.username}
                     {user.username !== localStorage.getItem("username") && (
                       <button
@@ -365,6 +276,7 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
               </ul>
             </div>
           )}
+
           <div className="list-div-bar"></div>
           <img
             className="icon-img"
@@ -421,7 +333,11 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
               name="addProject"
               value="Add project"
             />
-            <button type="button" className="clear-all-button" onClick={clearAll}>
+            <button
+              type="button"
+              className="clear-all-button"
+              onClick={clearAll}
+            >
               Clear all
             </button>
           </div>
@@ -429,5 +345,4 @@ export default function Add({ selectedUsers, setSelectedUsers }) {
       </form>
     </div>
   );
-  
 }

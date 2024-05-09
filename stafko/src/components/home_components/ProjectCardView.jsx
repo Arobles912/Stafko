@@ -5,7 +5,8 @@ import {
   startTimer,
   stopTimer,
   getActiveTimer,
-} from "../clockify/ClockifyFunctions";
+} from "../../utils/clockify/ClockifyFunctions";
+import { fetchOwnerName, fetchCustomerName, fetchData } from "../../utils/api_calls/ApiCalls";
 
 export default function ProjectCardView({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
@@ -20,76 +21,25 @@ export default function ProjectCardView({ project }) {
   const [isEditCustomer, setIsEditCustomer] = useState(false);
   const [staffProjectsData, setStaffProjectsData] = useState(null);
   const [collaborators, setCollaborators] = useState([]);
+  const [allCollaborators, setAllCollaborators] = useState([]);
+  const [initialDesc, setInitialDesc] = useState([]);
   const [loading, setLoading] = useState(true);
   const [timer, setTimer] = useState(null);
   const [time, setTime] = useState(0);
 
   const username = localStorage.getItem("username");
   const textareaRef = useRef(null);
+  
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const [staffProjectsResponse, collaboratorsResponse] =
-          await Promise.all([
-            fetch(
-              `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-                project.staffProject.project_id
-              }`
-            ),
-            fetch(
-              `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-                project.staffProject.project_id
-              }/users`
-            ),
-          ]);
-
-        if (staffProjectsResponse.ok && collaboratorsResponse.ok) {
-          const [staffData, collaboratorsData] = await Promise.all([
-            staffProjectsResponse.json(),
-            collaboratorsResponse.json(),
-          ]);
-
-          setStaffProjectsData(staffData);
-          setCollaborators(collaboratorsData);
-          setLoading(false);
-        } else {
-          throw new Error("Failed to fetch data");
-        }
-      } catch (error) {
-        console.error("An error has occurred:", error);
-      }
-    }
-
-    fetchData();
+    fetchData({project, setStaffProjectsData, setCollaborators, setAllCollaborators, setInitialDesc, setLoading});
   }, [project.staffProject.project_id]);
 
   useEffect(() => {
-    async function fetchOwnerAndCustomer() {
-      try {
-        const [ownerResponse, customerResponse] = await Promise.all([
-          fetch(`${import.meta.env.VITE_BACKEND_URL}/staff/${projectOwner}`),
-          fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/customers/${projectCustomer}`
-          ),
-        ]);
+    fetchOwnerName({projectOwner, setProjectOwner});
+    fetchCustomerName({projectCustomer, setProjectCustomer});
+  }, []);
 
-        if (ownerResponse.ok) {
-          const ownerData = await ownerResponse.json();
-          setProjectOwner(ownerData.username);
-        }
-
-        if (customerResponse.ok) {
-          const customerData = await customerResponse.json();
-          setProjectCustomer(customerData.customer_name);
-        }
-      } catch (error) {
-        console.error("Failed to fetch project owner or customer: ", error);
-      }
-    }
-
-    fetchOwnerAndCustomer();
-  }, [projectOwner, projectCustomer]);
 
   useEffect(() => {
     adjustTextareaHeight();

@@ -8,7 +8,7 @@ import {
   startTimer,
   stopTimer,
   getActiveTimer,
-} from "../clockify/ClockifyFunctions";
+} from "../../utils/clockify/ClockifyFunctions";
 
 export default function ProjectCardExtended({
   extendedCard,

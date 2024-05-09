@@ -3,46 +3,18 @@ import { Link, useNavigate } from "react-router-dom";
 import "./styles/Login.css";
 import Header from "../components/login_components/Header.jsx";
 import Footer from "../components/login_components/Footer.jsx";
+import { registerUser } from "../utils/login_calls/LoginCalls.js";
 
 export default function Register({ username, setUsername }) {
   const [pass, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   const handleRegister = async (event) => {
     event.preventDefault();
-
-    if (!username || !pass || !email) {
-      setError("All fields are required.");
-      return;
-    }
-
-    try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          pass,
-          email,
-        }),
-      });
-
-      if (response.ok) {
-        console.log("User registered successfully");
-        alert("User registered succesfully.");
-        navigate("/");
-      } else {
-        const data = await response.json();
-        setError(data.message || "Failed to register user");
-      }
-    } catch (error) {
-      console.error("Error during registration:", error);
-      setError("Failed to register user. Please try again later.");
-    }
+    registerUser({username, pass, email, navigate, setError});
   };
 
   return (
