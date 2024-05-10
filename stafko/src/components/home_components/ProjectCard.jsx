@@ -2,10 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import "./styles/ProjectCard.css";
 import ProjectCardMain from "./ProjectCardMain";
 import ProjectCardExtended from "./ProjectCardExtended";
+import {
+  fetchOwnerName,
+  fetchCustomerName,
+  fetchData,
+} from "../../utils/api_calls/ApiCalls";
 
 export default function ProjectCard({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
   const [isEditCustomer, setIsEditCustomer] = useState(false);
+  const [isUserInfo, setIsUserInfo] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
   const [description, setDescription] = useState(project.project.description);
   const [projectOwner, setProjectOwner] = useState(
@@ -25,86 +31,20 @@ export default function ProjectCard({ project }) {
   const textareaRef = useRef(null);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const [
-          staffProjectsResponse,
-          descriptionResponse,
-          collaboratorsResponse,
-        ] = await Promise.all([
-          fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-              project.staffProject.project_id
-            }`
-          ),
-          fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/projects/${
-              project.staffProject.project_id
-            }`
-          ),
-          fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-              project.staffProject.project_id
-            }/users`
-          ),
-        ]);
-
-        if (
-          staffProjectsResponse.ok &&
-          descriptionResponse.ok &&
-          collaboratorsResponse.ok
-        ) {
-          const [staffData, descriptionData, collaboratorsData] =
-            await Promise.all([
-              staffProjectsResponse.json(),
-              descriptionResponse.json(),
-              collaboratorsResponse.json(),
-            ]);
-
-          setStaffProjectsData(staffData);
-          setInitialDesc(descriptionData.description);
-          setCollaborators(collaboratorsData);
-          setAllCollaborators(collaboratorsData);
-          setLoading(false);
-        } else {
-          throw new Error("Failed to fetch data");
-        }
-      } catch (error) {
-        console.error("An error has occurred:", error);
-      }
-    }
-
-    fetchData();
+    fetchData({
+      project,
+      setStaffProjectsData,
+      setCollaborators,
+      setAllCollaborators,
+      setInitialDesc,
+      setLoading,
+    });
   }, [project.staffProject.project_id]);
 
   useEffect(() => {
-    async function fetchOwnerAndCustomer() {
-      try {
-        const [ownerResponse, customerResponse] = await Promise.all([
-          fetch(`${import.meta.env.VITE_BACKEND_URL}/staff/${projectOwner}`),
-          fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/customers/${projectCustomer}`
-          ),
-        ]);
-
-        if (ownerResponse.ok) {
-          const ownerData = await ownerResponse.json();
-          setProjectOwner(ownerData.username);
-        }
-
-        if (customerResponse.ok) {
-          const customerData = await customerResponse.json();
-          setProjectCustomer(customerData.customer_name);
-        }
-      } catch (error) {
-        console.error("Failed to fetch project owner or customer: ", error);
-      }
-    }
-
-    fetchOwnerAndCustomer();
-  }, [projectOwner, projectCustomer]);
-
-
+    fetchOwnerName({ projectOwner, setProjectOwner });
+    fetchCustomerName({ projectCustomer, setProjectCustomer });
+  }, []);
 
   function handleEditButton() {
     if (editButtonText === "Cancel") {
@@ -139,7 +79,6 @@ export default function ProjectCard({ project }) {
         throw new Error("Can't get file URL.");
       }
     } catch (error) {
-      setError("Error downloading the file:", error);
       console.error("Error downloading the file:", error);
     }
   }
@@ -320,15 +259,17 @@ export default function ProjectCard({ project }) {
           handleDownloadButton={handleDownloadButton}
         />
         <ProjectCardExtended
+          project={project}
           extendedCard={extendedCard}
           setDescription={setDescription}
           setIsEditCustomer={setIsEditCustomer}
           isEditCustomer={isEditCustomer}
+          isUserInfo={isUserInfo}
+          setIsUserInfo={setIsUserInfo}
           error={error}
           loading={loading}
           textareaRef={textareaRef}
           description={description}
-          project={project}
           collaborators={collaborators}
           projectOwner={projectOwner}
           modifyCollaborators={modifyCollaborators}

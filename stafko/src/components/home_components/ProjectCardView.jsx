@@ -1,7 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles/ProjectCard.css";
 import CustomerCardView from "../floating_components/CustomerCardView";
-import { startTimer, stopTimer, getActiveTimer } from "../clockify/ClockifyFunctions";
+import UserInfo from "../floating_components/UserInfo";
+import {
+  startTimer,
+  stopTimer,
+  getActiveTimer,
+  updateTotalTime
+} from "../../utils/clockify/ClockifyFunctions";
+import {
+  fetchOwnerName,
+  fetchCustomerName,
+  fetchData,
+} from "../../utils/api_calls/ApiCalls";
 
 export default function ProjectCardView({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
@@ -14,78 +25,35 @@ export default function ProjectCardView({ project }) {
     project.project.associated_customer
   );
   const [isEditCustomer, setIsEditCustomer] = useState(false);
+  const [isUserInfo, setIsUserInfo] = useState(false);
   const [staffProjectsData, setStaffProjectsData] = useState(null);
+  const [collaboratorName, setCollaboratorName] = useState("");
   const [collaborators, setCollaborators] = useState([]);
+  const [allCollaborators, setAllCollaborators] = useState([]);
+  const [initialDesc, setInitialDesc] = useState([]);
   const [loading, setLoading] = useState(true);
   const [timer, setTimer] = useState(null);
   const [time, setTime] = useState(0);
+  const [milliseconds, setMilliseconds] = useState(null);
 
   const username = localStorage.getItem("username");
   const textareaRef = useRef(null);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const [staffProjectsResponse, collaboratorsResponse] =
-          await Promise.all([
-            fetch(
-              `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-                project.staffProject.project_id
-              }`
-            ),
-            fetch(
-              `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-                project.staffProject.project_id
-              }/users`
-            ),
-          ]);
-
-        if (staffProjectsResponse.ok && collaboratorsResponse.ok) {
-          const [staffData, collaboratorsData] = await Promise.all([
-            staffProjectsResponse.json(),
-            collaboratorsResponse.json(),
-          ]);
-
-          setStaffProjectsData(staffData);
-          setCollaborators(collaboratorsData);
-          setLoading(false);
-        } else {
-          throw new Error("Failed to fetch data");
-        }
-      } catch (error) {
-        console.error("An error has occurred:", error);
-      }
-    }
-
-    fetchData();
+    fetchData({
+      project,
+      setStaffProjectsData,
+      setCollaborators,
+      setAllCollaborators,
+      setInitialDesc,
+      setLoading,
+    });
   }, [project.staffProject.project_id]);
 
   useEffect(() => {
-    async function fetchOwnerAndCustomer() {
-      try {
-        const [ownerResponse, customerResponse] = await Promise.all([
-          fetch(`${import.meta.env.VITE_BACKEND_URL}/staff/${projectOwner}`),
-          fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/customers/${projectCustomer}`
-          ),
-        ]);
-
-        if (ownerResponse.ok) {
-          const ownerData = await ownerResponse.json();
-          setProjectOwner(ownerData.username);
-        }
-
-        if (customerResponse.ok) {
-          const customerData = await customerResponse.json();
-          setProjectCustomer(customerData.customer_name);
-        }
-      } catch (error) {
-        console.error("Failed to fetch project owner or customer: ", error);
-      }
-    }
-
-    fetchOwnerAndCustomer();
-  }, [projectOwner, projectCustomer]);
+    fetchOwnerName({ projectOwner, setProjectOwner });
+    fetchCustomerName({ projectCustomer, setProjectCustomer });
+  }, []);
 
   useEffect(() => {
     adjustTextareaHeight();
@@ -152,20 +120,23 @@ export default function ProjectCardView({ project }) {
   }, [timer]);
 
   const handleStartTimer = () => {
-    startTimer(project, setTimer, setTime, username);
-    localStorage.setItem("timerstate", "active");
+    const activeTimer = localStorage.getItem("timerstate");
+    if (activeTimer !== "active") {
+      startTimer(project, setTimer, setTime, username);
+      localStorage.setItem("timerstate", "active");
+    } else {
+      console.log("A timer is already running.");
+    }
   };
-  
-  const handleStopTimer = () => {
-    stopTimer(
-      project.staffProject.project_id,
-      project.staffProject.staff_id,
-      timer,
-      setTimer,
-      setTime
-    );
+
+  const handleStopTimer = async () => {
+    stopTimer(timer, setTimer, setTime);
     localStorage.removeItem("timerstate");
+    const timeInMilliseconds = time * 1000;
+    setMilliseconds(timeInMilliseconds);
+    await updateTotalTime({milliseconds: timeInMilliseconds, username, project});
   };
+
 
   const projectDate =
     project.project.creation_date.substring(8, 10) +
@@ -248,6 +219,22 @@ export default function ProjectCardView({ project }) {
               />
             )}
           </div>
+          <div
+            className={`main-user-info-div ${
+              isUserInfo ? "visible" : "hidden"
+            }`}
+          >
+            {loading ? (
+              <div>Loading...</div>
+            ) : (
+              <UserInfo
+                setIsUserInfo={setIsUserInfo}
+                isUserInfo={isUserInfo}
+                project={project}
+                username={collaboratorName}
+              />
+            )}
+          </div>
           <div className="description-div">
             <h3>ReadME</h3>
             <hr />
@@ -275,6 +262,10 @@ export default function ProjectCardView({ project }) {
                     className={
                       collaborator === projectOwner ? "owner-color-span" : ""
                     }
+                    onClick={() => {
+                      setIsUserInfo(true);
+                      setCollaboratorName(collaborator);
+                    }}
                   >
                     {collaborator}
                   </span>

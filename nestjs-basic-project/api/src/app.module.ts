@@ -1,15 +1,13 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
 import { ProjectsModule } from "./projects/projects.module";
 import { StaffModule } from "./staff/staff.module";
 import { AuthModule } from "./auth/auth.module";
 import { StaffProjectModule } from "./staff_project/staff_project.module";
-import { MulterModule } from "@nestjs/platform-express";
 import { CustomersModule } from './customers/customers.module';
-import  config  from "./config";
+import config from "./config";
 import * as dotenv from "dotenv";
+import { MulterModule } from '@nestjs/platform-express';
 
 dotenv.config();
 
@@ -19,6 +17,7 @@ dotenv.config();
     StaffModule,
     AuthModule,
     StaffProjectModule,
+    CustomersModule,
     TypeOrmModule.forRoot({
       type: config.dbType,
       host: config.dbHost,
@@ -30,11 +29,10 @@ dotenv.config();
       synchronize: true,
     }),
     MulterModule.register({
-      dest: './uploads', 
+      dest: './uploads',
     }),
-    CustomersModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

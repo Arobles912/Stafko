@@ -224,6 +224,7 @@ export default function AddCustomer() {
                 name="phonenumber"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
+                max="999999999"
               />
               <br />
             </div>

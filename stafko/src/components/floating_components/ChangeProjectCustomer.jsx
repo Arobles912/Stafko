@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./styles/EditProjectName.css";
+import { fetchCustomers } from "../../utils/api_calls/ApiCalls";
 
 export default function ChangeProjectCustomer({
   setIsChangeProjectCustomer,
@@ -18,21 +19,7 @@ export default function ChangeProjectCustomer({
   }, [shouldReload]);
 
   useEffect(() => {
-    async function fetchCustomers() {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/customers`
-        );
-        if (response.ok) {
-          const customerData = await response.json();
-          setCustomers(customerData);
-        }
-      } catch (error) {
-        console.error("Failed to fetch customers: ", error);
-      }
-    }
-
-    fetchCustomers();
+    fetchCustomers(setCustomers);
   }, []);
 
   async function handleConfirm() {

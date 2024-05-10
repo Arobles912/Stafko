@@ -31,6 +31,10 @@ Stafko is a simple web application made with **React** and **NestJS** that allow
 
 <img src="screenshots/add-customer.png">
 
+### Edit customer
+
+<img src="screenshots/edit-customer.png">
+
 ### Project card
 
 <img src="screenshots/project-card.png">
@@ -41,9 +45,17 @@ Stafko is a simple web application made with **React** and **NestJS** that allow
 
 <img src="screenshots/project-card-view.png">
 
+### User info
+
+<img src="screenshots/user-info.png">
+
 ### Edit project name
 
 <img src="screenshots/edit-project-name.png">
+
+### Edit project customer
+
+<img src="screenshots/edit-project-customer.png">
 
 ### Add collaborators
 

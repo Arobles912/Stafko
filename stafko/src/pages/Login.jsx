@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./styles/Login.css";
 import Header from "../components/login_components/Header.jsx";
 import Footer from "../components/login_components/Footer.jsx";
+import { loginUser } from "../utils/login_calls/LoginCalls.js";
 
 export default function Login({ setIsLoggedIn, username, setUsername }) {
   const [pass, setPassword] = useState("");
@@ -15,33 +16,9 @@ export default function Login({ setIsLoggedIn, username, setUsername }) {
     }
   }, []);
 
-  const handleLogin = async (event) => {
+  const handleLogin = (event) => {
     event.preventDefault();
-    try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          pass,
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("token", data.token); 
-        localStorage.setItem("username", data.username);
-        setIsLoggedIn(true);
-      } else {
-        const data = await response.json();
-        setError(data.message || "Incorrect username or password");
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
-      setError("Failed to log user. Please try again later.");
-    }
+    loginUser({ username, pass, setIsLoggedIn, setError });
   };
 
   return (

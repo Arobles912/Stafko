@@ -1,12 +1,20 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { StaffProjectController } from './staff_project/staff_project.controller';
-import { StaffProjectService } from './staff_project/staff_project.service';
-import { StaffProjectEntity } from './entity/staff_project.entity/staff_project.entity';
+import { StaffProjectEntity } from './domain/entities/staff_project.entity';
+import { StaffProjectController } from './infrastructure/staff_project.controller';
+import { StaffProjectService } from './application/staff_project.service';
+import { StaffProjectRepository } from './domain/repositories/staff_project.repository';
+
 @Module({
   imports: [TypeOrmModule.forFeature([StaffProjectEntity])],
   controllers: [StaffProjectController],
-  providers: [StaffProjectService],
-  exports: [StaffProjectService]
+  providers: [
+    StaffProjectService,
+    {
+      provide: 'StaffProjectRepository',
+      useClass: StaffProjectRepository,
+    },
+  ],
+  exports: [StaffProjectService],
 })
 export class StaffProjectModule {}
