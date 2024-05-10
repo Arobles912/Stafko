@@ -128,82 +128,87 @@ export async function addUser(selectedUsers, setSelectedUsers) {
   }
 }
 
-export async function fetchData({project, setStaffProjectsData, setAllCollaborators, setCollaborators, setInitialDesc, setLoading}) {
-    try {
-        const [
-          staffProjectsResponse,
-          descriptionResponse,
-          collaboratorsResponse,
-        ] = await Promise.all([
-          fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-              project.staffProject.project_id
-            }`
-          ),
-          fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/projects/${
-              project.staffProject.project_id
-            }`
-          ),
-          fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-              project.staffProject.project_id
-            }/users`
-          ),
-        ]);
+export async function fetchData({
+  project,
+  setStaffProjectsData,
+  setAllCollaborators,
+  setCollaborators,
+  setInitialDesc,
+  setLoading,
+}) {
+  try {
+    const [staffProjectsResponse, descriptionResponse, collaboratorsResponse] =
+      await Promise.all([
+        fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+            project.staffProject.project_id
+          }`
+        ),
+        fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/projects/${
+            project.staffProject.project_id
+          }`
+        ),
+        fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+            project.staffProject.project_id
+          }/users`
+        ),
+      ]);
 
-        if (
-          staffProjectsResponse.ok &&
-          descriptionResponse.ok &&
-          collaboratorsResponse.ok
-        ) {
-          const [staffData, descriptionData, collaboratorsData] =
-            await Promise.all([
-              staffProjectsResponse.json(),
-              descriptionResponse.json(),
-              collaboratorsResponse.json(),
-            ]);
+    if (
+      staffProjectsResponse.ok &&
+      descriptionResponse.ok &&
+      collaboratorsResponse.ok
+    ) {
+      const [staffData, descriptionData, collaboratorsData] = await Promise.all(
+        [
+          staffProjectsResponse.json(),
+          descriptionResponse.json(),
+          collaboratorsResponse.json(),
+        ]
+      );
 
-          setStaffProjectsData(staffData);
-          setInitialDesc(descriptionData.description);
-          setCollaborators(collaboratorsData);
-          setAllCollaborators(collaboratorsData);
-          setLoading(false);
-        } else {
-          throw new Error("Failed to fetch data");
-        }
-      } catch (error) {
-        console.error("An error has occurred:", error);
-      }
+      setStaffProjectsData(staffData);
+      setInitialDesc(descriptionData.description);
+      setCollaborators(collaboratorsData);
+      setAllCollaborators(collaboratorsData);
+      setLoading(false);
+    } else {
+      throw new Error("Failed to fetch data");
+    }
+  } catch (error) {
+    console.error("An error has occurred:", error);
+  }
 }
 
 export async function createStaffProject({ staffId, projectId }) {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/staffProject`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            staff_id: staffId,
-            project_id: projectId,
-          }),
-        }
-      );
-      if (response.ok) {
-        console.log("User-project relation created.");
-        return true;
-      } else {
-        console.log("User-project error.");
-        return false;
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/staffProject`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          staff_id: staffId,
+          project_id: projectId,
+        }),
       }
-    } catch (error) {
-      console.error("An error has occurred: ", error);
+    );
+    if (response.ok) {
+      console.log("User-project relation created.");
+      return true;
+    } else {
+      console.log("User-project error.");
       return false;
     }
+  } catch (error) {
+    console.error("An error has occurred: ", error);
+    return false;
   }
+}
 
 export async function fetchOwnerName({ projectOwner, setProjectOwner }) {
   try {
@@ -236,4 +241,35 @@ export async function fetchCustomerName({
   }
 }
 
-
+export async function fetchUserInfo(project, username, formatTime, setEmail, setTotalTime) {
+  try {
+    const userResponse = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/staff/username/${username}`
+    );
+    if (userResponse.ok) {
+      const userData = await userResponse.json();
+      const userId = userData.staff_id;
+      const userEmail = userData.email;
+      setEmail(userEmail);
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/${userId}/${
+            project.staffProject.project_id
+          }`
+        );
+        if (response.ok) {
+          const staffProjectData = await response.json();
+          const totalHours = staffProjectData.total_time;
+          const formattedTime = formatTime(totalHours);
+          setTotalTime(formattedTime);
+        } else {
+          console.error("Time couldn't be fetched.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+  } catch (error) {
+    console.error("Failed to fetch user: ", error);
+  }
+}

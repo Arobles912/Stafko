@@ -11,6 +11,7 @@ import {
 export default function ProjectCard({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);
   const [isEditCustomer, setIsEditCustomer] = useState(false);
+  const [isUserInfo, setIsUserInfo] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
   const [description, setDescription] = useState(project.project.description);
   const [projectOwner, setProjectOwner] = useState(
@@ -30,7 +31,14 @@ export default function ProjectCard({ project }) {
   const textareaRef = useRef(null);
 
   useEffect(() => {
-    fetchData({project, setStaffProjectsData, setCollaborators, setAllCollaborators, setInitialDesc, setLoading});
+    fetchData({
+      project,
+      setStaffProjectsData,
+      setCollaborators,
+      setAllCollaborators,
+      setInitialDesc,
+      setLoading,
+    });
   }, [project.staffProject.project_id]);
 
   useEffect(() => {
@@ -251,15 +259,17 @@ export default function ProjectCard({ project }) {
           handleDownloadButton={handleDownloadButton}
         />
         <ProjectCardExtended
+          project={project}
           extendedCard={extendedCard}
           setDescription={setDescription}
           setIsEditCustomer={setIsEditCustomer}
           isEditCustomer={isEditCustomer}
+          isUserInfo={isUserInfo}
+          setIsUserInfo={setIsUserInfo}
           error={error}
           loading={loading}
           textareaRef={textareaRef}
           description={description}
-          project={project}
           collaborators={collaborators}
           projectOwner={projectOwner}
           modifyCollaborators={modifyCollaborators}

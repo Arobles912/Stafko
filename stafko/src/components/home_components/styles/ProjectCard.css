@@ -280,11 +280,17 @@ hr {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   margin-left: 10px;
+  font-weight: 600;
+}
+
+.user-card div > span:hover {
+  color: #ffcc00;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
 .owner-color-span {
   color: #da620d;
-  font-weight: 600;
 }
 
 .user-card div > img {

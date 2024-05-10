@@ -16,7 +16,4 @@ export class StaffDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty({ description: 'The role of the staff member', required: false })
-  @IsOptional()
-  user_role?: string;
 }

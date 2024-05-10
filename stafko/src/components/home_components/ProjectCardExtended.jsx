@@ -8,18 +8,22 @@ import {
   startTimer,
   stopTimer,
   getActiveTimer,
+  updateTotalTime
 } from "../../utils/clockify/ClockifyFunctions";
+import UserInfo from "../floating_components/UserInfo";
 
 export default function ProjectCardExtended({
+  project,
   extendedCard,
   isEditCustomer,
   error,
   loading,
   textareaRef,
   description,
+  isUserInfo,
+  setIsUserInfo,
   setDescription,
   setIsEditCustomer,
-  project,
   collaborators,
   projectOwner,
   modifyCollaborators,
@@ -32,9 +36,9 @@ export default function ProjectCardExtended({
     useState(false);
   const [timer, setTimer] = useState(null);
   const [time, setTime] = useState(0);
-
+  const [milliseconds, setMilliseconds] = useState(null);
+  const [collaboratorName, setCollaboratorName] = useState("");
   const username = localStorage.getItem("username");
-
 
   useEffect(() => {
     const timerState = localStorage.getItem("timerstate");
@@ -69,17 +73,21 @@ export default function ProjectCardExtended({
   };
 
   const handleStartTimer = () => {
-    startTimer(project, setTimer, setTime, username);
-    localStorage.setItem("timerstate", "active");
+    const activeTimer = localStorage.getItem("timerstate");
+    if (activeTimer !== "active") {
+      startTimer(project, setTimer, setTime, username);
+      localStorage.setItem("timerstate", "active");
+    } else {
+      console.log("A timer is already running.");
+    }
   };
   
-  const handleStopTimer = () => {
-    stopTimer(
-      timer,
-      setTimer,
-      setTime
-    );
+  const handleStopTimer = async () => {
+    stopTimer(timer, setTimer, setTime);
     localStorage.removeItem("timerstate");
+    const timeInMilliseconds = time * 1000;
+    setMilliseconds(timeInMilliseconds);
+    await updateTotalTime({ milliseconds: timeInMilliseconds, username, project });
   };
   
   return (
@@ -145,6 +153,23 @@ export default function ProjectCardExtended({
           />
         )}
       </div>
+
+      <div
+        className={`main-user-info-div ${
+          isUserInfo ? "visible" : "hidden"
+        }`}
+      >
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <UserInfo
+            setIsUserInfo={setIsUserInfo}
+            isUserInfo={isUserInfo}
+            project={project}
+            username={collaboratorName}
+          />
+        )}
+      </div>
       <div className="description-div">
         <h3>ReadME</h3>
         <hr />
@@ -167,10 +192,14 @@ export default function ProjectCardExtended({
                 src="src/assets/user_images/user-icon.png"
                 alt="colaborators-icon"
               />
-              <span
+              <span 
                 className={
                   collaborator === projectOwner ? "owner-color-span" : ""
                 }
+                onClick={() => {
+                  setIsUserInfo(true);
+                  setCollaboratorName(collaborator);
+                }}
               >
                 {collaborator}
               </span>

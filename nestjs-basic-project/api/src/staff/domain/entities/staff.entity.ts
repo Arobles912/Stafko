@@ -19,7 +19,4 @@ export class StaffEntity {
   @Column({ length: 50, nullable: false })
   email: string;
 
-  @ApiProperty({ description: 'The role of the staff member' })
-  @Column({ default: 'Usuario', length: 50 })
-  user_role: string;
 }

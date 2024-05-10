@@ -8,7 +8,6 @@ CREATE TABLE staff (
     username VARCHAR(30) NOT NULL,
     pass VARCHAR(255) NOT NULL,
     email VARCHAR(50) NOT NULL,
-    user_role VARCHAR(50) DEFAULT 'Usuario'
 );
 
 CREATE TABLE customers (
@@ -36,7 +35,7 @@ CREATE TABLE projects (
 CREATE TABLE staff_project (
     staff_id INTEGER REFERENCES staff(staff_id),
     project_id INTEGER REFERENCES projects(project_id),
-    total_hours INTERVAL DEFAULT '00:00:00',
+    total_time NUMBER,
     PRIMARY KEY (staff_id, project_id)
 );
 

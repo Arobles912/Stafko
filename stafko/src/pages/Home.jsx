@@ -33,13 +33,9 @@ export default function Home({ setIsLoggedIn }) {
       }
     };
     fetchUserData();
+    fetchOwner({ projectOwner, token, setProjectOwner });
   }, []);
 
-  useEffect(() => {
-    if (projectOwner && token) {
-      fetchOwner({ projectOwner, token, setProjectOwner });
-    }
-  }, );
 
   useEffect(() => {
     if (username && token) {

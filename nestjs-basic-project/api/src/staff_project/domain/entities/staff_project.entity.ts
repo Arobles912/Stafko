@@ -14,8 +14,8 @@ export class StaffProjectEntity {
   project_id: number;
 
   @ApiProperty({ description: 'Total hours worked on the project.', example: '00:00:00' })
-  @Column({ default: '00:00:00' })
-  total_hours: string;
+  @Column({ nullable: true })
+  total_time: number;
 
   @ApiProperty({ description: 'Staff entity', type: StaffEntity })
   @ManyToOne(() => StaffEntity, { nullable: false })

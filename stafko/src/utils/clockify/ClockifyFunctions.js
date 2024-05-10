@@ -166,3 +166,54 @@ export async function getActiveTimer() {
     return null;
   }
 }
+
+export async function updateTotalTime({ milliseconds, username, project }) {
+  try {
+    const userResponse = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/staff/username/${username}`
+    );
+    if (userResponse.ok) {
+      const userData = await userResponse.json();
+      const userId = userData.staff_id;
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/${userId}/${
+            project.staffProject.project_id
+          }`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (response.ok) {
+          const projectData = await response.json();
+          const totalTime = projectData.total_time || 0;
+          const newTotalTime = totalTime + milliseconds;
+          await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/staffProject/${userId}/${
+              project.staffProject.project_id
+            }`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                total_time: newTotalTime,
+              }),
+            }
+          );
+          console.log("Time updated.");
+        } else {
+          console.error("Time couldn't be updated.");
+        }
+      } catch (error) {
+        console.error("Error updating time:", error);
+      }
+    }
+  } catch (error) {
+    console.error("Failed to fetch user: ", error);
+  }
+}

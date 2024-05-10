@@ -12,5 +12,5 @@ export class StaffProjectDto {
 
   @ApiProperty({ description: 'Total hours', example: '00:00:00' })
   @IsOptional()
-  total_hours?: string;
+  total_time?: number;
 }
