@@ -325,7 +325,8 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner }) {
               </p>
             </div>
           )}
-          <div className="bottom-buttons">
+        </div>
+        <div className="bottom-buttons">
             <input
               className="add-project-input"
               type="submit"
@@ -341,7 +342,6 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner }) {
               Clear all
             </button>
           </div>
-        </div>
       </form>
     </div>
   );

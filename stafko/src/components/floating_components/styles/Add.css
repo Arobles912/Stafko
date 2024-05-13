@@ -63,6 +63,7 @@
 .add-form textarea {
   font-size: 14px;
   resize: none;
+  width: 100%;
   margin-top: 10px;
 }
 
