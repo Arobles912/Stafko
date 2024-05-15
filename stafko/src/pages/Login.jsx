@@ -5,12 +5,12 @@ import Header from "../components/login_components/Header.jsx";
 import Footer from "../components/login_components/Footer.jsx";
 import { loginUser } from "../utils/login_calls/LoginCalls.js";
 
-export default function Login({ setIsLoggedIn, username, setUsername }) {
+export default function Login({ setIsLoggedIn, email, setEmail }) {
   const [pass, setPassword] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     if (token) {
       setIsLoggedIn(true);
     }
@@ -18,7 +18,7 @@ export default function Login({ setIsLoggedIn, username, setUsername }) {
 
   const handleLogin = (event) => {
     event.preventDefault();
-    loginUser({ username, pass, setIsLoggedIn, setError });
+    loginUser({ email, pass, setIsLoggedIn, setError });
   };
 
   return (
@@ -32,14 +32,14 @@ export default function Login({ setIsLoggedIn, username, setUsername }) {
               src="src/assets/user_images/user-icon.png"
               alt="user-icon"
             />
-            <label htmlFor="username">Username:</label>
+            <label htmlFor="email">Email:</label>
             <br />
             <input
-              type="text"
-              id="username"
-              name="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               maxLength={30}
             />
             <br />

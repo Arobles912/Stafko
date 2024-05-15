@@ -169,51 +169,67 @@ export async function getActiveTimer() {
 
 export async function updateTotalTime({ milliseconds, username, project }) {
   try {
+    const accessToken = localStorage.getItem("accessToken");
+
+    // Obtener el ID del usuario
     const userResponse = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/staff/username/${username}`
-    );
-    if (userResponse.ok) {
-      const userData = await userResponse.json();
-      const userId = userData.staff_id;
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/${userId}/${
-            project.staffProject.project_id
-          }`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (response.ok) {
-          const projectData = await response.json();
-          const totalTime = projectData.total_time || 0;
-          const newTotalTime = totalTime + milliseconds;
-          await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/staffProject/${userId}/${
-              project.staffProject.project_id
-            }`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                total_time: newTotalTime,
-              }),
-            }
-          );
-          console.log("Time updated.");
-        } else {
-          console.error("Time couldn't be updated.");
-        }
-      } catch (error) {
-        console.error("Error updating time:", error);
+      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${username}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
       }
+    );
+
+    if (!userResponse.ok) {
+      throw new Error("Failed to fetch user");
     }
+
+    const userData = await userResponse.json();
+    const userId = userData.data[0].id;
+    
+    const staffProjectResponse = await fetch(
+      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staffProject?filter[staff_id][_eq]=${userId}&filter[project_id][_eq]=${project.staffProject.project_id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    if (!staffProjectResponse.ok) {
+      throw new Error("Failed to fetch staff project data");
+    }
+
+    const staffProjectData = await staffProjectResponse.json();
+    const projectData = staffProjectData.data[0];
+    const totalTime = projectData.total_time || 0;
+    const newTotalTime = totalTime + milliseconds;
+
+    const updateResponse = await fetch(
+      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staffProject/${projectData.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          total_time: newTotalTime,
+        }),
+      }
+    );
+
+    if (!updateResponse.ok) {
+      throw new Error("Failed to update total time");
+    }
+
+    console.log("Time updated.");
   } catch (error) {
-    console.error("Failed to fetch user: ", error);
+    console.error("Error updating time:", error);
   }
 }

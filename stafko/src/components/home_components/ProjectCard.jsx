@@ -60,9 +60,14 @@ export default function ProjectCard({ project }) {
   async function handleDownloadButton() {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/projects/${
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${
           project.staffProject.project_id
-        }/download`
+        }/download`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
       if (response.ok) {
         const blob = await response.blob();
@@ -94,18 +99,30 @@ export default function ProjectCard({ project }) {
   async function deleteCollaborators(collaborator) {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/staff/username/${collaborator}`
+        `${
+          import.meta.env.VITE_BACKEND_DIRECTUS
+        }/items/staff?filter=username,eq,${collaborator}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
 
       if (response.ok) {
         const staffData = await response.json();
-        const staffId = staffData.staff_id;
+        const staffId = staffData[0].staff_id;
         const staffProjectResponse = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/${staffId}/${
+          `${
+            import.meta.env.VITE_BACKEND_DIRECTUS
+          }/items/staffProject?filter=staff_id,eq,${staffId}&filter=project_id,eq,${
             project.staffProject.project_id
           }`,
           {
             method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           }
         );
         if (staffProjectResponse.ok) {
@@ -131,19 +148,27 @@ export default function ProjectCard({ project }) {
       try {
         const [staffProjectResponse, projectResponse] = await Promise.all([
           fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
+            `${
+              import.meta.env.VITE_BACKEND_DIRECTUS
+            }/items/staffProject?filter=project_id,eq,${
               project.staffProject.project_id
             }`,
             {
               method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
             }
           ),
           fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/projects/${
+            `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${
               project.project.project_id
             }`,
             {
               method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
             }
           ),
         ]);
@@ -165,11 +190,12 @@ export default function ProjectCard({ project }) {
         if (staffProjectData) {
           try {
             const restoreResponse = await fetch(
-              `${import.meta.env.VITE_BACKEND_URL}/projects`,
+              `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects`,
               {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
+                  Authorization: `Bearer ${accessToken}`,
                 },
                 body: JSON.stringify(staffProjectData),
               }
@@ -196,13 +222,14 @@ export default function ProjectCard({ project }) {
     if (confirmed) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/projects/${
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${
             project.project.project_id
           }`,
           {
-            method: "PUT",
+            method: "PATCH",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
             },
             body: JSON.stringify({
               description: description,

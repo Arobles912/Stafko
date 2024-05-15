@@ -13,29 +13,32 @@ export default function ChangeProjectCustomer({
   const [shouldReload, setShouldReload] = useState(false);
 
   useEffect(() => {
+    fetchCustomers(setCustomers);
+  }, []);
+
+  useEffect(() => {
     if (shouldReload) {
       window.location.reload();
     }
   }, [shouldReload]);
 
-  useEffect(() => {
-    fetchCustomers(setCustomers);
-  }, []);
-
   async function handleConfirm() {
+    const accessToken = localStorage.getItem("accessToken");
+
     const confirmed = window.confirm(
       "Are you sure you want to confirm the changes?"
     );
     if (confirmed) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/projects/${
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${
             project.project.project_id
           }`,
           {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
             },
             body: JSON.stringify({
               associated_customer: projectCustomer,

@@ -5,9 +5,9 @@ import Header from "../components/login_components/Header.jsx";
 import Footer from "../components/login_components/Footer.jsx";
 import { registerUser } from "../utils/login_calls/LoginCalls.js";
 
-export default function Register({ username, setUsername }) {
+export default function Register({ email, setEmail}) {
   const [pass, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [error, setError] = useState("");
 
   const navigate = useNavigate();

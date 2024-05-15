@@ -37,6 +37,7 @@ export default function ProjectCardView({ project }) {
   const [milliseconds, setMilliseconds] = useState(null);
 
   const username = localStorage.getItem("username");
+  const accessToken = localStorage.getItem("accessToken");
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -74,9 +75,11 @@ export default function ProjectCardView({ project }) {
   async function handleDownloadButton() {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/projects/${
-          project.staffProject.project_id
-        }/download`
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${project.staffProject.project_id}/download`,{
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
       if (response.ok) {
         const blob = await response.blob();

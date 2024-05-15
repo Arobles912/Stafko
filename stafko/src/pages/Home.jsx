@@ -6,46 +6,36 @@ import ProjectCardView from "../components/home_components/ProjectCardView";
 import "./styles/Home.css";
 import MobileNavbar from "../components/navbar_components/MobileNavbar";
 import AddCustomer from "../components/floating_components/AddCustomer";
-import { fetchProjects, fetchOwner } from "../utils/api_calls/ApiCalls";
+import {
+  fetchProjects,
+  fetchCustomers,
+  fetchUsers,
+} from "../utils/api_calls/ApiCalls";
 
 export default function Home({ setIsLoggedIn }) {
   const [isAddProjectVisible, setIsAddProjectVisible] = useState(false);
   const [isAddCustomerVisible, setIsAddCustomerVisible] = useState(false);
   const [projects, setProjects] = useState([]);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(localStorage.getItem("username"));
   const [projectOwner, setProjectOwner] = useState(
     localStorage.getItem("username")
   );
-  const [token, setToken] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [isMobileNavbarVisible, setIsMobileNavbarVisible] = useState(false);
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem("accessToken")
+  );
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const storedUsername = localStorage.getItem("username");
-        const storedToken = localStorage.getItem("token");
-        setUsername(storedUsername);
-        setToken(storedToken);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchUserData();
-    fetchOwner({ projectOwner, token, setProjectOwner });
-  }, []);
-
-
-  useEffect(() => {
-    if (username && token) {
-      fetchProjects({ username, token, setProjects });
+    if (username && accessToken) {
+      fetchProjects({ username, setProjects });
     }
-  }, [username, token]);
+  }, [username, accessToken]);
 
   const toggleAddProject = () => {
     setIsAddProjectVisible(!isAddProjectVisible);
-    selectedUsers.splice(1, 1);
+    setSelectedUsers((prevUsers) => prevUsers.filter((user, index) => index === 0));
   };
 
   const toggleAddCustomer = () => {
@@ -65,9 +55,7 @@ export default function Home({ setIsLoggedIn }) {
   projects.sort(compareProjects);
 
   const filteredProjects = projects.filter((project) =>
-    project.project.project_name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
+    project.project.project_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -90,20 +78,19 @@ export default function Home({ setIsLoggedIn }) {
             isAddCustomerVisible ? "Cancel add customer" : "Add customer"
           }
           setUsername={setUsername}
-          setToken={setToken}
           setSearchTerm={setSearchTerm}
           isMobileNavbarVisible={isMobileNavbarVisible}
           setIsMobileNavbarVisible={setIsMobileNavbarVisible}
+          setAccessToken={setAccessToken}
         />
         <div
-          className={`main-add-div ${
-            isAddProjectVisible ? "visible" : "hidden"
-          }`}
+          className={`main-add-div ${isAddProjectVisible ? "visible" : "hidden"}`}
         >
           <Add
             selectedUsers={selectedUsers}
             setSelectedUsers={setSelectedUsers}
             projectOwner={projectOwner}
+            setProjectOwner={setProjectOwner}
           />
         </div>
         <div

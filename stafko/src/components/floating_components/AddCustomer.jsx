@@ -13,6 +13,7 @@ export default function AddCustomer() {
   const [shouldReload, setShouldReload] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
+  const accessToken = localStorage.getItem("accessToken");
 
   async function addCustomer(event) {
     event.preventDefault();
@@ -29,13 +30,15 @@ export default function AddCustomer() {
       return;
     }
 
+
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/customers`,
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/customers`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({
             customer_name: customerName,

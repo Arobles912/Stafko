@@ -4,10 +4,11 @@ import {
   addUser,
   createStaffProject,
   fetchCustomers,
+  fetchOwner,
   fetchUsers,
 } from "../../utils/api_calls/ApiCalls";
 
-export default function Add({ selectedUsers, setSelectedUsers, projectOwner }) {
+export default function Add({ selectedUsers, setSelectedUsers, projectOwner, setProjectOwner }) {
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
   const [projectFile, setProjectFile] = useState(null);
@@ -17,93 +18,75 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner }) {
   const [error, setError] = useState(null);
   const [shouldReload, setShouldReload] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     fetchUsers(setUsers);
     fetchCustomers(setCustomers);
-    autoAddOwnerToCollaborators();
-  }, [selectedUsers, setSelectedUsers]);
+    setSelectedUsers((prevUsers) => [
+      ...prevUsers,
+      { username: projectOwner, id: "owner" },
+    ]);
+    fetchOwner({projectOwner, setProjectOwner})
+  }, []);
 
-  const handleStaffProject = ( staffId, projectId ) => {
+  const handleStaffProject = (staffId, projectId) => {
     createStaffProject({ staffId, projectId });
   };
 
-  async function autoAddOwnerToCollaborators() {
-    try {
-      if (
-        !selectedUsers.some(
-          (user) => user.username === localStorage.getItem("username")
-        )
-      ) {
-        const response = await fetch(
-          `${
-            import.meta.env.VITE_BACKEND_URL
-          }/staff/username/${localStorage.getItem("username")}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          const ownerStaffId = data.staff_id;
-          const ownerUsername = data.username;
-          setSelectedUsers((prevUsers) => [
-            ...prevUsers,
-            { username: ownerUsername, id: ownerStaffId },
-          ]);
-        }
-      } else {
-        console.log("Owner already exists in the list of collaborators.");
-      }
-    } catch (error) {
-      console.error("Failed to fetch project owner: ", error);
-    }
-  }
-
   async function addProject(event) {
     event.preventDefault();
-
+  
     if (!projectName.trim()) {
       setError("The project name can't be empty.");
       return;
     }
-
+  
     if (description.length > 3000) {
       setError("The project description can't be longer than 3000 characters.");
       return;
     }
-
+  
     if (selectedUsers.length < 1) {
       setError("The users selected field can't be empty.");
       return;
     }
-
+  
     if (!projectCustomer) {
       setError("The project customer is required.");
       return;
     }
-
-    if (projectFile === null) {
-      setError("The project file is required.");
-      return;
-    }
+  
+    // if (projectFile === null) {
+    //   setError("The project file is required.");
+    //   return;
+    // }
+    console.log(projectOwner);
 
     try {
-      const formData = new FormData();
-      formData.append("project_name", projectName);
-      formData.append("description", description);
-      formData.append("project_owner", projectOwner);
-      formData.append("associated_customer", projectCustomer);
-      formData.append("project_file", projectFile);
-
+      const projectData = {
+        project_name: projectName,
+        description: description,
+        project_owner: projectOwner,
+        associated_customer: projectCustomer
+        //project_file: projectFile
+      };
+  
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/projects`,
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects`,
         {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json"
+          },
           method: "POST",
-          body: formData,
+          body: JSON.stringify(projectData)
         }
       );
-
+  
       if (response.ok) {
         const data = await response.json();
-        const projectId = data.project_id;
+        const projectId = data.data.id;
         for (let i = 0; i < selectedUsers.length; i++) {
           const staffId = selectedUsers[i].id;
           await handleStaffProject(staffId, projectId);
@@ -114,12 +97,16 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner }) {
         setProjectFile(null);
         setSelectedUsers([]);
         setShouldReload(true);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.errors[0].message);
       }
     } catch (error) {
       console.error("Failed to create project: ", error);
     }
   }
   
+
   async function deleteUser(username) {
     setSelectedUsers((prevUsers) =>
       prevUsers.filter((user) => user.username !== username)
@@ -240,7 +227,7 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner }) {
           </label>
           <br />
           <select name="users" id="users" className="select-user">
-            <option>Select user</option>
+            <option value={projectOwner}>{projectOwner}</option>
             {users.map((user) => (
               <option key={user.staff_id} value={user.username}>
                 {user.username}
@@ -263,7 +250,7 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner }) {
                 {selectedUsers.map((user, index) => (
                   <li key={index}>
                     - {user.username}
-                    {user.username !== localStorage.getItem("username") && (
+                    {user.username !== projectOwner && (
                       <button
                         type="button"
                         onClick={() => deleteUser(user.username)}
@@ -283,7 +270,7 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner }) {
             src="src/assets/project_images/files-icon.png"
             alt="user-icon"
           />
-          <label htmlFor="projectFile" className="required">
+          <label htmlFor="projectFile">
             Project File:
           </label>
           <br />
@@ -292,7 +279,6 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner }) {
             id="projectfile"
             name="projectfile"
             onChange={(e) => setProjectFile(e.target.files[0])}
-            required
           />
           <br />
           {error && (
@@ -327,21 +313,17 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner }) {
           )}
         </div>
         <div className="bottom-buttons">
-            <input
-              className="add-project-input"
-              type="submit"
-              id="addProject"
-              name="addProject"
-              value="Add project"
-            />
-            <button
-              type="button"
-              className="clear-all-button"
-              onClick={clearAll}
-            >
-              Clear all
-            </button>
-          </div>
+          <input
+            className="add-project-input"
+            type="submit"
+            id="addProject"
+            name="addProject"
+            value="Add project"
+          />
+          <button type="button" className="clear-all-button" onClick={clearAll}>
+            Clear all
+          </button>
+        </div>
       </form>
     </div>
   );

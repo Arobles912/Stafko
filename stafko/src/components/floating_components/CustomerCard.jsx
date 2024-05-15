@@ -23,7 +23,7 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
     async function fetchCustomerData() {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/customers/${
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/customers/${
             project.project.associated_customer
           }`
         );
@@ -64,7 +64,7 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
     if (confirmed) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/customers/${
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/customers/${
             project.project.associated_customer
           }`,
           {

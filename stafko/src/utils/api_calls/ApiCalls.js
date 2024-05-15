@@ -1,42 +1,49 @@
-export async function fetchProjects({ username, token, setProjects }) {
+export async function fetchProjects({ username, setProjects }) {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/staff/username/${username}`,
+      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
+
     if (response.ok) {
       const userData = await response.json();
-      const staffId = userData.staff_id;
+      const staffId = userData.data.find((user) => user.username === username)
+        ?.staff_id;
+      if (!staffId) {
+        console.log("Staff ID not found");
+        return;
+      }
+
       const staffProjectsResponse = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/staffProject/staff/${staffId}`,
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[staff_id][_eq]=${staffId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
       if (staffProjectsResponse.ok) {
         const staffProjectsData = await staffProjectsResponse.json();
         const projectsData = await Promise.all(
-          staffProjectsData.map(async (staffProject) => {
+          staffProjectsData.data.map(async (staffProject) => {
             const projectResponse = await fetch(
-              `${import.meta.env.VITE_BACKEND_URL}/projects/${
-                staffProject.project_id
-              }`,
+              `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${staffProject.project_id}`,
               {
                 headers: {
-                  Authorization: `Bearer ${token}`,
+                  Authorization: `Bearer ${accessToken}`,
                 },
               }
             );
             if (projectResponse.ok) {
               const projectData = await projectResponse.json();
               return {
-                project: projectData,
+                project: projectData.data,
                 staffProject: staffProject,
               };
             } else {
@@ -59,19 +66,21 @@ export async function fetchProjects({ username, token, setProjects }) {
   }
 }
 
-export async function fetchOwner({ projectOwner, token, setProjectOwner }) {
+export async function fetchOwner({ projectOwner, setProjectOwner }) {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/staff/username/${projectOwner}`,
+      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${projectOwner}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
     if (response.ok) {
       const data = await response.json();
-      setProjectOwner(data.staff_id);
+      setProjectOwner(data.data[0].staff_id);
     }
   } catch (error) {
     console.error("Failed to fetch project owner: ", error);
@@ -79,11 +88,20 @@ export async function fetchOwner({ projectOwner, token, setProjectOwner }) {
 }
 
 export async function fetchUsers(setUsers) {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/staff`);
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     if (response.ok) {
       const userData = await response.json();
-      setUsers(userData);
+      setUsers(userData.data);
     }
   } catch (error) {
     console.error("Failed to fetch users: ", error);
@@ -91,13 +109,20 @@ export async function fetchUsers(setUsers) {
 }
 
 export async function fetchCustomers(setCustomers) {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/customers`
+      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/customers`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
     if (response.ok) {
       const customerData = await response.json();
-      setCustomers(customerData);
+      setCustomers(customerData.data);
     }
   } catch (error) {
     console.error("Failed to fetch customers: ", error);
@@ -105,18 +130,25 @@ export async function fetchCustomers(setCustomers) {
 }
 
 export async function addUser(selectedUsers, setSelectedUsers) {
+  const accessToken = localStorage.getItem("accessToken");
   const userSelect = document.getElementById("users");
   const selectedUser = userSelect.value;
+
   if (selectedUsers.some((user) => user.username === selectedUser)) {
     console.log("User already exists in the list.");
   } else {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/staff/username/${selectedUser}`
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${selectedUser}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
       if (response.ok) {
         const userData = await response.json();
-        const staffId = userData.staff_id;
+        const staffId = userData.data[0].staff_id;
         setSelectedUsers((prevUsers) => [
           ...prevUsers,
           { username: selectedUser, id: staffId },
@@ -136,23 +168,34 @@ export async function fetchData({
   setInitialDesc,
   setLoading,
 }) {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const [staffProjectsResponse, descriptionResponse, collaboratorsResponse] =
       await Promise.all([
         fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-            project.staffProject.project_id
-          }`
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[project_id][_eq]=${project.staffProject.project_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
         ),
         fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/projects/${
-            project.staffProject.project_id
-          }`
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${project.staffProject.project_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
         ),
         fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${
-            project.staffProject.project_id
-          }/users`
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[project_id][_eq]=${project.staffProject.project_id}&_join=users`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
         ),
       ]);
 
@@ -169,10 +212,10 @@ export async function fetchData({
         ]
       );
 
-      setStaffProjectsData(staffData);
-      setInitialDesc(descriptionData.description);
-      setCollaborators(collaboratorsData);
-      setAllCollaborators(collaboratorsData);
+      setStaffProjectsData(staffData.data);
+      setInitialDesc(descriptionData.data[0].description);
+      setCollaborators(collaboratorsData.data);
+      setAllCollaborators(collaboratorsData.data);
       setLoading(false);
     } else {
       throw new Error("Failed to fetch data");
@@ -182,14 +225,20 @@ export async function fetchData({
   }
 }
 
-export async function createStaffProject({ staffId, projectId }) {
+export async function createStaffProject({
+  staffId,
+  projectId,
+}) {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/staffProject`,
+      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           staff_id: staffId,
@@ -210,14 +259,24 @@ export async function createStaffProject({ staffId, projectId }) {
   }
 }
 
-export async function fetchOwnerName({ projectOwner, setProjectOwner }) {
+export async function fetchOwnerName({
+  projectOwner,
+  setProjectOwner,
+}) {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/staff/${projectOwner}`
+      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff/${projectOwner}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
     if (response.ok) {
       const data = await response.json();
-      setProjectOwner(data.username);
+      setProjectOwner(data.data[0].username);
     }
   } catch (error) {
     console.error("Failed to fetch project owner: ", error);
@@ -228,38 +287,61 @@ export async function fetchCustomerName({
   projectCustomer,
   setProjectCustomer,
 }) {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/customers/${projectCustomer}`
+      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/customers/${projectCustomer}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
     if (response.ok) {
       const data = await response.json();
-      setProjectCustomer(data.customer_name);
+      setProjectCustomer(data.data[0].customer_name);
     }
   } catch (error) {
     console.error("Failed to fetch project customer: ", error);
   }
 }
 
-export async function fetchUserInfo(project, username, formatTime, setEmail, setTotalTime) {
+export async function fetchUserInfo(
+  project,
+  username,
+  formatTime,
+  setEmail,
+  setTotalTime
+) {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const userResponse = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/staff/username/${username}`
+      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${username}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
     if (userResponse.ok) {
       const userData = await userResponse.json();
-      const userId = userData.staff_id;
-      const userEmail = userData.email;
+      const userId = userData.data[0].staff_id;
+      const userEmail = userData.data[0].email;
       setEmail(userEmail);
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staffProject/${userId}/${
-            project.staffProject.project_id
-          }`
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[staff_id][_eq]=${userId}&filter[project_id][_eq]=${project.staffProject.project_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
         );
         if (response.ok) {
           const staffProjectData = await response.json();
-          const totalHours = staffProjectData.total_time;
+          const totalHours = staffProjectData.data[0].total_time;
           const formattedTime = formatTime(totalHours);
           setTotalTime(formattedTime);
         } else {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -8,10 +8,20 @@ import {
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
+//import { refreshAccessToken } from "./utils/login_calls/LoginCalls";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    //const refreshTokenFromStorage = localStorage.getItem("refreshToken");
+    if (accessToken) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   return (
     <Router>
       <Routes>
@@ -21,12 +31,19 @@ function App() {
             isLoggedIn ? (
               <Navigate to="/home" />
             ) : (
-              <Login setIsLoggedIn={setIsLoggedIn} username={username} setUsername={setUsername}/>
+              <Login
+                setIsLoggedIn={setIsLoggedIn}
+                email={email}
+                setEmail={setEmail}
+              />
             )
           }
         />
-        <Route path="/register" element={<Register username={username} setUsername={setUsername} />} />
-        <Route path="/home" element={<Home username={username} setIsLoggedIn={setIsLoggedIn}/>} />
+        <Route
+          path="/register"
+          element={<Register email={email} setEmail={setEmail} />}
+        />
+        <Route path="/home" element={<Home setIsLoggedIn={setIsLoggedIn}/>} />
       </Routes>
     </Router>
   );

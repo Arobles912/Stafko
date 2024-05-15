@@ -11,7 +11,7 @@ export default function Navbar({
   setIsLoggedIn,
   addButtonText,
   addCustomerText,
-  setToken,
+  setAccessToken,
   setUsername,
   setSearchTerm,
   isMobileNavbarVisible,
@@ -24,8 +24,9 @@ export default function Navbar({
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (confirmed) {
-      setToken(null);
-      localStorage.removeItem("token");
+      setAccessToken(null);
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       setUsername("");
       localStorage.removeItem("username");
       setIsLoggedIn(false);
@@ -75,7 +76,7 @@ export default function Navbar({
       >
         {addCustomerText}
       </button>
-
+      
       <SearchBar setSearchTerm={setSearchTerm} />
 
       <div className="right-side-div">

@@ -12,17 +12,19 @@ export default function EditProjectName({ setIsEditProjectName, project }) {
   }, [shouldReload]);
 
   async function handleConfirm() {
+    const accessToken = localStorage.getItem("accessToken");
     const confirmed = window.confirm(
       "Are you sure you want to confirm the changes?"
     );
     if (confirmed) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/projects/${project.project.project_id}`,
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${project.project.project_id}`,
           {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
             },
             body: JSON.stringify({
               project_name: projectName,
@@ -30,7 +32,7 @@ export default function EditProjectName({ setIsEditProjectName, project }) {
           }
         );
         if (response.ok) {
-            console.log("Project name updated succesfully.");
+            console.log("Project name updated successfully.");
             setShouldReload(true);
             return true;
           } else {

@@ -11,11 +11,19 @@ export default function AddCollaborator({
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [users, setUsers] = useState([]);
   const [shouldReload, setShouldReload] = useState(false);
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/staff`);
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         if (response.ok) {
           const userData = await response.json();
           const filteredUsers = userData.filter(
@@ -29,7 +37,7 @@ export default function AddCollaborator({
     }
 
     fetchUsers();
-  }, [collaborators]);
+  }, [collaborators, accessToken]);
 
   async function deleteUser(username) {
     setSelectedUsers((prevUsers) =>
@@ -45,11 +53,16 @@ export default function AddCollaborator({
     } else {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/staff/username/${selectedUser}`
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter=username=${selectedUser}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
         );
         if (response.ok) {
           const userData = await response.json();
-          const staffId = userData.staff_id;
+          const staffId = userData[0].staff_id;
           setSelectedUsers((prevUsers) => [
             ...prevUsers,
             { username: selectedUser, id: staffId },
@@ -62,15 +75,14 @@ export default function AddCollaborator({
   }
 
   const handleCreateStaffProject = (staffId, projectId) => {
-    return createStaffProject({staffId, projectId});
-  }
+    return createStaffProject({ staffId, projectId }, accessToken);
+  };
 
-  
   useEffect(() => {
     if (shouldReload) {
       window.location.reload();
     }
-  }, [shouldReload]);
+  }, [shouldReload, accessToken]);
 
   async function handleConfirm() {
     const confirmed = window.confirm(
@@ -93,6 +105,7 @@ export default function AddCollaborator({
       }
     }
   }
+
 
   return (
     <div className="main-add-collaborator-div">
