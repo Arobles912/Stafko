@@ -12,6 +12,7 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
   const [cif, setCif] = useState("");
   const [formValues, setFormValues] = useState({});
   const [shouldReload, setShouldReload] = useState(false);
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     if (shouldReload) {
@@ -23,29 +24,34 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
     async function fetchCustomerData() {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/customers/${
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/customers/${
             project.project.associated_customer
-          }`
+          }`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
         );
         if (response.ok) {
           const data = await response.json();
-          setCustomerName(data.customer_name);
-          setCity(data.city);
-          setCountry(data.country);
-          setPhoneNumber(data.phone_number);
-          setCustomerEmail(data.email);
-          setWebsite(data.website);
-          setSector(data.sector);
-          setCif(data.cif);
+          setCustomerName(data.data.customer_name);
+          setCity(data.data.city);
+          setCountry(data.data.country);
+          setPhoneNumber(data.data.phone_number);
+          setCustomerEmail(data.data.email);
+          setWebsite(data.data.website);
+          setSector(data.data.sector);
+          setCif(data.data.cif);
           setFormValues({
-            customer_name: data.customer_name,
-            city: data.city,
-            country: data.country,
-            phone_number: data.phone_number,
-            email: data.email,
-            website: data.website,
-            sector: data.sector,
-            cif: data.cif,
+            customer_name: data.data.customer_name,
+            city: data.data.city,
+            country: data.data.country,
+            phone_number: data.data.phone_number,
+            email: data.data.email,
+            website: data.data.website,
+            sector: data.data.sector,
+            cif: data.data.cif,
           });
         } else {
           console.log("Customer data couldn't be fetched.");
@@ -64,13 +70,14 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
     if (confirmed) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/customers/${
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/customers/${
             project.project.associated_customer
           }`,
           {
-            method: "PUT",
+            method: "PATCH",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
             },
             body: JSON.stringify(formValues),
           }

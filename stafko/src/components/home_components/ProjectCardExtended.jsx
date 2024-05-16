@@ -183,41 +183,42 @@ export default function ProjectCardExtended({
         />
       </div>
       <div className="user-list">
-        <h3>Collaborators</h3>
-        <hr />
-        {collaborators.map((collaborator, index) => (
-          <div className="user-card" key={index}>
-            <div>
-              <img
-                src="src/assets/user_images/user-icon.png"
-                alt="colaborators-icon"
-              />
-              <span 
-                className={
-                  collaborator === projectOwner ? "owner-color-span" : ""
-                }
-                onClick={() => {
-                  setIsUserInfo(true);
-                  setCollaboratorName(collaborator);
-                }}
-              >
-                {collaborator}
-              </span>
-            </div>
-            {collaborator !== projectOwner && (
-              <button
-                type="button"
-                onClick={() => modifyCollaborators(collaborator)}
-              >
-                Delete collaborator
-              </button>
-            )}
-          </div>
-        ))}
-        <button type="button" onClick={() => setIsAddCollaboratorVisible(true)}>
-          Add collaborator
-        </button>
+  <h3>Collaborators</h3>
+  <hr />
+  {collaborators.map((collaborator, index) => (
+    <div className="user-card" key={index}>
+      <div>
+        <img
+          src="src/assets/user_images/user-icon.png"
+          alt="colaborators-icon"
+        />
+        <span 
+          className={
+            collaborator === projectOwner ? "owner-color-span" : ""
+          }
+          onClick={() => {
+            setIsUserInfo(true);
+            setCollaboratorName(collaborator);
+          }}
+        >
+          {collaborator}
+        </span>
       </div>
+      {collaborator !== projectOwner && (
+        <button
+          type="button"
+          onClick={() => modifyCollaborators(collaborator)}
+        >
+          Delete collaborator
+        </button>
+      )}
+    </div>
+  ))}
+  <button type="button" onClick={() => setIsAddCollaboratorVisible(true)}>
+    Add collaborator
+  </button>
+</div>
+
       {error && (
         <div style={{ textAlign: "center", width: "100%" }}>
           <p
@@ -274,7 +275,7 @@ export default function ProjectCardExtended({
         <div className="action-buttons">
           <button
             type="button"
-            onClick={deleteProject}
+            onClick={() => deleteProject(project.staffProject.project_id)}
             className="delete-button"
           >
             Delete project

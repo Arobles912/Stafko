@@ -13,15 +13,18 @@ export async function fetchProjects({ username, setProjects }) {
 
     if (response.ok) {
       const userData = await response.json();
-      const staffId = userData.data.find((user) => user.username === username)
-        ?.staff_id;
+      const staffId = userData.data.find(
+        (user) => user.username === username
+      )?.staff_id;
       if (!staffId) {
         console.log("Staff ID not found");
         return;
       }
 
       const staffProjectsResponse = await fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[staff_id][_eq]=${staffId}`,
+        `${
+          import.meta.env.VITE_BACKEND_DIRECTUS
+        }/items/staff_project?filter[staff_id][_eq]=${staffId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -33,7 +36,9 @@ export async function fetchProjects({ username, setProjects }) {
         const projectsData = await Promise.all(
           staffProjectsData.data.map(async (staffProject) => {
             const projectResponse = await fetch(
-              `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${staffProject.project_id}`,
+              `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${
+                staffProject.project_id
+              }`,
               {
                 headers: {
                   Authorization: `Bearer ${accessToken}`,
@@ -71,7 +76,9 @@ export async function fetchOwner({ projectOwner, setProjectOwner }) {
 
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${projectOwner}`,
+      `${
+        import.meta.env.VITE_BACKEND_DIRECTUS
+      }/items/staff?filter[username][_eq]=${projectOwner}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -80,14 +87,18 @@ export async function fetchOwner({ projectOwner, setProjectOwner }) {
     );
     if (response.ok) {
       const data = await response.json();
-      setProjectOwner(data.data[0].staff_id);
+      if (data.data && data.data.length > 0) {
+        setProjectOwner(data.data[0].staff_id);
+      } else {
+        console.log("Project owner not found");
+      }
     }
   } catch (error) {
     console.error("Failed to fetch project owner: ", error);
   }
 }
 
-export async function fetchUsers(setUsers) {
+export async function fetchUsers(setUsers, projectOwner) {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
@@ -101,12 +112,17 @@ export async function fetchUsers(setUsers) {
     );
     if (response.ok) {
       const userData = await response.json();
-      setUsers(userData.data);
+      const filteredUsers = userData.data.filter(
+        (user) => user.username !== projectOwner
+      );
+      setUsers(filteredUsers);
+      return filteredUsers; 
     }
   } catch (error) {
     console.error("Failed to fetch users: ", error);
   }
 }
+
 
 export async function fetchCustomers(setCustomers) {
   const accessToken = localStorage.getItem("accessToken");
@@ -139,7 +155,9 @@ export async function addUser(selectedUsers, setSelectedUsers) {
   } else {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${selectedUser}`,
+        `${
+          import.meta.env.VITE_BACKEND_DIRECTUS
+        }/items/staff?filter[username][_eq]=${selectedUser}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -160,75 +178,76 @@ export async function addUser(selectedUsers, setSelectedUsers) {
   }
 }
 
+
 export async function fetchData({
   project,
   setStaffProjectsData,
   setAllCollaborators,
   setCollaborators,
-  setInitialDesc,
   setLoading,
 }) {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const [staffProjectsResponse, descriptionResponse, collaboratorsResponse] =
-      await Promise.all([
-        fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[project_id][_eq]=${project.staffProject.project_id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        ),
-        fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${project.staffProject.project_id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        ),
-        fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[project_id][_eq]=${project.staffProject.project_id}&_join=users`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        ),
+    const [staffProjectsResponse, descriptionResponse] = await Promise.all([
+      fetch(
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[project_id][_eq]=${project.staffProject.project_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      ),
+      fetch(
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${project.staffProject.project_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      ),
+    ]);
+
+    if (staffProjectsResponse.ok && descriptionResponse.ok) {
+      const [staffProjectsData, descriptionData] = await Promise.all([
+        staffProjectsResponse.json(),
+        descriptionResponse.json(),
       ]);
 
-    if (
-      staffProjectsResponse.ok &&
-      descriptionResponse.ok &&
-      collaboratorsResponse.ok
-    ) {
-      const [staffData, descriptionData, collaboratorsData] = await Promise.all(
-        [
-          staffProjectsResponse.json(),
-          descriptionResponse.json(),
-          collaboratorsResponse.json(),
-        ]
+      const staffIds = staffProjectsData.data.map((staffProject) => staffProject.staff_id);
+
+      const staffResponse = await fetch(
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[staff_id][_in]=${staffIds.join(",")}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
 
-      setStaffProjectsData(staffData.data);
-      setInitialDesc(descriptionData.data[0].description);
-      setCollaborators(collaboratorsData.data);
-      setAllCollaborators(collaboratorsData.data);
-      setLoading(false);
+      if (staffResponse.ok) {
+        const staffData = await staffResponse.json();
+
+        const usernames = staffData.data.map((staff) => staff.username);
+
+        setCollaborators(usernames);
+        setAllCollaborators(usernames);
+        setStaffProjectsData(staffProjectsData.data);
+        setLoading(false);
+      } else {
+        console.error("Failed to fetch staff data");
+      }
     } else {
-      throw new Error("Failed to fetch data");
+      console.error("Failed to fetch data");
     }
   } catch (error) {
     console.error("An error has occurred:", error);
   }
 }
 
-export async function createStaffProject({
-  staffId,
-  projectId,
-}) {
+
+
+export async function createStaffProject({ staffId, projectId }) {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
@@ -259,10 +278,7 @@ export async function createStaffProject({
   }
 }
 
-export async function fetchOwnerName({
-  projectOwner,
-  setProjectOwner,
-}) {
+export async function fetchOwnerName({ projectOwner, setProjectOwner }) {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
@@ -276,7 +292,7 @@ export async function fetchOwnerName({
     );
     if (response.ok) {
       const data = await response.json();
-      setProjectOwner(data.data[0].username);
+      setProjectOwner(data.data.username);
     }
   } catch (error) {
     console.error("Failed to fetch project owner: ", error);
@@ -291,7 +307,9 @@ export async function fetchCustomerName({
 
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/customers/${projectCustomer}`,
+      `${
+        import.meta.env.VITE_BACKEND_DIRECTUS
+      }/items/customers/${projectCustomer}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -300,7 +318,7 @@ export async function fetchCustomerName({
     );
     if (response.ok) {
       const data = await response.json();
-      setProjectCustomer(data.data[0].customer_name);
+      setProjectCustomer(data.data.customer_name);
     }
   } catch (error) {
     console.error("Failed to fetch project customer: ", error);
@@ -318,7 +336,9 @@ export async function fetchUserInfo(
 
   try {
     const userResponse = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${username}`,
+      `${
+        import.meta.env.VITE_BACKEND_DIRECTUS
+      }/items/staff?filter[username][_eq]=${username}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -332,7 +352,11 @@ export async function fetchUserInfo(
       setEmail(userEmail);
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[staff_id][_eq]=${userId}&filter[project_id][_eq]=${project.staffProject.project_id}`,
+          `${
+            import.meta.env.VITE_BACKEND_DIRECTUS
+          }/items/staff_project?filter[staff_id][_eq]=${userId}&filter[project_id][_eq]=${
+            project.staffProject.project_id
+          }`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

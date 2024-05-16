@@ -75,7 +75,7 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
             project.project.associated_customer
           }`,
           {
-            method: "PUT",
+            method: "PATCH",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${accessToken}`,

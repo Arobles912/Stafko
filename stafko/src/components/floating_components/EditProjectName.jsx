@@ -21,7 +21,7 @@ export default function EditProjectName({ setIsEditProjectName, project }) {
         const response = await fetch(
           `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${project.project.project_id}`,
           {
-            method: "PUT",
+            method: "PATCH",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${accessToken}`,

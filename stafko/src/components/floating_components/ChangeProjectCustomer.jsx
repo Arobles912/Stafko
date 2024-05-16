@@ -35,7 +35,7 @@ export default function ChangeProjectCustomer({
             project.project.project_id
           }`,
           {
-            method: "PUT",
+            method: "PATCH",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${accessToken}`,

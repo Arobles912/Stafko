@@ -18,7 +18,7 @@ export async function loginUser({ email, pass, setIsLoggedIn, setError }) {
       const directusData = await directusResponse.json();
 
       const staffResponse = await fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?email=${email}`,
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[email][_eq]=${email}`,
         {
           method: "GET",
           headers: {

@@ -171,9 +171,10 @@ export async function updateTotalTime({ milliseconds, username, project }) {
   try {
     const accessToken = localStorage.getItem("accessToken");
 
-    // Obtener el ID del usuario
     const userResponse = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${username}`,
+      `${
+        import.meta.env.VITE_BACKEND_DIRECTUS
+      }/items/staff?filter[username][_eq]=${username}`,
       {
         method: "GET",
         headers: {
@@ -188,10 +189,14 @@ export async function updateTotalTime({ milliseconds, username, project }) {
     }
 
     const userData = await userResponse.json();
-    const userId = userData.data[0].id;
-    
+    const userId = userData.data[0].staff_id;
+
     const staffProjectResponse = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staffProject?filter[staff_id][_eq]=${userId}&filter[project_id][_eq]=${project.staffProject.project_id}`,
+      `${
+        import.meta.env.VITE_BACKEND_DIRECTUS
+      }/items/staff_project?filter[staff_id][_eq]=${userId}&filter[project_id][_eq]=${
+        project.staffProject.project_id
+      }`,
       {
         method: "GET",
         headers: {
@@ -211,7 +216,9 @@ export async function updateTotalTime({ milliseconds, username, project }) {
     const newTotalTime = totalTime + milliseconds;
 
     const updateResponse = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staffProject/${projectData.id}`,
+      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project/${
+        projectData.id
+      }`,
       {
         method: "PATCH",
         headers: {

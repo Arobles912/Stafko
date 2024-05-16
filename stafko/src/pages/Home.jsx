@@ -8,8 +8,6 @@ import MobileNavbar from "../components/navbar_components/MobileNavbar";
 import AddCustomer from "../components/floating_components/AddCustomer";
 import {
   fetchProjects,
-  fetchCustomers,
-  fetchUsers,
 } from "../utils/api_calls/ApiCalls";
 
 export default function Home({ setIsLoggedIn }) {
@@ -31,6 +29,7 @@ export default function Home({ setIsLoggedIn }) {
     if (username && accessToken) {
       fetchProjects({ username, setProjects });
     }
+    console.log(accessToken);
   }, [username, accessToken]);
 
   const toggleAddProject = () => {
@@ -43,10 +42,10 @@ export default function Home({ setIsLoggedIn }) {
   };
 
   const compareProjects = (a, b) => {
-    if (a.project.creation_date > b.project.creation_date) {
+    if (a.staffProject.creation_date > b.staffProject.creation_date) {
       return -1;
     }
-    if (a.project.creation_date < b.project.creation_date) {
+    if (a.staffProject.creation_date < b.staffProject.creation_date) {
       return 1;
     }
     return 0;
@@ -55,7 +54,7 @@ export default function Home({ setIsLoggedIn }) {
   projects.sort(compareProjects);
 
   const filteredProjects = projects.filter((project) =>
-    project.project.project_name.toLowerCase().includes(searchTerm.toLowerCase())
+    project.project && project.project.project_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (

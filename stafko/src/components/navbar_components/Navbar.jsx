@@ -25,9 +25,9 @@ export default function Navbar({
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (confirmed) {
       setAccessToken(null);
+      setUsername("");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
-      setUsername("");
       localStorage.removeItem("username");
       setIsLoggedIn(false);
       navigate("/");

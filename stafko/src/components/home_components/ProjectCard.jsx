@@ -27,8 +27,8 @@ export default function ProjectCard({ project }) {
   const [shouldReload, setShouldReload] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-
   const textareaRef = useRef(null);
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     fetchData({
@@ -44,18 +44,8 @@ export default function ProjectCard({ project }) {
   useEffect(() => {
     fetchOwnerName({ projectOwner, setProjectOwner });
     fetchCustomerName({ projectCustomer, setProjectCustomer });
+    setInitialDesc(description)
   }, []);
-
-  function handleEditButton() {
-    if (editButtonText === "Cancel") {
-      setTimeout(() => {
-        setCollaborators(allCollaborators);
-        setDescription(initialDesc);
-      }, 500);
-    }
-    setExtendedCard(!extendedCard);
-    setEditButtonText(extendedCard ? "Edit" : "Cancel");
-  }
 
   async function handleDownloadButton() {
     try {
@@ -88,132 +78,132 @@ export default function ProjectCard({ project }) {
     }
   }
 
-  async function modifyCollaborators(deleteCollaborator) {
-    setCollaborators((prevCollaborators) =>
-      prevCollaborators.filter(
-        (collaborator) => collaborator !== deleteCollaborator
-      )
-    );
-  }
-
   async function deleteCollaborators(collaborator) {
     try {
+      const accessToken = localStorage.getItem("accessToken");
+  
       const response = await fetch(
-        `${
-          import.meta.env.VITE_BACKEND_DIRECTUS
-        }/items/staff?filter=username,eq,${collaborator}`,
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${collaborator}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-
+  
       if (response.ok) {
         const staffData = await response.json();
-        const staffId = staffData[0].staff_id;
+        const staffId = staffData.data[0].staff_id;
+  
         const staffProjectResponse = await fetch(
-          `${
-            import.meta.env.VITE_BACKEND_DIRECTUS
-          }/items/staffProject?filter=staff_id,eq,${staffId}&filter=project_id,eq,${
-            project.staffProject.project_id
-          }`,
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[staff_id][_eq]=${staffId}`,
           {
-            method: "DELETE",
+            method: "GET",
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
           }
         );
+  
         if (staffProjectResponse.ok) {
-          console.log("Collaborator deleted successfully.");
+          const staffProjectData = await staffProjectResponse.json();
+          const staffProjectId = staffProjectData.data[0].id;
+  
+          const deleteResponse = await fetch(
+            `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project/${staffProjectId}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+  
+          if (deleteResponse.ok) {
+            console.log("Staff project deleted successfully.");
+          } else {
+            console.error("Staff project couldn't be deleted.");
+          }
         } else {
-          console.error("Staff project couldn't be deleted.");
+          console.error("Failed to fetch staff project data.");
         }
       } else {
-        console.log("User couldn't be fetched");
+        console.error("User couldn't be fetched");
       }
     } catch (error) {
       console.error("An error has occurred:", error);
     }
   }
+  
+  
 
-  async function deleteProject() {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete the project?"
-    );
-    if (confirmed) {
-      let staffProjectData;
-
-      try {
-        const [staffProjectResponse, projectResponse] = await Promise.all([
-          fetch(
-            `${
-              import.meta.env.VITE_BACKEND_DIRECTUS
-            }/items/staffProject?filter=project_id,eq,${
-              project.staffProject.project_id
-            }`,
+  async function deleteProject(projectId) {
+    const accessToken = localStorage.getItem("accessToken");
+  
+    const confirmed = window.confirm("Are you sure you want to delete the project");
+    
+    if (!confirmed) {
+      return;
+    }
+  
+    try {
+      const staffProjectResponse = await fetch(
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[project_id][_eq]=${projectId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+  
+      if (!staffProjectResponse.ok) {
+        throw new Error("Failed to fetch staff projects");
+      }
+  
+      const staffProjectsData = await staffProjectResponse.json();
+  
+      const deleteStaffProjectsPromises = staffProjectsData.data.map(
+        async (staffProject) => {
+          const staffProjectId = staffProject.id;
+          const staffProjectDeleteResponse = await fetch(
+            `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project/${staffProjectId}`,
             {
               method: "DELETE",
               headers: {
                 Authorization: `Bearer ${accessToken}`,
               },
             }
-          ),
-          fetch(
-            `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${
-              project.project.project_id
-            }`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          ),
-        ]);
-
-        if (!staffProjectResponse.ok) {
-          throw new Error("Failed to delete staff project");
-        }
-
-        staffProjectData = { ...project };
-
-        if (!projectResponse.ok) {
-          throw new Error("Failed to delete project");
-        }
-        console.log("Project deleted successfully.");
-        setShouldReload(true);
-      } catch (error) {
-        console.error("An error has occurred:", error);
-
-        if (staffProjectData) {
-          try {
-            const restoreResponse = await fetch(
-              `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${accessToken}`,
-                },
-                body: JSON.stringify(staffProjectData),
-              }
-            );
-
-            if (restoreResponse.ok) {
-              console.log("Project restored successfully.");
-              setShouldReload(false);
-            } else {
-              throw new Error("Failed to restore project");
-            }
-          } catch (error) {
-            console.error("Error restoring project:", error);
+          );
+          if (!staffProjectDeleteResponse.ok) {
+            throw new Error("Failed to delete staff project");
           }
         }
+      );
+  
+      await Promise.all(deleteStaffProjectsPromises);
+  
+      const projectDeleteResponse = await fetch(
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${projectId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+  
+      if (!projectDeleteResponse.ok) {
+        throw new Error("Failed to delete project");
       }
+  
+      console.log("Project and associated staff projects deleted successfully.");
+      setShouldReload(true);
+    } catch (error) {
+      console.error("An error has occurred:", error);
     }
   }
+  
+
 
   async function saveChanges() {
     const confirmed = window.confirm(
@@ -260,6 +250,25 @@ export default function ProjectCard({ project }) {
         setError("Error updating the description:", error);
       }
     }
+  }
+
+  function handleEditButton() {
+    if (editButtonText === "Cancel") {
+      setTimeout(() => {
+        setCollaborators(allCollaborators);
+        setDescription(initialDesc);
+      }, 500);
+    }
+    setExtendedCard(!extendedCard);
+    setEditButtonText(extendedCard ? "Edit" : "Cancel");
+  }
+
+  async function modifyCollaborators(deleteCollaborator) {
+    setCollaborators((prevCollaborators) =>
+      prevCollaborators.filter(
+        (collaborator) => collaborator !== deleteCollaborator
+      )
+    );
   }
 
   const numberOfCollaborators = staffProjectsData

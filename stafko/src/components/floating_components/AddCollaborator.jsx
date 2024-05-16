@@ -26,18 +26,23 @@ export default function AddCollaborator({
         );
         if (response.ok) {
           const userData = await response.json();
-          const filteredUsers = userData.filter(
-            (user) => !collaborators.includes(user.username)
-          );
-          setUsers(filteredUsers);
+          if (Array.isArray(userData.data)) { 
+            const filteredUsers = userData.data.filter(
+              (user) => !collaborators.includes(user.username)
+            );
+            setUsers(filteredUsers);
+          } else {
+            console.error("Received data is not an array:", userData);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch users: ", error);
       }
     }
-
+  
     fetchUsers();
   }, [collaborators, accessToken]);
+  
 
   async function deleteUser(username) {
     setSelectedUsers((prevUsers) =>
@@ -53,7 +58,7 @@ export default function AddCollaborator({
     } else {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter=username=${selectedUser}`,
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${selectedUser}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -62,7 +67,7 @@ export default function AddCollaborator({
         );
         if (response.ok) {
           const userData = await response.json();
-          const staffId = userData[0].staff_id;
+          const staffId = userData.data[0].staff_id;
           setSelectedUsers((prevUsers) => [
             ...prevUsers,
             { username: selectedUser, id: staffId },

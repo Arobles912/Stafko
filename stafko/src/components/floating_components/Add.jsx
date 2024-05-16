@@ -8,7 +8,12 @@ import {
   fetchUsers,
 } from "../../utils/api_calls/ApiCalls";
 
-export default function Add({ selectedUsers, setSelectedUsers, projectOwner, setProjectOwner }) {
+export default function Add({
+  selectedUsers,
+  setSelectedUsers,
+  projectOwner,
+  setProjectOwner,
+}) {
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
   const [projectFile, setProjectFile] = useState(null);
@@ -20,15 +25,46 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner, set
   const [successMessage, setSuccessMessage] = useState("");
   const accessToken = localStorage.getItem("accessToken");
 
+  const username = localStorage.getItem("username");
+
   useEffect(() => {
-    fetchUsers(setUsers);
     fetchCustomers(setCustomers);
-    setSelectedUsers((prevUsers) => [
-      ...prevUsers,
-      { username: projectOwner, id: "owner" },
-    ]);
-    fetchOwner({projectOwner, setProjectOwner})
+    fetchOwner({ projectOwner, setProjectOwner });
+    fetchUsers(setUsers, projectOwner);
+    autoAddOwnerToCollaborators();
   }, []);
+
+  async function autoAddOwnerToCollaborators() {
+    try {
+      if (!selectedUsers.some((user) => user.username === username)) {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await fetch(
+          `${
+            import.meta.env.VITE_BACKEND_DIRECTUS
+          }/items/staff?filter[username][_eq]=${username}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          if (data.data.length > 0) {
+            const ownerStaffId = data.data[0].staff_id;
+            setSelectedUsers((prevUsers) => [
+              ...prevUsers,
+              { username, id: ownerStaffId },
+            ]);
+          }
+        }
+      } else {
+        console.log("Owner already exists in the list of collaborators.");
+      }
+    } catch (error) {
+      console.error("Failed to fetch project owner: ", error);
+    }
+  }
 
   const handleStaffProject = (staffId, projectId) => {
     createStaffProject({ staffId, projectId });
@@ -36,57 +72,51 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner, set
 
   async function addProject(event) {
     event.preventDefault();
-  
+
     if (!projectName.trim()) {
       setError("The project name can't be empty.");
       return;
     }
-  
+
     if (description.length > 3000) {
       setError("The project description can't be longer than 3000 characters.");
       return;
     }
-  
+
     if (selectedUsers.length < 1) {
       setError("The users selected field can't be empty.");
       return;
     }
-  
+
     if (!projectCustomer) {
       setError("The project customer is required.");
       return;
     }
-  
-    // if (projectFile === null) {
-    //   setError("The project file is required.");
-    //   return;
-    // }
-    console.log(projectOwner);
 
     try {
       const projectData = {
         project_name: projectName,
         description: description,
         project_owner: projectOwner,
-        associated_customer: projectCustomer
-        //project_file: projectFile
+        associated_customer: projectCustomer,
       };
-  
+
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
           method: "POST",
-          body: JSON.stringify(projectData)
+          body: JSON.stringify(projectData),
         }
       );
-  
+
       if (response.ok) {
         const data = await response.json();
-        const projectId = data.data.id;
+        const projectId = data.data.project_id;
+        console.log(projectId);
         for (let i = 0; i < selectedUsers.length; i++) {
           const staffId = selectedUsers[i].id;
           await handleStaffProject(staffId, projectId);
@@ -95,7 +125,7 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner, set
         setProjectName("");
         setDescription("");
         setProjectFile(null);
-        setSelectedUsers([]);
+        setProjectCustomer("");
         setShouldReload(true);
       } else {
         const errorData = await response.json();
@@ -105,7 +135,6 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner, set
       console.error("Failed to create project: ", error);
     }
   }
-  
 
   async function deleteUser(username) {
     setSelectedUsers((prevUsers) =>
@@ -227,7 +256,6 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner, set
           </label>
           <br />
           <select name="users" id="users" className="select-user">
-            <option value={projectOwner}>{projectOwner}</option>
             {users.map((user) => (
               <option key={user.staff_id} value={user.username}>
                 {user.username}
@@ -250,7 +278,7 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner, set
                 {selectedUsers.map((user, index) => (
                   <li key={index}>
                     - {user.username}
-                    {user.username !== projectOwner && (
+                    {user.username === username ? null : (
                       <button
                         type="button"
                         onClick={() => deleteUser(user.username)}
@@ -270,9 +298,7 @@ export default function Add({ selectedUsers, setSelectedUsers, projectOwner, set
             src="src/assets/project_images/files-icon.png"
             alt="user-icon"
           />
-          <label htmlFor="projectFile">
-            Project File:
-          </label>
+          <label htmlFor="projectFile">Project File:</label>
           <br />
           <input
             type="file"
