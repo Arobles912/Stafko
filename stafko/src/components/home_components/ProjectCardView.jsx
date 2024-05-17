@@ -3,12 +3,6 @@ import "./styles/ProjectCard.css";
 import CustomerCardView from "../floating_components/CustomerCardView";
 import UserInfo from "../floating_components/UserInfo";
 import {
-  startTimer,
-  stopTimer,
-  getActiveTimer,
-  updateTotalTime
-} from "../../utils/clockify/ClockifyFunctions";
-import {
   fetchOwnerName,
   fetchCustomerName,
   fetchData,
@@ -35,6 +29,7 @@ export default function ProjectCardView({ project }) {
   const [timer, setTimer] = useState(null);
   const [time, setTime] = useState(0);
   const [milliseconds, setMilliseconds] = useState(null);
+  const [error, setError] = useState(null);
 
   const username = localStorage.getItem("username");
   const accessToken = localStorage.getItem("accessToken");
@@ -74,30 +69,32 @@ export default function ProjectCardView({ project }) {
 
   async function handleDownloadButton() {
     try {
+      const fileId = project.project.project_file; 
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${project.staffProject.project_id}/download`,{
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/assets/${fileId}`,
+        {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
+
       if (response.ok) {
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
 
         const link = document.createElement("a");
         link.href = url;
-        link.download = "downloaded-file";
+        link.download = fileId; 
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
       } else {
-        setError("Can't get file URL.");
-        throw new Error("Can't get file URL.");
+        setError("No se pudo obtener la URL del archivo.");
+        throw new Error("No se pudo obtener la URL del archivo.");
       }
     } catch (error) {
-      setError("Error downloading the file:", error);
-      console.error("Error downloading the file:", error);
+      console.error("Error al descargar el archivo:", error);
     }
   }
 
@@ -137,9 +134,12 @@ export default function ProjectCardView({ project }) {
     localStorage.removeItem("timerstate");
     const timeInMilliseconds = time * 1000;
     setMilliseconds(timeInMilliseconds);
-    await updateTotalTime({milliseconds: timeInMilliseconds, username, project});
+    await updateTotalTime({
+      milliseconds: timeInMilliseconds,
+      username,
+      project,
+    });
   };
-
 
   const projectDate =
     project.project.creation_date.substring(8, 10) +

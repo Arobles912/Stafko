@@ -44,44 +44,44 @@ export default function ProjectCard({ project }) {
   useEffect(() => {
     fetchOwnerName({ projectOwner, setProjectOwner });
     fetchCustomerName({ projectCustomer, setProjectCustomer });
-    setInitialDesc(description)
+    setInitialDesc(description);
   }, []);
 
   async function handleDownloadButton() {
     try {
+      const fileId = project.project.project_file; 
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${
-          project.staffProject.project_id
-        }/download`,
+        `${import.meta.env.VITE_BACKEND_DIRECTUS}/assets/${fileId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
+
       if (response.ok) {
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
 
         const link = document.createElement("a");
         link.href = url;
-        link.download = "downloaded-file";
+        link.download = fileId; 
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
       } else {
-        setError("Can't get file URL.");
-        throw new Error("Can't get file URL.");
+        setError("No se pudo obtener la URL del archivo.");
+        throw new Error("No se pudo obtener la URL del archivo.");
       }
     } catch (error) {
-      console.error("Error downloading the file:", error);
+      console.error("Error al descargar el archivo:", error);
     }
   }
 
   async function deleteCollaborators(collaborator) {
     try {
       const accessToken = localStorage.getItem("accessToken");
-  
+
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${collaborator}`,
         {
@@ -90,11 +90,11 @@ export default function ProjectCard({ project }) {
           },
         }
       );
-  
+
       if (response.ok) {
         const staffData = await response.json();
         const staffId = staffData.data[0].staff_id;
-  
+
         const staffProjectResponse = await fetch(
           `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[staff_id][_eq]=${staffId}`,
           {
@@ -104,11 +104,11 @@ export default function ProjectCard({ project }) {
             },
           }
         );
-  
+
         if (staffProjectResponse.ok) {
           const staffProjectData = await staffProjectResponse.json();
           const staffProjectId = staffProjectData.data[0].id;
-  
+
           const deleteResponse = await fetch(
             `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project/${staffProjectId}`,
             {
@@ -118,7 +118,7 @@ export default function ProjectCard({ project }) {
               },
             }
           );
-  
+
           if (deleteResponse.ok) {
             console.log("Staff project deleted successfully.");
           } else {
@@ -134,18 +134,18 @@ export default function ProjectCard({ project }) {
       console.error("An error has occurred:", error);
     }
   }
-  
-  
 
   async function deleteProject(projectId) {
     const accessToken = localStorage.getItem("accessToken");
-  
-    const confirmed = window.confirm("Are you sure you want to delete the project");
-    
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete the project"
+    );
+
     if (!confirmed) {
       return;
     }
-  
+
     try {
       const staffProjectResponse = await fetch(
         `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[project_id][_eq]=${projectId}`,
@@ -155,13 +155,13 @@ export default function ProjectCard({ project }) {
           },
         }
       );
-  
+
       if (!staffProjectResponse.ok) {
         throw new Error("Failed to fetch staff projects");
       }
-  
+
       const staffProjectsData = await staffProjectResponse.json();
-  
+
       const deleteStaffProjectsPromises = staffProjectsData.data.map(
         async (staffProject) => {
           const staffProjectId = staffProject.id;
@@ -179,9 +179,9 @@ export default function ProjectCard({ project }) {
           }
         }
       );
-  
+
       await Promise.all(deleteStaffProjectsPromises);
-  
+
       const projectDeleteResponse = await fetch(
         `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${projectId}`,
         {
@@ -191,19 +191,17 @@ export default function ProjectCard({ project }) {
           },
         }
       );
-  
+
       if (!projectDeleteResponse.ok) {
         throw new Error("Failed to delete project");
       }
-  
+
       console.log("Project and associated staff projects deleted successfully.");
       setShouldReload(true);
     } catch (error) {
       console.error("An error has occurred:", error);
     }
   }
-  
-
 
   async function saveChanges() {
     const confirmed = window.confirm(
@@ -212,9 +210,7 @@ export default function ProjectCard({ project }) {
     if (confirmed) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${
-            project.project.project_id
-          }`,
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${project.project.project_id}`,
           {
             method: "PATCH",
             headers: {

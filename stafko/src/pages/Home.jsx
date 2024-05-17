@@ -9,6 +9,7 @@ import AddCustomer from "../components/floating_components/AddCustomer";
 import {
   fetchProjects,
 } from "../utils/api_calls/ApiCalls";
+import { updateTokens } from "../utils/token_utils/TokenUtils";
 
 export default function Home({ setIsLoggedIn }) {
   const [isAddProjectVisible, setIsAddProjectVisible] = useState(false);
@@ -24,13 +25,27 @@ export default function Home({ setIsLoggedIn }) {
   const [accessToken, setAccessToken] = useState(
     localStorage.getItem("accessToken")
   );
+  const [refreshToken, setRefreshToken] = useState(
+    localStorage.getItem("refreshToken") || ""
+  );
 
   useEffect(() => {
     if (username && accessToken) {
       fetchProjects({ username, setProjects });
     }
-    console.log(accessToken);
+    console.log(localStorage.getItem('refreshToken'));
+    console.log(localStorage.getItem('accessToken')); 
   }, [username, accessToken]);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      await updateTokens({ refreshToken, setRefreshToken, setAccessToken });
+      console.log(localStorage.getItem('refreshToken'));
+      console.log(localStorage.getItem('accessToken')); 
+    }, 600000);
+  
+    return () => clearInterval(interval);
+  }, [refreshToken]);
 
   const toggleAddProject = () => {
     setIsAddProjectVisible(!isAddProjectVisible);
@@ -40,6 +55,7 @@ export default function Home({ setIsLoggedIn }) {
   const toggleAddCustomer = () => {
     setIsAddCustomerVisible(!isAddCustomerVisible);
   };
+
 
   const compareProjects = (a, b) => {
     if (a.staffProject.creation_date > b.staffProject.creation_date) {

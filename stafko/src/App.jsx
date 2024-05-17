@@ -8,7 +8,6 @@ import {
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
-//import { refreshAccessToken } from "./utils/login_calls/LoginCalls";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -16,7 +15,6 @@ function App() {
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
-    //const refreshTokenFromStorage = localStorage.getItem("refreshToken");
     if (accessToken) {
       setIsLoggedIn(true);
     }

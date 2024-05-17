@@ -39,9 +39,7 @@ export default function Add({
       if (!selectedUsers.some((user) => user.username === username)) {
         const accessToken = localStorage.getItem("accessToken");
         const response = await fetch(
-          `${
-            import.meta.env.VITE_BACKEND_DIRECTUS
-          }/items/staff?filter[username][_eq]=${username}`,
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${username}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -70,6 +68,30 @@ export default function Add({
     createStaffProject({ staffId, projectId });
   };
 
+  async function uploadFile(file) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_DIRECTUS}/files`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: formData,
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.data.id;
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.errors[0].message);
+    }
+  }
+
   async function addProject(event) {
     event.preventDefault();
 
@@ -93,12 +115,24 @@ export default function Add({
       return;
     }
 
+    if (projectFile === null) {
+      setError("The project file is required.");
+      return;
+    }
+
     try {
+      let projectFileId = null;
+
+      if (projectFile) {
+        projectFileId = await uploadFile(projectFile);
+      }
+
       const projectData = {
         project_name: projectName,
         description: description,
         project_owner: projectOwner,
         associated_customer: projectCustomer,
+        project_file: projectFileId
       };
 
       const response = await fetch(
