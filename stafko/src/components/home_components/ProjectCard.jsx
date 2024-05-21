@@ -96,7 +96,7 @@ export default function ProjectCard({ project }) {
         const staffId = staffData.data[0].staff_id;
 
         const staffProjectResponse = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[staff_id][_eq]=${staffId}`,
+          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[staff_id][_eq]=${staffId}&filter[project_id][_eq]=${project.project.project_id}`,
           {
             method: "GET",
             headers: {
@@ -236,7 +236,6 @@ export default function ProjectCard({ project }) {
               deleteCollaborators(collaborator)
             )
           );
-
           setShouldReload(true);
         } else {
           setError("The description is too long.");
@@ -303,6 +302,7 @@ export default function ProjectCard({ project }) {
           textareaRef={textareaRef}
           description={description}
           collaborators={collaborators}
+          allCollaborators={allCollaborators}
           projectOwner={projectOwner}
           modifyCollaborators={modifyCollaborators}
           deleteProject={deleteProject}

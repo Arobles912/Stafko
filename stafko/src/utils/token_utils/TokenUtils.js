@@ -7,7 +7,7 @@ export async function updateTokens({
     const payload = {
       refresh_token: refreshToken,
       mode: "json"
-    }
+    };
 
     const response = await fetch(
       `${import.meta.env.VITE_BACKEND_DIRECTUS}/auth/refresh`,
@@ -19,12 +19,18 @@ export async function updateTokens({
         body: JSON.stringify(payload),
       }
     );
+
     const data = await response.json();
     if (response.ok) {
-      setRefreshToken(data.data.refresh_token); 
+      const currentTime = Date.now();
+      setAccessToken(data.data.access_token);
+      setRefreshToken(data.data.refresh_token);
+      localStorage.setItem("accessToken", data.data.access_token);
       localStorage.setItem("refreshToken", data.data.refresh_token);
-      setAccessToken(data.data.access_token); 
-      localStorage.setItem("accessToken", data.data.access_token);  
+      localStorage.setItem("lastRefreshTime", currentTime.toString());
+
+      console.log(localStorage.getItem("refreshToken"));
+      console.log(localStorage.getItem("accessToken"));
     } else {
       throw new Error(data.error);
     }

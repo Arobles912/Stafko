@@ -6,9 +6,7 @@ import ProjectCardView from "../components/home_components/ProjectCardView";
 import "./styles/Home.css";
 import MobileNavbar from "../components/navbar_components/MobileNavbar";
 import AddCustomer from "../components/floating_components/AddCustomer";
-import {
-  fetchProjects,
-} from "../utils/api_calls/ApiCalls";
+import { fetchProjects } from "../utils/api_calls/ApiCalls";
 import { updateTokens } from "../utils/token_utils/TokenUtils";
 
 export default function Home({ setIsLoggedIn }) {
@@ -16,46 +14,59 @@ export default function Home({ setIsLoggedIn }) {
   const [isAddCustomerVisible, setIsAddCustomerVisible] = useState(false);
   const [projects, setProjects] = useState([]);
   const [username, setUsername] = useState(localStorage.getItem("username"));
-  const [projectOwner, setProjectOwner] = useState(
-    localStorage.getItem("username")
-  );
+  const [projectOwner, setProjectOwner] = useState(localStorage.getItem("username"));
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [isMobileNavbarVisible, setIsMobileNavbarVisible] = useState(false);
-  const [accessToken, setAccessToken] = useState(
-    localStorage.getItem("accessToken")
-  );
-  const [refreshToken, setRefreshToken] = useState(
-    localStorage.getItem("refreshToken") || ""
-  );
+  const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
+  const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken") || "");
+  const [timeLeft, setTimeLeft] = useState(0);
 
   useEffect(() => {
     if (username && accessToken) {
       fetchProjects({ username, setProjects });
     }
-    console.log(localStorage.getItem('refreshToken'));
-    console.log(localStorage.getItem('accessToken')); 
+    console.log(localStorage.getItem("refreshToken"));
+    console.log(localStorage.getItem("accessToken"));
   }, [username, accessToken]);
 
   useEffect(() => {
+    const calculateTimeLeft = () => {
+      const lastRefreshTime = parseInt(localStorage.getItem('lastRefreshTime'), 10);
+      const currentTime = Date.now();
+      const timeSinceLastRefresh = currentTime - lastRefreshTime;
+      const timeLeft = 600000 - timeSinceLastRefresh; 
+
+      return timeLeft > 0 ? timeLeft : 0;
+    };
+
+    const timeLeftInitial = calculateTimeLeft();
+    setTimeLeft(timeLeftInitial);
+
     const interval = setInterval(async () => {
-      await updateTokens({ refreshToken, setRefreshToken, setAccessToken });
-      console.log(localStorage.getItem('refreshToken'));
-      console.log(localStorage.getItem('accessToken')); 
-    }, 600000);
-  
+      const timeLeft = calculateTimeLeft();
+      setTimeLeft(timeLeft);
+
+      if (timeLeft <= 0) {
+        await updateTokens({ refreshToken, setRefreshToken, setAccessToken });
+        setTimeLeft(600000);
+      }
+
+    }, 1000); 
+
     return () => clearInterval(interval);
   }, [refreshToken]);
 
   const toggleAddProject = () => {
     setIsAddProjectVisible(!isAddProjectVisible);
-    setSelectedUsers((prevUsers) => prevUsers.filter((user, index) => index === 0));
+    setSelectedUsers((prevUsers) =>
+      prevUsers.filter((user, index) => index === 0)
+    );
   };
 
   const toggleAddCustomer = () => {
     setIsAddCustomerVisible(!isAddCustomerVisible);
   };
-
 
   const compareProjects = (a, b) => {
     if (a.staffProject.creation_date > b.staffProject.creation_date) {
@@ -69,8 +80,12 @@ export default function Home({ setIsLoggedIn }) {
 
   projects.sort(compareProjects);
 
-  const filteredProjects = projects.filter((project) =>
-    project.project && project.project.project_name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProjects = projects.filter(
+    (project) =>
+      project.project &&
+      project.project.project_name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -99,7 +114,9 @@ export default function Home({ setIsLoggedIn }) {
           setAccessToken={setAccessToken}
         />
         <div
-          className={`main-add-div ${isAddProjectVisible ? "visible" : "hidden"}`}
+          className={`main-add-div ${
+            isAddProjectVisible ? "visible" : "hidden"
+          }`}
         >
           <Add
             selectedUsers={selectedUsers}

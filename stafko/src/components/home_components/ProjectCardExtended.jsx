@@ -9,7 +9,7 @@ import {
   stopTimer,
   getActiveTimer,
   updateTotalTime
-} from "../../utils/clockify/ClockifyFunctions";
+} from "../../utils/clockify_calls/ClockifyFunctions";
 import UserInfo from "../floating_components/UserInfo";
 
 export default function ProjectCardExtended({
@@ -25,6 +25,7 @@ export default function ProjectCardExtended({
   setDescription,
   setIsEditCustomer,
   collaborators,
+  allCollaborators,
   projectOwner,
   modifyCollaborators,
   deleteProject,
@@ -105,6 +106,7 @@ export default function ProjectCardExtended({
           <AddCollaborator
             setIsAddCollaboratorVisible={setIsAddCollaboratorVisible}
             collaborators={collaborators}
+            allCollaborators={allCollaborators}
             project={project}
           />
         )}

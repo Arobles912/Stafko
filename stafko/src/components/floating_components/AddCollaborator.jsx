@@ -6,6 +6,7 @@ export default function AddCollaborator({
   setIsAddCollaboratorVisible,
   collaborators,
   project,
+  allCollaborators
 }) {
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -28,7 +29,7 @@ export default function AddCollaborator({
           const userData = await response.json();
           if (Array.isArray(userData.data)) { 
             const filteredUsers = userData.data.filter(
-              (user) => !collaborators.includes(user.username)
+              (user) => !allCollaborators.includes(user.username)
             );
             setUsers(filteredUsers);
           } else {

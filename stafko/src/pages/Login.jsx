@@ -29,7 +29,7 @@ export default function Login({ setIsLoggedIn, email, setEmail }) {
             <h2>Welcome</h2>
             <img
               className="icon-img"
-              src="src/assets/user_images/user-icon.png"
+              src="src/assets/user_images/email-icon.png"
               alt="user-icon"
             />
             <label htmlFor="email">Email:</label>
