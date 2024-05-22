@@ -15,18 +15,18 @@ export class AuthRepository implements IAuthRepository {
   ) {}
 
   async register(registerDto: RegisterDto): Promise<{ message: string }> {
-    const { username, pass, email } = registerDto;
+    const { first_name, password, email } = registerDto;
 
-    const user = await this.staffService.findOneByUsername(username);
+    const user = await this.staffService.findOneByEmail(email);
 
     if (user) {
-      throw new BadRequestException("Username already exists.");
+      throw new BadRequestException("Email already exists.");
     }
 
-    const hashedPassword = await bcryptjs.hash(pass, 10);
+    const hashedPassword = await bcryptjs.hash(password, 10);
 
     await this.staffService.create({
-      username,
+      username: first_name,
       pass: hashedPassword,
       email
     });
@@ -35,14 +35,14 @@ export class AuthRepository implements IAuthRepository {
   }
 
   async login(loginDto: LoginDto): Promise<{ token: string; email: string }> {
-    const { email, pass } = loginDto;
+    const { email, password } = loginDto;
     const user = await this.staffService.findOneByEmail(email);
 
     if (!user) {
       throw new UnauthorizedException("Invalid email.");
     }
 
-    const isPasswordValid = await bcryptjs.compare(pass, user.pass);
+    const isPasswordValid = await bcryptjs.compare(password, user.pass);
 
     if (!isPasswordValid) {
       throw new UnauthorizedException("Invalid password.");

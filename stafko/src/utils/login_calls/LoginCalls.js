@@ -1,7 +1,7 @@
 export async function loginUser({ email, pass, setIsLoggedIn, setError }) {
   try {
     const directusResponse = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/auth/login`,
+      `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
       {
         method: "POST",
         headers: {
@@ -9,7 +9,7 @@ export async function loginUser({ email, pass, setIsLoggedIn, setError }) {
         },
         body: JSON.stringify({
           email,
-          password: pass,
+          password: pass
         }),
       }
     );
@@ -18,7 +18,7 @@ export async function loginUser({ email, pass, setIsLoggedIn, setError }) {
       const directusData = await directusResponse.json();
 
       const staffResponse = await fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[email][_eq]=${email}`,
+        `${import.meta.env.VITE_BACKEND_URL}/staff/email/${email}`,
         {
           method: "GET",
           headers: {
@@ -38,7 +38,7 @@ export async function loginUser({ email, pass, setIsLoggedIn, setError }) {
 
       localStorage.setItem("accessToken", directusData.data.access_token);
       localStorage.setItem("refreshToken", directusData.data.refresh_token);
-      localStorage.setItem("username", staffData.data[0].username);
+      localStorage.setItem("username", staffData.username);
       setIsLoggedIn(true);
     } else {
       const data = await directusResponse.json();
@@ -66,7 +66,7 @@ export async function registerUser({
 
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/users`,
+      `${import.meta.env.VITE_BACKEND_URL}/auth/register`,
       {
         method: "POST",
         headers: {
@@ -82,29 +82,9 @@ export async function registerUser({
     );
 
     if (response.ok) {
-      try {
-        const staffResponse = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username,
-              pass,
-              email,
-            }),
-          }
-        );
-        if (staffResponse.ok) {
-          console.log("User registered successfully");
-          alert("User registered successfully.");
-          navigate("/");
-        }
-      } catch (error) {
-        console.error("Failed registering the user in the staff table");
-      }
+      console.log("User registered successfully");
+      alert("User registered successfully.");
+      navigate("/");
     } else {
       const data = await response.json();
       setError(data.error.message || "Failed to register user");
@@ -114,34 +94,3 @@ export async function registerUser({
     setError("Failed to register user. Please try again later.");
   }
 }
-
-// export async function refreshAccessToken(refreshToken) {
-//   try {
-//     const response = await fetch(
-//       `${import.meta.env.VITE_BACKEND_DIRECTUS}/auth/refresh`,
-//       {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//           refresh_token: refreshToken,
-//         }),
-//       }
-//     );
-
-//     if (response.ok) {
-//       const data = await response.json();
-//       localStorage.setItem("accessToken", data.access_token);
-//       localStorage.setItem("refreshToken", data.refresh_token);
-//       return data.access_token;
-//     } else {
-//       throw new Error(
-//         "Failed to refresh token. Status: " + response.status
-//       );
-//     }
-//   } catch (error) {
-//     console.error("Error refreshing token:", error);
-//     throw new Error("Failed to refresh token. Please try again later.");
-//   }
-// }

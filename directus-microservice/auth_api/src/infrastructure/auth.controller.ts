@@ -4,6 +4,8 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  BadRequestException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { LoginDto } from '../domain/dto/login.dto';
 import { RegisterDto } from '../domain/dto/register.dto';
@@ -18,10 +20,13 @@ export class AuthController {
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
     try {
-      await this.authService.register(registerDto);
-      return { message: 'User registered successfully' };
+      const result = await this.authService.register(registerDto);
+      return result;
     } catch (error) {
-      return { message: 'Registration failed' };
+      if (error instanceof BadRequestException) {
+        throw error;  
+      }
+      throw new BadRequestException('Registration failed unexpectedly');
     }
   }
 
@@ -29,10 +34,13 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
     try {
-      const { token, username } = await this.authService.login(loginDto);
-      return { token, username };
+      const result = await this.authService.login(loginDto);
+      return result;
     } catch (error) {
-      return { message: 'Login failed' };
+      if (error instanceof UnauthorizedException) {
+        throw error;  
+      }
+      throw new UnauthorizedException('Login failed unexpectedly');
     }
   }
 }

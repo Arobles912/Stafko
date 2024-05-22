@@ -11,4 +11,5 @@ export interface IStaffProjectService {
   delete(staffId: number, projectId: number): Promise<void>;
   removeByProjectId(projectId: number): Promise<void>;
   findUserById(userId: number): Promise<{ username: string } | null>;
+  findStaffProjectByProjectAndStaffId(projectId: number, staffId: number): Promise<StaffProjectEntity | null>;
 }

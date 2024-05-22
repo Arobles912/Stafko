@@ -3,7 +3,7 @@ export async function fetchProjects({ username, setProjects }) {
 
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff`,
+      `${import.meta.env.VITE_BACKEND_URL}/staff`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -23,8 +23,8 @@ export async function fetchProjects({ username, setProjects }) {
 
       const staffProjectsResponse = await fetch(
         `${
-          import.meta.env.VITE_BACKEND_DIRECTUS
-        }/items/staff_project?filter[staff_id][_eq]=${staffId}`,
+          import.meta.env.VITE_BACKEND_URL
+        }/staffProject/staff/${staffId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -36,7 +36,7 @@ export async function fetchProjects({ username, setProjects }) {
         const projectsData = await Promise.all(
           staffProjectsData.data.map(async (staffProject) => {
             const projectResponse = await fetch(
-              `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${
+              `${import.meta.env.VITE_BACKEND_URL}/projects/${
                 staffProject.project_id
               }`,
               {
@@ -77,8 +77,8 @@ export async function fetchOwner({ projectOwner, setProjectOwner }) {
   try {
     const response = await fetch(
       `${
-        import.meta.env.VITE_BACKEND_DIRECTUS
-      }/items/staff?filter[username][_eq]=${projectOwner}`,
+        import.meta.env.VITE_BACKEND_URL
+      }/staff/${projectOwner}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -103,7 +103,7 @@ export async function fetchUsers(setUsers, projectOwner) {
 
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff`,
+      `${import.meta.env.VITE_BACKEND_URL}/staff`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -129,7 +129,7 @@ export async function fetchCustomers(setCustomers) {
 
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/customers`,
+      `${import.meta.env.VITE_BACKEND_URL}/customers`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -156,8 +156,8 @@ export async function addUser(selectedUsers, setSelectedUsers) {
     try {
       const response = await fetch(
         `${
-          import.meta.env.VITE_BACKEND_DIRECTUS
-        }/items/staff?filter[username][_eq]=${selectedUser}`,
+          import.meta.env.VITE_BACKEND_URL
+        }/staff/username/${selectedUser}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -191,7 +191,7 @@ export async function fetchData({
   try {
     const [staffProjectsResponse, descriptionResponse] = await Promise.all([
       fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[project_id][_eq]=${project.staffProject.project_id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/staffProject/project/${project.staffProject.project_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -199,7 +199,7 @@ export async function fetchData({
         }
       ),
       fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${project.staffProject.project_id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/projects/${project.staffProject.project_id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -217,7 +217,7 @@ export async function fetchData({
       const staffIds = staffProjectsData.data.map((staffProject) => staffProject.staff_id);
 
       const staffResponse = await fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[staff_id][_in]=${staffIds.join(",")}`,
+        `${import.meta.env.VITE_BACKEND_URL}/staff/${staffIds.join(",")}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -252,7 +252,7 @@ export async function createStaffProject({ staffId, projectId }) {
 
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project`,
+      `${import.meta.env.VITE_BACKEND_URL}/staffProject`,
       {
         method: "POST",
         headers: {
@@ -283,7 +283,7 @@ export async function fetchOwnerName({ projectOwner, setProjectOwner }) {
 
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff/${projectOwner}`,
+      `${import.meta.env.VITE_BACKEND_URL}/staff/${projectOwner}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -308,8 +308,8 @@ export async function fetchCustomerName({
   try {
     const response = await fetch(
       `${
-        import.meta.env.VITE_BACKEND_DIRECTUS
-      }/items/customers/${projectCustomer}`,
+        import.meta.env.VITE_BACKEND_URL
+      }customers/${projectCustomer}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -337,8 +337,8 @@ export async function fetchUserInfo(
   try {
     const userResponse = await fetch(
       `${
-        import.meta.env.VITE_BACKEND_DIRECTUS
-      }/items/staff?filter[username][_eq]=${username}`,
+        import.meta.env.VITE_BACKEND_URL
+      }/staff/username/${username}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -353,7 +353,7 @@ export async function fetchUserInfo(
       try {
         const response = await fetch(
           `${
-            import.meta.env.VITE_BACKEND_DIRECTUS
+            import.meta.env.VITE_BACKEND_URL
           }/items/staff_project?filter[staff_id][_eq]=${userId}&filter[project_id][_eq]=${
             project.staffProject.project_id
           }`,

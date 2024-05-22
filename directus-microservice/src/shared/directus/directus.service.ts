@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import fetch from 'node-fetch';
 
 @Injectable()
 export class DirectusService {
-  private readonly baseUrl: string = "http://localhost:8055"; 
+  private readonly baseUrl: string = 'http://localhost:8055';
 
   private async fetchFromDirectus(endpoint: string, options: RequestInit = {}) {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
@@ -15,7 +15,8 @@ export class DirectusService {
     });
 
     if (!response.ok) {
-      throw new Error(`Error fetching from Directus: ${response.statusText}`);
+      const errorMessage = await response.text();
+      throw new HttpException(`Error fetching from Directus: ${response.statusText} - ${errorMessage}`, response.status);
     }
 
     return response.json();
@@ -28,10 +29,20 @@ export class DirectusService {
     });
   }
 
-  async register(email: string, password: string, additionalData: any): Promise<any> {
-    return this.fetchFromDirectus('/auth/register', {
+  async register(
+    email: string,
+    password: string,
+    first_name: string,
+    role: string,
+  ): Promise<any> {
+    return this.fetchFromDirectus('/users', {
       method: 'POST',
-      body: JSON.stringify({ email, password, ...additionalData }),
+      body: JSON.stringify({
+        email,
+        password,
+        first_name,
+        role
+      }),
     });
   }
 

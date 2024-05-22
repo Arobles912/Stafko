@@ -7,5 +7,5 @@ export class LoginDto {
 
   @IsString()
   @Transform(({ value }) => value.trim())
-  pass: string;
+  password: string;
 }

@@ -5,6 +5,7 @@ import { AuthService } from "./application/auth.service";
 import { JwtModule } from "@nestjs/jwt";
 import { jwtConstants } from "./infrastructure/constants/jwt.constant";
 import { AuthRepository } from "./domain/repositories/auth.repository";
+import { DirectusService } from "src/shared/directus/directus.service";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AuthRepository } from "./domain/repositories/auth.repository";
       provide: 'AuthRepository',
       useClass: AuthRepository,
     },
+    DirectusService
 
   ], 
 })

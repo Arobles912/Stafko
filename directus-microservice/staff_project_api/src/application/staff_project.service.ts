@@ -28,6 +28,15 @@ export class StaffProjectService {
     return items.filter(item => item.staff_id === staffId);
   }
 
+  async findStaffProjectByProjectAndStaffId(projectId: number, staffId: number): Promise<StaffProjectEntity | null> {
+    const response = await this.directusService.getItems('staff_project');
+    const staffProjects: StaffProjectEntity[] = response.data as StaffProjectEntity[];
+    const foundStaffProject = staffProjects.find(
+      (staffProject) => staffProject.project_id === projectId && staffProject.staff_id === staffId
+    );
+    return foundStaffProject || null;
+  }
+
   async findByProjectId(projectId: number): Promise<StaffProjectEntity[]> {
     const response = await this.directusService.getItems('staff_project');
     const items: StaffProjectEntity[] = response.data as StaffProjectEntity[];

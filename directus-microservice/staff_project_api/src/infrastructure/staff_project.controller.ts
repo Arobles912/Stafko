@@ -67,9 +67,17 @@ export class StaffProjectController {
     }
   }
 
-  @Get(':staffId/:projectId')
+  @Get(':id')
   async findOne(@Param('id') id: number): Promise<StaffProjectEntity> {
     return this.staffProjectService.findOne(+id);
+  }
+
+  @Get(':staffId/:projectId')
+  async findStaffProjectByProjectAndStaffId(
+    @Param('staffId') staffId: number,
+    @Param('projectId') projectId: number,
+  ): Promise<StaffProjectEntity> {
+    return this.staffProjectService.findStaffProjectByProjectAndStaffId(+staffId, +projectId);
   }
 
   @Get()
