@@ -28,7 +28,7 @@ export class ProjectsController {
 
   @Get(":id")
   async findOne(@Param("id") id: number): Promise<ProjectsEntity> {
-    return this.projectsService.findOne(id);
+    return this.projectsService.findOne(+id);
   }
 
   @Put(":id")
@@ -36,7 +36,7 @@ export class ProjectsController {
     @Param("id") id: number,
     @Body() projectDto: ProjectsDto
   ): Promise<ProjectsEntity> {
-    return this.projectsService.update(id, projectDto);
+    return this.projectsService.update(+id, projectDto);
   }
 
   @Get("projectname/:project_name")
@@ -46,12 +46,12 @@ export class ProjectsController {
 
   @Delete(":id")
   async remove(@Param("id") id: number): Promise<void> {
-    return this.projectsService.delete(id);
+    return this.projectsService.delete(+id);
   }
 
   @Get(":id/download")
   async downloadFile(@Param("id") id: number, @Res() res: Response) {
-    const project = await this.projectsService.findOne(id);
+    const project = await this.projectsService.findOne(+id);
     res.send(project.project_file); 
   }
 }

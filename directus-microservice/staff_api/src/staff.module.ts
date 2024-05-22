@@ -4,6 +4,7 @@ import { StaffEntity } from './domain/entities/staff.entity';
 import { StaffController } from './infrastructure/staff.controller';
 import { StaffService } from './application/staff.service';
 import { StaffRepository } from './domain/repositories/staff.repository';
+import { DirectusService } from 'src/shared/directus/directus.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([StaffEntity])],
@@ -14,6 +15,7 @@ import { StaffRepository } from './domain/repositories/staff.repository';
       provide: 'StaffRepository',
       useClass: StaffRepository,
     },
+    DirectusService
   ],
   exports: [StaffService, 'StaffRepository'],
 })

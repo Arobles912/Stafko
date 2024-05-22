@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { ProjectsDto } from '../domain/dto/projects.dto/projects.dto';
 import { ProjectsEntity } from '../domain/entities/projects.entity';
 import { MulterFile } from 'multer';
-import { DirectusService } from 'src/directus/directus.service';
+import { DirectusService } from 'src/shared/directus/directus.service';
 
 @Injectable()
 export class ProjectsService {

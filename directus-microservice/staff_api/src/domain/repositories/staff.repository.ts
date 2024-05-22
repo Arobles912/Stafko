@@ -24,6 +24,10 @@ export class StaffRepository implements IStaffRepository {
     return await this.staffRepository.findOne({ where: { username } });
   }
 
+  async findOneByEmail(email: string): Promise<StaffEntity> {
+    return await this.staffRepository.findOne({ where: { email } });
+  }
+
   async create(staffData: StaffDto): Promise<StaffEntity> {
     const staff = this.staffRepository.create(staffData);
     return await this.staffRepository.save(staff);

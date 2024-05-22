@@ -4,6 +4,7 @@ import { ProjectsEntity } from './domain/entities/projects.entity';
 import { ProjectsController } from './infrastructure/projects.controller';
 import { ProjectsService } from './application/projects.service';
 import { ProjectsRepository } from './domain/repositories/projects.respository';
+import { DirectusService } from 'src/shared/directus/directus.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ProjectsEntity])],
@@ -14,6 +15,7 @@ import { ProjectsRepository } from './domain/repositories/projects.respository';
       provide: 'ProjectsRepository',
       useClass: ProjectsRepository,
     },
+    DirectusService
   ],
 })
 export class ProjectsModule {}

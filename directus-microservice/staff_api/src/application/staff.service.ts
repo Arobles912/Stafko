@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { StaffEntity } from '../domain/entities/staff.entity';
 import { StaffDto } from '../domain/dto/staff.dto/staff.dto';
-import { DirectusService } from 'src/directus/directus.service';
+import { DirectusService } from 'src/shared/directus/directus.service';
 
 @Injectable()
 export class StaffService {
@@ -40,6 +40,15 @@ export class StaffService {
     const staffList: StaffEntity[] = response.data as StaffEntity[];
 
     const staffMember = staffList.find((staff) => staff.username === username);
+
+    return staffMember || null;
+  }
+
+  async findOneByEmail(email: string): Promise<StaffEntity> {
+    const response = await this.directusService.getItems('staff');
+    const staffList: StaffEntity[] = response.data as StaffEntity[];
+
+    const staffMember = staffList.find((staff) => staff.email === email);
 
     return staffMember || null;
   }

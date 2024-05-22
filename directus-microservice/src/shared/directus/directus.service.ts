@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import fetch from 'node-fetch';
 
 @Injectable()
 export class DirectusService {
-  private readonly baseUrl: string = process.env.DIRECTUS_BACKEND_URL; 
-  private readonly apiKey: string = process.env.DIRECTUS_API_KEY; 
+  private readonly baseUrl: string = "http://localhost:8055"; 
 
   private async fetchFromDirectus(endpoint: string, options: RequestInit = {}) {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       ...options,
       headers: {
         ...options.headers,
-        Authorization: `Bearer ${this.apiKey}`,
         'Content-Type': 'application/json',
       },
     });
@@ -20,6 +19,20 @@ export class DirectusService {
     }
 
     return response.json();
+  }
+
+  async login(email: string, password: string): Promise<any> {
+    return this.fetchFromDirectus('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+  }
+
+  async register(email: string, password: string, additionalData: any): Promise<any> {
+    return this.fetchFromDirectus('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ email, password, ...additionalData }),
+    });
   }
 
   async getItems(collection: string): Promise<any> {

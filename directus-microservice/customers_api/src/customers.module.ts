@@ -4,6 +4,7 @@ import { CustomersEntity } from './domain/entities/customers.entity';
 import { CustomersController } from './infrastructure/customers.controller';
 import { CustomersService } from './application/customers.service';
 import { CustomersRepository } from './domain/repositories/customers.repository';
+import { DirectusService } from 'src/shared/directus/directus.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([CustomersEntity, CustomersRepository])],
@@ -14,6 +15,7 @@ import { CustomersRepository } from './domain/repositories/customers.repository'
       provide: 'CustomersRepository',
       useClass: CustomersRepository,
     },
+    DirectusService
   ],
 })
 export class CustomersModule {}
