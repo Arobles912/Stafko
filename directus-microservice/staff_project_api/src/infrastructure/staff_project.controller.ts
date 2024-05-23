@@ -26,14 +26,14 @@ export class StaffProjectController {
   @Get('staff/:staffId')
   async findByStaffId(
     @Param('staffId') staffId: number,
-  ): Promise<StaffProjectEntity[]> {
+  ): Promise<StaffProjectEntity> {
     return this.staffProjectService.findByStaffId(staffId);
   }
 
   @Get('project/:projectId')
-  async findByProjectId(
+  async findByProjectId( 
     @Param('projectId') projectId: number,
-  ): Promise<StaffProjectEntity[]> {
+  ): Promise<StaffProjectEntity> {
     return this.staffProjectService.findByProjectId(projectId);
   }
 
@@ -49,30 +49,24 @@ export class StaffProjectController {
     @Param('projectId') projectId: number,
   ): Promise<string[]> {
     try {
-      const members = await this.staffProjectService.findByProjectId(projectId);
+      const member = await this.staffProjectService.findByProjectId(projectId);
 
-      const usernames = await Promise.all(
-        members.map(async (member) => {
-          const user = await this.staffProjectService.findUserById(
-            member.staff_id,
-          );
-          return user ? user.username : null;
-        }),
-      );
+      const user = await this.staffProjectService.findUserById(member.staff_id);
 
-      return usernames.filter((username) => username !== null);
+      return user ? [user.username] : [];
     } catch (error) {
       console.error('Error fetching users by project ID:', error.message);
       throw new Error('Failed to fetch users');
     }
   }
 
+
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<StaffProjectEntity> {
     return this.staffProjectService.findOne(+id);
   }
 
-  @Get(':staffId/:projectId')
+  @Get(':projectId/:staffId')
   async findStaffProjectByProjectAndStaffId(
     @Param('staffId') staffId: number,
     @Param('projectId') projectId: number,

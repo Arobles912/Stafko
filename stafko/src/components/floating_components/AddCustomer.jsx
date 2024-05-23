@@ -33,7 +33,7 @@ export default function AddCustomer() {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/customers`,
+        `${import.meta.env.VITE_BACKEND_URL}/customers`,
         {
           method: "POST",
           headers: {

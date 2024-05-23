@@ -3,9 +3,10 @@ import { ProjectsDto } from '../domain/dto/projects.dto/projects.dto';
 import { ProjectsEntity } from '../domain/entities/projects.entity';
 import { MulterFile } from 'multer';
 import { DirectusService } from 'src/shared/directus/directus.service';
+import { IProjectsService } from './projects.service.interface';
 
 @Injectable()
-export class ProjectsService {
+export class ProjectsService implements IProjectsService {
   constructor(private readonly directusService: DirectusService) {}
 
   async create(projectDto: ProjectsDto, file: MulterFile): Promise<ProjectsEntity> {

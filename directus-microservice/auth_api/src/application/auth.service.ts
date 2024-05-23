@@ -1,11 +1,18 @@
-import { Injectable, BadRequestException, UnauthorizedException, HttpException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  UnauthorizedException,
+  HttpException,
+} from '@nestjs/common';
 import { LoginDto } from '../domain/dto/login.dto';
 import { RegisterDto } from '../domain/dto/register.dto';
 import { DirectusService } from 'src/shared/directus/directus.service';
 import { StaffService } from 'staff_api/src/application/staff.service';
+import { RefreshDto } from '../domain/dto/refresh.dto';
+import { IAuthService } from './auth.service.interface';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements IAuthService {
   constructor(
     private readonly directusService: DirectusService,
     private readonly staffService: StaffService,
@@ -31,7 +38,7 @@ export class AuthService {
       if (error instanceof HttpException) {
         throw new BadRequestException(error.message);
       }
-      throw new BadRequestException('Registration failed unexpectedly');
+      throw new BadRequestException('Registration failed unexpectedly.');
     }
   }
 
@@ -46,7 +53,22 @@ export class AuthService {
       if (error instanceof HttpException) {
         throw new UnauthorizedException(error.message);
       }
-      throw new UnauthorizedException('Login failed unexpectedly');
+      throw new UnauthorizedException('Login failed unexpectedly.');
+    }
+  }
+
+  async refreshToken(refreshDto: RefreshDto): Promise<void> {
+    try {
+      const response = await this.directusService.refreshToken(
+        refreshDto.refreshToken,
+        refreshDto.mode,
+      );
+      return response;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw new UnauthorizedException(error.message);
+      }
+      throw new UnauthorizedException('Refresh token failed.');
     }
   }
 }

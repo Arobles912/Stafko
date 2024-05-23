@@ -2,9 +2,10 @@ import { Injectable, Inject } from '@nestjs/common';
 import { StaffEntity } from '../domain/entities/staff.entity';
 import { StaffDto } from '../domain/dto/staff.dto/staff.dto';
 import { DirectusService } from 'src/shared/directus/directus.service';
+import { IStaffService } from './staff.service.interface';
 
 @Injectable()
-export class StaffService {
+export class StaffService implements IStaffService {
   constructor(private readonly directusService: DirectusService) {}
 
   async create(staffDto: StaffDto): Promise<StaffEntity> {

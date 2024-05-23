@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { StaffProjectDto } from '../domain/dto/staff_project.dto/staff_project.dto';
 import { StaffProjectEntity } from '../domain/entities/staff_project.entity';
 import { DirectusService } from 'src/shared/directus/directus.service';
+import { IStaffProjectService } from './staff_project.service.interface';
 
 @Injectable()
-export class StaffProjectService {
+export class StaffProjectService implements IStaffProjectService {
   constructor(private readonly directusService: DirectusService) {}
 
   async create(staffProjectDto: StaffProjectDto): Promise<StaffProjectEntity> {
@@ -22,11 +23,15 @@ export class StaffProjectService {
     return response.data as StaffProjectEntity;
   }
 
-  async findByStaffId(staffId: number): Promise<StaffProjectEntity[]> {
-    const response = await this.directusService.getItems('staff_project');
-    const items: StaffProjectEntity[] = response.data as StaffProjectEntity[];
-    return items.filter(item => item.staff_id === staffId);
-  }
+async findByStaffId(staffId: number): Promise<StaffProjectEntity | null> {
+  const response = await this.directusService.getItems('staff_project');
+  const items: StaffProjectEntity[] = response.data as StaffProjectEntity[];
+  const foundStaffProjects = items.find(
+    (staffProject) => staffProject.staff_id === staffId
+  );
+  return foundStaffProjects; 
+}
+
 
   async findStaffProjectByProjectAndStaffId(projectId: number, staffId: number): Promise<StaffProjectEntity | null> {
     const response = await this.directusService.getItems('staff_project');
@@ -34,13 +39,16 @@ export class StaffProjectService {
     const foundStaffProject = staffProjects.find(
       (staffProject) => staffProject.project_id === projectId && staffProject.staff_id === staffId
     );
-    return foundStaffProject || null;
+    return foundStaffProject;
   }
 
-  async findByProjectId(projectId: number): Promise<StaffProjectEntity[]> {
+  async findByProjectId(projectId: number): Promise<StaffProjectEntity | null> {
     const response = await this.directusService.getItems('staff_project');
-    const items: StaffProjectEntity[] = response.data as StaffProjectEntity[];
-    return items.filter(item => item.project_id === projectId);
+    const staffProjects: StaffProjectEntity[] = response.data as StaffProjectEntity[];
+    const foundStaffProject = staffProjects.find(
+      (staffProject) => staffProject.project_id === projectId
+    );
+    return foundStaffProject;
   }
 
   async update(id: number, staffProjectDto: StaffProjectDto): Promise<StaffProjectEntity> {

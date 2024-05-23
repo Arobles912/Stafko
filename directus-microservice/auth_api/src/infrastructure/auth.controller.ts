@@ -10,6 +10,7 @@ import {
 import { LoginDto } from '../domain/dto/login.dto';
 import { RegisterDto } from '../domain/dto/register.dto';
 import { AuthService } from '../application/auth.service'; 
+import { RefreshDto } from '../domain/dto/refresh.dto';
 
 @Controller('api/auth')
 export class AuthController {
@@ -26,7 +27,7 @@ export class AuthController {
       if (error instanceof BadRequestException) {
         throw error;  
       }
-      throw new BadRequestException('Registration failed unexpectedly');
+      throw new BadRequestException('Registration failed unexpectedly.');
     }
   }
 
@@ -40,7 +41,21 @@ export class AuthController {
       if (error instanceof UnauthorizedException) {
         throw error;  
       }
-      throw new UnauthorizedException('Login failed unexpectedly');
+      throw new UnauthorizedException('Login failed unexpectedly.');
+    }
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('refresh')
+  async refresh(@Body() refreshDto: RefreshDto){
+    try {
+      const result = await this.authService.refreshToken(refreshDto);
+      return result;
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;  
+      }
+      throw new UnauthorizedException('Refresh token failed.');
     }
   }
 }

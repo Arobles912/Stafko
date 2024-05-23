@@ -1,32 +1,27 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import fetch from 'node-fetch';
+import fetch, { RequestInit } from 'node-fetch';
+import { GlobalService } from './global.service';
 
 @Injectable()
 export class DirectusService {
   private readonly baseUrl: string = 'http://localhost:8055';
 
-  private async fetchFromDirectus(endpoint: string, options: RequestInit = {}) {
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      ...options,
-      headers: {
-        ...options.headers,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new HttpException(`Error fetching from Directus: ${response.statusText} - ${errorMessage}`, response.status);
-    }
-
-    return response.json();
-  }
 
   async login(email: string, password: string): Promise<any> {
-    return this.fetchFromDirectus('/auth/login', {
+    const response = await this.fetchFromDirectus('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
+
+    if (response && response.data && response.data.access_token) {
+      GlobalService.token = response.data.access_token;
+    } else {
+      throw new HttpException('Login failed: No access token returned', HttpStatus.UNAUTHORIZED);
+    }
+
+    console.log('Token after login:', GlobalService.token);
+
+    return response;
   }
 
   async register(
@@ -41,8 +36,15 @@ export class DirectusService {
         email,
         password,
         first_name,
-        role
+        role,
       }),
+    });
+  }
+
+  async refreshToken(refreshToken: string, mode: string): Promise<void> {
+    return this.fetchFromDirectus('/auth/refresh', {
+      method: 'POST',
+      body: JSON.stringify({ refresh_token: refreshToken, mode: mode }),
     });
   }
 
@@ -72,5 +74,34 @@ export class DirectusService {
     return this.fetchFromDirectus(`/items/${collection}/${id}`, {
       method: 'DELETE',
     });
+  }
+
+  async fetchFromDirectus(endpoint: string, options: RequestInit = {}) {
+    if (GlobalService.token !== null) {
+      options.headers = {
+        ...options.headers,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${GlobalService.token}`,
+      };
+    } else {
+      options.headers = {
+        ...options.headers,
+        'Content-Type': 'application/json',
+      };
+    }
+
+    console.log('Token in fetchFromDirectus:', GlobalService.token);
+
+    const response = await fetch(`${this.baseUrl}${endpoint}`, options);
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      throw new HttpException(
+        `Error fetching from Directus: ${response.statusText} - ${responseText}`,
+        response.status,
+      );
+    }
+
+    return JSON.parse(responseText);
   }
 }
