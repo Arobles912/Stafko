@@ -7,6 +7,12 @@ import {
   fetchCustomerName,
   fetchData,
 } from "../../utils/api_calls/ApiCalls";
+import {
+  startTimer,
+  stopTimer,
+  getActiveTimer,
+  updateTotalTime
+} from "../../utils/clockify_calls/ClockifyFunctions";
 
 export default function ProjectCardView({ project }) {
   const [extendedCard, setExtendedCard] = useState(false);

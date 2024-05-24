@@ -17,8 +17,8 @@ export class ProjectsEntity {
   })
   creation_date: Date;
 
-  @Column('bytea', { nullable: true })
-  project_file: Buffer;
+  @Column({length: 2000, nullable: true })
+  project_file: string;
 
   @Column({ nullable: true })
   project_owner: number;

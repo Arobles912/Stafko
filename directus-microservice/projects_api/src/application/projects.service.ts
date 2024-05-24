@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ProjectsDto } from '../domain/dto/projects.dto/projects.dto';
 import { ProjectsEntity } from '../domain/entities/projects.entity';
 import { MulterFile } from 'multer';
@@ -9,15 +9,15 @@ import { IProjectsService } from './projects.service.interface';
 export class ProjectsService implements IProjectsService {
   constructor(private readonly directusService: DirectusService) {}
 
-  async create(projectDto: ProjectsDto, file: MulterFile): Promise<ProjectsEntity> {
-    const data = {
-      project_name: projectDto.project_name,
-      project_file: file.buffer,
-    };
-    const response = await this.directusService.createItem('projects', data);
+  async uploadFile(file: MulterFile): Promise<any> {
+    return this.directusService.uploadFile(file);
+  }
+
+  async create(projectDto: ProjectsDto): Promise<ProjectsEntity> {
+    const response = await this.directusService.createItem('projects', projectDto);
     return response.data as ProjectsEntity;
   }
-  
+
   async findAll(): Promise<ProjectsEntity[]> {
     const response = await this.directusService.getItems('projects');
     return response.data as ProjectsEntity[];

@@ -1,11 +1,12 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import fetch, { RequestInit } from 'node-fetch';
 import { GlobalService } from './global.service';
+import { MulterFile } from 'multer';
+import * as FormData from 'form-data';
 
 @Injectable()
 export class DirectusService {
   private readonly baseUrl: string = 'http://localhost:8055';
-
 
   async login(email: string, password: string): Promise<any> {
     const response = await this.fetchFromDirectus('/auth/login', {
@@ -18,8 +19,6 @@ export class DirectusService {
     } else {
       throw new HttpException('Login failed: No access token returned', HttpStatus.UNAUTHORIZED);
     }
-
-    console.log('Token after login:', GlobalService.token);
 
     return response;
   }
@@ -62,6 +61,7 @@ export class DirectusService {
       body: JSON.stringify(data),
     });
   }
+  
 
   async updateItem(collection: string, id: number, data: any): Promise<any> {
     return this.fetchFromDirectus(`/items/${collection}/${id}`, {
@@ -74,6 +74,34 @@ export class DirectusService {
     return this.fetchFromDirectus(`/items/${collection}/${id}`, {
       method: 'DELETE',
     });
+  }
+
+  async uploadFile(file: MulterFile): Promise<any> {
+    const formData = new FormData();
+    formData.append('file', file.buffer, {
+      filename: file.originalname,
+      contentType: file.mimetype,
+    });
+
+    const options: RequestInit = {
+      method: 'POST',
+      body: formData as any,
+      headers: {
+        Authorization: `Bearer ${GlobalService.token}`,
+      },
+    };
+
+    const response = await fetch(`${this.baseUrl}/files`, options);
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      throw new HttpException(
+        `Error uploading file to Directus: ${response.statusText} - ${responseText}`,
+        response.status,
+      );
+    }
+
+    return JSON.parse(responseText);
   }
 
   async fetchFromDirectus(endpoint: string, options: RequestInit = {}) {
@@ -89,11 +117,13 @@ export class DirectusService {
         'Content-Type': 'application/json',
       };
     }
-
-    console.log('Token in fetchFromDirectus:', GlobalService.token);
-
+    
     const response = await fetch(`${this.baseUrl}${endpoint}`, options);
     const responseText = await response.text();
+
+    console.log(response);
+    console.log(responseText);
+    
 
     if (!response.ok) {
       throw new HttpException(

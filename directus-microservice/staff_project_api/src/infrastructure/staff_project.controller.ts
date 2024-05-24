@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   Inject,
+  Patch,
 } from '@nestjs/common';
 import { StaffProjectService } from '../application/staff_project.service';
 import { StaffProjectDto } from '../domain/dto/staff_project.dto/staff_project.dto';
@@ -23,31 +24,25 @@ export class StaffProjectController {
     return this.staffProjectService.create(staffProjectDto);
   }
 
-  @Get('staff/:staffId')
+  @Get('staff_id/:staffId')
   async findByStaffId(
     @Param('staffId') staffId: number,
   ): Promise<StaffProjectEntity> {
-    return this.staffProjectService.findByStaffId(staffId);
+    return this.staffProjectService.findByStaffId(+staffId);
   }
 
   @Get('project/:projectId')
-  async findByProjectId( 
-    @Param('projectId') projectId: number,
-  ): Promise<StaffProjectEntity> {
-    return this.staffProjectService.findByProjectId(projectId);
+  async findByProjectId(@Param('projectId') projectId: number) {
+    return this.staffProjectService.findByProjectId(+projectId);
   }
 
   @Delete('project/:projectId')
-  async removeByProjectId(
-    @Param('projectId') projectId: number,
-  ): Promise<void> {
+  async removeByProjectId(@Param('projectId') projectId: number) {
     return this.staffProjectService.removeByProjectId(+projectId);
   }
 
   @Get('project/:projectId/users')
-  async findUsersByProjectId(
-    @Param('projectId') projectId: number,
-  ): Promise<string[]> {
+  async findUsersByProjectId(@Param('projectId') projectId: number) {
     try {
       const member = await this.staffProjectService.findByProjectId(projectId);
 
@@ -60,9 +55,8 @@ export class StaffProjectController {
     }
   }
 
-
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<StaffProjectEntity> {
+  async findOne(@Param('id') id: number) {
     return this.staffProjectService.findOne(+id);
   }
 
@@ -70,25 +64,28 @@ export class StaffProjectController {
   async findStaffProjectByProjectAndStaffId(
     @Param('staffId') staffId: number,
     @Param('projectId') projectId: number,
-  ): Promise<StaffProjectEntity> {
-    return this.staffProjectService.findStaffProjectByProjectAndStaffId(+staffId, +projectId);
+  ) {
+    return this.staffProjectService.findStaffProjectByProjectAndStaffId(
+      +staffId,
+      +projectId,
+    );
   }
 
   @Get()
-  async findAll(): Promise<StaffProjectEntity[]> {
+  async findAll() {
     return this.staffProjectService.findAll();
   }
 
-  @Put(':id')
+  @Patch(':id')
   async update(
     @Param('id') id: number,
     @Body() staffProjectDto: StaffProjectDto,
-  ): Promise<StaffProjectEntity> {
+  ) {
     return this.staffProjectService.update(+id, staffProjectDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<void> {
+  async delete(@Param('id') id: number) {
     return this.staffProjectService.delete(+id);
   }
 }

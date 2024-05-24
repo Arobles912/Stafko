@@ -83,7 +83,7 @@ export default function ProjectCard({ project }) {
       const accessToken = localStorage.getItem("accessToken");
 
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${collaborator}`,
+        `${import.meta.env.VITE_BACKEND_URL}/staff/username/${collaborator}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -93,10 +93,10 @@ export default function ProjectCard({ project }) {
 
       if (response.ok) {
         const staffData = await response.json();
-        const staffId = staffData.data[0].staff_id;
+        const staffId = staffData.staff_id;
 
         const staffProjectResponse = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project?filter[staff_id][_eq]=${staffId}&filter[project_id][_eq]=${project.project.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/staffProject/${staffId}/${project.project.project_id}`,
           {
             method: "GET",
             headers: {
@@ -107,10 +107,10 @@ export default function ProjectCard({ project }) {
 
         if (staffProjectResponse.ok) {
           const staffProjectData = await staffProjectResponse.json();
-          const staffProjectId = staffProjectData.data[0].id;
+          const staffProjectId = staffProjectData.id;
 
           const deleteResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project/${staffProjectId}`,
+            `${import.meta.env.VITE_BACKEND_URL}/staffProject/${staffProjectId}`,
             {
               method: "DELETE",
               headers: {
@@ -166,7 +166,7 @@ export default function ProjectCard({ project }) {
         async (staffProject) => {
           const staffProjectId = staffProject.id;
           const staffProjectDeleteResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff_project/${staffProjectId}`,
+            `${import.meta.env.VITE_BACKEND_URL}/staffProject/${staffProjectId}`,
             {
               method: "DELETE",
               headers: {
@@ -183,7 +183,7 @@ export default function ProjectCard({ project }) {
       await Promise.all(deleteStaffProjectsPromises);
 
       const projectDeleteResponse = await fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${projectId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/projects/${projectId}`,
         {
           method: "DELETE",
           headers: {
@@ -210,7 +210,7 @@ export default function ProjectCard({ project }) {
     if (confirmed) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${project.project.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/projects/${project.project.project_id}`,
           {
             method: "PATCH",
             headers: {
@@ -267,7 +267,7 @@ export default function ProjectCard({ project }) {
   }
 
   const numberOfCollaborators = staffProjectsData
-    ? staffProjectsData.length
+    ? staffProjectsData.data.length
     : 0;
 
   useEffect(() => {

@@ -18,7 +18,7 @@ export default function AddCollaborator({
     async function fetchUsers() {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff`,
+          `${import.meta.env.VITE_BACKEND_URL}/staff`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -27,8 +27,8 @@ export default function AddCollaborator({
         );
         if (response.ok) {
           const userData = await response.json();
-          if (Array.isArray(userData.data)) { 
-            const filteredUsers = userData.data.filter(
+          if (Array.isArray(userData)) { 
+            const filteredUsers = userData.filter(
               (user) => !allCollaborators.includes(user.username)
             );
             setUsers(filteredUsers);
@@ -59,7 +59,7 @@ export default function AddCollaborator({
     } else {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${selectedUser}`,
+          `${import.meta.env.VITE_BACKEND_URL}/staff/username/${selectedUser}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -68,7 +68,7 @@ export default function AddCollaborator({
         );
         if (response.ok) {
           const userData = await response.json();
-          const staffId = userData.data[0].staff_id;
+          const staffId = userData.staff_id;
           setSelectedUsers((prevUsers) => [
             ...prevUsers,
             { username: selectedUser, id: staffId },

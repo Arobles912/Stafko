@@ -1,6 +1,5 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Patch } from '@nestjs/common';
 import { StaffDto } from '../domain/dto/staff.dto/staff.dto';
-import { StaffEntity } from '../domain/entities/staff.entity';
 import { StaffService } from '../application/staff.service';
 
 @Controller('api/staff')
@@ -8,38 +7,38 @@ export class StaffController {
   constructor(private readonly staffService: StaffService) {}
 
   @Post()
-  async create(@Body() staffDto: StaffDto): Promise<StaffEntity> {
+  async create(@Body() staffDto: StaffDto){
     return this.staffService.create(staffDto);
   }
 
   @Get()
-  async findAll(): Promise<StaffEntity[]> {
+  async findAll(){
     return this.staffService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<StaffEntity> {
+  async findOne(@Param('id') id: number){
     return this.staffService.findOne(+id);
   }
 
-  @Put(':id')
-  async update(@Param('id') id: number, @Body() staffDto: StaffDto): Promise<StaffEntity> {
+  @Patch(':id')
+  async update(@Param('id') id: number, @Body() staffDto: StaffDto){
     return this.staffService.update(+id, staffDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<void> {
+  async remove(@Param('id') id: number){
     return this.staffService.remove(+id);
   }
 
   @Get('username/:username')
-  async findOneByUsername(@Param('username') username: string): Promise<StaffEntity> {
+  async findOneByUsername(@Param('username') username: string){
     return this.staffService.findOneByUsername(username);
   }
 
 
   @Get('email/:email')
-  async findOneByEmail(@Param('email') email: string): Promise<StaffEntity> {
+  async findOneByEmail(@Param('email') email: string){
     return this.staffService.findOneByEmail(email);
   }
 }

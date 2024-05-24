@@ -12,7 +12,7 @@ export class ProjectsDto {
   creation_date: Date;
 
   @IsNotEmpty()
-  project_file: Buffer;
+  project_file: string;
 
   @IsNotEmpty()
   project_owner: number;

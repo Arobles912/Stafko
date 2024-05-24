@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProjectsEntity } from "../entities/projects.entity";
@@ -18,18 +18,22 @@ export class ProjectsRepository implements IProjectsRepository {
   }
 
   async findOne(project_id: number): Promise<ProjectsEntity> {
-    return await this.projectsRepository.findOne({where: {project_id}});
+    return await this.projectsRepository.findOne({ where: { project_id } });
   }
 
   async create(projectDto: ProjectsDto, file: MulterFile): Promise<ProjectsEntity> {
+    if (!file || !file.buffer) {
+      throw new BadRequestException('File is required and must be valid');
+    }
+
     const project = this.projectsRepository.create({
       ...projectDto,
       project_file: file.buffer,
     });
+
     return await this.projectsRepository.save(project);
   }
-  
-  
+
   async update(
     project_id: number,
     projectDto: ProjectsDto
@@ -47,7 +51,6 @@ export class ProjectsRepository implements IProjectsRepository {
   }
 
   async save(project: ProjectsEntity): Promise<ProjectsEntity> {
-    const savedProject = await this.projectsRepository.save(project);
-    return savedProject;
+    return await this.projectsRepository.save(project);
   }
 }

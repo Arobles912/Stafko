@@ -36,25 +36,24 @@ export default function Add({
 
   async function autoAddOwnerToCollaborators() {
     try {
-      if (!selectedUsers.some((user) => user.username === username)) {
-        const accessToken = localStorage.getItem("accessToken");
+      if (
+        !selectedUsers.some(
+          (user) => user.username === username
+        )
+      ) {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/staff?filter[username][_eq]=${username}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/staff/username/${username}`
         );
         if (response.ok) {
           const data = await response.json();
-          if (data.data.length > 0) {
-            const ownerStaffId = data.data[0].staff_id;
-            setSelectedUsers((prevUsers) => [
-              ...prevUsers,
-              { username, id: ownerStaffId },
-            ]);
-          }
+          const ownerStaffId = data.staff_id;
+          const ownerUsername = data.username;
+          setSelectedUsers((prevUsers) => [
+            ...prevUsers,
+            { username: ownerUsername, id: ownerStaffId },
+          ]);
         }
       } else {
         console.log("Owner already exists in the list of collaborators.");
@@ -67,30 +66,6 @@ export default function Add({
   const handleStaffProject = (staffId, projectId) => {
     createStaffProject({ staffId, projectId });
   };
-
-  async function uploadFile(file) {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/files`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: formData,
-      }
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.data.id;
-    } else {
-      const errorData = await response.json();
-      throw new Error(errorData.errors[0].message);
-    }
-  }
 
   async function addProject(event) {
     event.preventDefault();
@@ -115,28 +90,26 @@ export default function Add({
       return;
     }
 
-    if (projectFile === null) {
+    if (projectFile === null){
       setError("The project file is required.");
       return;
     }
 
     try {
-      let projectFileId = null;
+      const fileResponse = await uploadFile(projectFile);
 
-      if (projectFile) {
-        projectFileId = await uploadFile(projectFile);
-      }
+      console.log(fileResponse);
 
       const projectData = {
         project_name: projectName,
         description: description,
         project_owner: projectOwner,
         associated_customer: projectCustomer,
-        project_file: projectFileId
+        project_file: fileResponse.data.id, 
       };
 
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects`,
+        `${import.meta.env.VITE_BACKEND_URL}/projects`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -149,7 +122,7 @@ export default function Add({
 
       if (response.ok) {
         const data = await response.json();
-        const projectId = data.data.project_id;
+        const projectId = data.project_id;
         console.log(projectId);
         for (let i = 0; i < selectedUsers.length; i++) {
           const staffId = selectedUsers[i].id;
@@ -163,11 +136,27 @@ export default function Add({
         setShouldReload(true);
       } else {
         const errorData = await response.json();
-        setError(errorData.errors[0].message);
+        setError(errorData.message);
       }
     } catch (error) {
       console.error("Failed to create project: ", error);
     }
+  }
+
+  async function uploadFile(file) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/projects/upload`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to upload file");
+    }
+
+    return response.json();
   }
 
   async function deleteUser(username) {

@@ -24,7 +24,7 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
     async function fetchCustomerData() {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/customers/${
+          `${import.meta.env.VITE_BACKEND_URL}/customers/${
             project.project.associated_customer
           }`,
           {
@@ -35,23 +35,23 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
         );
         if (response.ok) {
           const data = await response.json();
-          setCustomerName(data.data.customer_name);
-          setCity(data.data.city);
-          setCountry(data.data.country);
-          setPhoneNumber(data.data.phone_number);
-          setCustomerEmail(data.data.email);
-          setWebsite(data.data.website);
-          setSector(data.data.sector);
-          setCif(data.data.cif);
+          setCustomerName(data.customer_name);
+          setCity(data.city);
+          setCountry(data.country);
+          setPhoneNumber(data.phone_number);
+          setCustomerEmail(data.email);
+          setWebsite(data.website);
+          setSector(data.sector);
+          setCif(data.cif);
           setFormValues({
-            customer_name: data.data.customer_name,
-            city: data.data.city,
-            country: data.data.country,
-            phone_number: data.data.phone_number,
-            email: data.data.email,
-            website: data.data.website,
-            sector: data.data.sector,
-            cif: data.data.cif,
+            customer_name: data.customer_name,
+            city: data.city,
+            country: data.country,
+            phone_number: data.phone_number,
+            email: data.email,
+            website: data.website,
+            sector: data.sector,
+            cif: data.cif,
           });
         } else {
           console.log("Customer data couldn't be fetched.");
@@ -70,7 +70,7 @@ export default function CustomerCard({ project, setIsEditCustomer }) {
     if (confirmed) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/customers/${
+          `${import.meta.env.VITE_BACKEND_URL}/customers/${
             project.project.associated_customer
           }`,
           {

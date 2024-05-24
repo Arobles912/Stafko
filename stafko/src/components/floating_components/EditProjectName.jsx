@@ -19,7 +19,7 @@ export default function EditProjectName({ setIsEditProjectName, project }) {
     if (confirmed) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_DIRECTUS}/items/projects/${project.project.project_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/projects/${project.project.project_id}`,
           {
             method: "PATCH",
             headers: {
