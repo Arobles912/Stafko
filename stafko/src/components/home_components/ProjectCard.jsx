@@ -51,7 +51,7 @@ export default function ProjectCard({ project }) {
     try {
       const fileId = project.project.project_file; 
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/assets/${fileId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/projects/${project.project.project_id}/download`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -70,11 +70,11 @@ export default function ProjectCard({ project }) {
         link.click();
         document.body.removeChild(link);
       } else {
-        setError("No se pudo obtener la URL del archivo.");
-        throw new Error("No se pudo obtener la URL del archivo.");
+        setError("Couldn't obtain the file url.");
+        throw new Error("Couldn't obtain the file url.");
       }
     } catch (error) {
-      console.error("Error al descargar el archivo:", error);
+      console.error("Error downloading the file:", error);
     }
   }
 

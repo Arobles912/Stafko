@@ -10,4 +10,5 @@ export interface IProjectsService {
   delete(id: number): Promise<void>;
   findByProjectName(project_name: string): Promise<ProjectsEntity>;
   uploadFile(file: MulterFile): Promise<any>;
+  downloadFile(fileId: string): Promise<Buffer>;
 }

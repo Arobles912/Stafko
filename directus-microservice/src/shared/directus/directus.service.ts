@@ -17,7 +17,10 @@ export class DirectusService {
     if (response && response.data && response.data.access_token) {
       GlobalService.token = response.data.access_token;
     } else {
-      throw new HttpException('Login failed: No access token returned', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        'Login failed: No token returned',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     return response;
@@ -40,11 +43,29 @@ export class DirectusService {
     });
   }
 
-  async refreshToken(refreshToken: string, mode: string): Promise<void> {
-    return this.fetchFromDirectus('/auth/refresh', {
+  async refreshToken(refreshToken: string): Promise<void> {
+    const payload = {
+      refresh_token: refreshToken,
+      mode: "json"
+    };
+
+    const response = await this.fetchFromDirectus('/auth/refresh', {
       method: 'POST',
-      body: JSON.stringify({ refresh_token: refreshToken, mode: mode }),
+      body: JSON.stringify({payload}),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
+
+    if (response && response.data && response.data.access_token && response.data.refresh_token) {
+      GlobalService.token = response.data.access_token;
+      GlobalService.refreshToken = response.data.refresh_token;
+    } else {
+      throw new HttpException(
+        'Token refresh failed: No access token returned',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
   }
 
   async getItems(collection: string): Promise<any> {
@@ -61,7 +82,6 @@ export class DirectusService {
       body: JSON.stringify(data),
     });
   }
-  
 
   async updateItem(collection: string, id: number, data: any): Promise<any> {
     return this.fetchFromDirectus(`/items/${collection}/${id}`, {
@@ -104,6 +124,30 @@ export class DirectusService {
     return JSON.parse(responseText);
   }
 
+  async downloadFile(fileId: string): Promise<Buffer> {
+    if (!fileId) {
+      throw new HttpException('Invalid file ID', HttpStatus.BAD_REQUEST);
+    }
+
+    const options: RequestInit = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${GlobalService.token}`,
+      },
+    };
+
+    const response = await fetch(`${this.baseUrl}/assets/${fileId}`, options);
+    if (!response.ok) {
+      const responseText = await response.text();
+      throw new HttpException(
+        `Error downloading file from Directus: ${response.statusText} - ${responseText}`,
+        response.status,
+      );
+    }
+
+    return Buffer.from(await response.arrayBuffer());
+  }
+
   async fetchFromDirectus(endpoint: string, options: RequestInit = {}) {
     if (GlobalService.token !== null) {
       options.headers = {
@@ -117,13 +161,9 @@ export class DirectusService {
         'Content-Type': 'application/json',
       };
     }
-    
+
     const response = await fetch(`${this.baseUrl}${endpoint}`, options);
     const responseText = await response.text();
-
-    console.log(response);
-    console.log(responseText);
-    
 
     if (!response.ok) {
       throw new HttpException(

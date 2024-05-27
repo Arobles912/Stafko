@@ -19,9 +19,6 @@ export async function createProjectIfNotExist(projectName) {
 
     const responseData = await response.json();
 
-    console.log(projectName);
-
-    console.log(responseData);
     let projectId;
     if (responseData.length === 0) {
       const createProjectResponse = await fetch(
@@ -58,7 +55,6 @@ export async function createProjectIfNotExist(projectName) {
     return null;
   }
 }
-
 
 export async function startTimer(project, setTimer, setTime, username) {
   setTime(1);
@@ -176,9 +172,7 @@ export async function updateTotalTime({ milliseconds, username, project }) {
     const accessToken = localStorage.getItem("accessToken");
 
     const userResponse = await fetch(
-      `${
-        import.meta.env.VITE_BACKEND_URL
-      }/staff/username/${username}`,
+      `${import.meta.env.VITE_BACKEND_URL}/staff/username/${username}`,
       {
         method: "GET",
         headers: {
@@ -196,9 +190,7 @@ export async function updateTotalTime({ milliseconds, username, project }) {
     const userId = userData.staff_id;
 
     const staffProjectResponse = await fetch(
-      `${
-        import.meta.env.VITE_BACKEND_DIRECTUS
-      }/items/staff_project?filter[staff_id][_eq]=${userId}&filter[project_id][_eq]=${
+      `${import.meta.env.VITE_BACKEND_URL}/staffProject/${userId}/${
         project.staffProject.project_id
       }`,
       {
@@ -216,12 +208,12 @@ export async function updateTotalTime({ milliseconds, username, project }) {
 
     const staffProjectData = await staffProjectResponse.json();
     const projectData = staffProjectData;
-    const totalTime = projectData.data.total_time || 0;
+    const totalTime = projectData.total_time || 0;
     const newTotalTime = totalTime + milliseconds;
 
     const updateResponse = await fetch(
       `${import.meta.env.VITE_BACKEND_URL}/staffProject/${
-        projectData.data[0].id
+        projectData.id
       }`,
       {
         method: "PATCH",

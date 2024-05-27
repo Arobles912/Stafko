@@ -77,7 +77,7 @@ export default function ProjectCardView({ project }) {
     try {
       const fileId = project.project.project_file; 
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_DIRECTUS}/assets/${fileId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/projects/${project.project.project_id}/download`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -154,8 +154,8 @@ export default function ProjectCardView({ project }) {
     "-" +
     project.project.creation_date.substring(0, 4);
 
-  const numberOfCollaborators = staffProjectsData
-    ? staffProjectsData.length
+    const numberOfCollaborators = staffProjectsData
+    ? staffProjectsData.data.length
     : 0;
 
   return (

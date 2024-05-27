@@ -45,4 +45,8 @@ export class ProjectsService implements IProjectsService {
 
     return projectSelected || null;
   }
+
+  async downloadFile(fileId: string): Promise<Buffer> {
+    return this.directusService.downloadFile(fileId);
+  }
 }
