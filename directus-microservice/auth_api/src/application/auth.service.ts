@@ -57,9 +57,10 @@ export class AuthService implements IAuthService {
     }
   }
 
-  async refreshToken(refreshToken: string): Promise<any> {
+  async refreshToken(refreshDto: RefreshDto): Promise<any> {
     try {
-      await this.directusService.refreshToken(refreshToken);
+      await this.directusService.refreshToken(refreshDto.refreshToken);
+      return { message: 'Token refreshed successfully' };
     } catch (error) {
       if (error instanceof HttpException) {
         throw new UnauthorizedException(error.message);
@@ -67,4 +68,5 @@ export class AuthService implements IAuthService {
       throw new UnauthorizedException('Token refresh failed unexpectedly.');
     }
   }
+  
 }

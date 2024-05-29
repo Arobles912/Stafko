@@ -7,7 +7,6 @@ export default function MobileNavbar({
   isMobileNavbarVisible,
   setIsMobileNavbarVisible,
 }) {
-
   const handleClickOutside = (event) => {
     const dropdownRef = document.querySelector(".mobile-navbar");
     if (dropdownRef && !dropdownRef.contains(event.target)) {
@@ -29,9 +28,12 @@ export default function MobileNavbar({
           isMobileNavbarVisible ? "show-navbar" : ""
         }`}
       >
-        <div className="search-bar-div-mobile">
-          <SearchBar searchBarClass={"search-bar-input-mobile"} setSearchTerm={setSearchTerm}/>
-        </div>
+        <SearchBar
+          searchBarClass={"search-bar-input-mobile"}
+          setSearchTerm={setSearchTerm}
+          searchBarDivClass="search-bar-div-mobile"
+          searchBarIcon="search-icon-mobile"
+        />
       </nav>
     </div>
   );

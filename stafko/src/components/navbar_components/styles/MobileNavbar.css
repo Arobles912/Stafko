@@ -27,6 +27,17 @@
   border: 1px solid black;
   box-sizing: border-box;
   padding: 6px;
+  padding-left: 30px;
   margin-top: auto;
   margin-bottom: auto;
+}
+
+
+.search-icon-mobile{
+  color: black;
+  position: absolute;
+  top: 32px;
+  left: 34px;
+  color: gray;
+  cursor: pointer;
 }

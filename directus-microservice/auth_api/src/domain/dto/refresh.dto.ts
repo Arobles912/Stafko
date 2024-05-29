@@ -1,9 +1,7 @@
-import {IsString} from "class-validator";
+import {IsNotEmpty, IsString} from "class-validator";
 
 export class RefreshDto {
   @IsString()
-  refreshToken: string;
-
-  @IsString()
-  mode: string;
+  @IsNotEmpty()
+  readonly refreshToken: string;
 }

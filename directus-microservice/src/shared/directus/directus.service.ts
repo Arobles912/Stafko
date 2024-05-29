@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import fetch, { RequestInit } from 'node-fetch';
-import { GlobalService } from './global.service';
+import { GlobalService } from '../global.service';
 import { MulterFile } from 'multer';
 import * as FormData from 'form-data';
 
@@ -16,6 +16,7 @@ export class DirectusService {
 
     if (response && response.data && response.data.access_token) {
       GlobalService.token = response.data.access_token;
+      GlobalService.refreshToken = response.data.refresh_token;
     } else {
       throw new HttpException(
         'Login failed: No token returned',
@@ -48,15 +49,15 @@ export class DirectusService {
       refresh_token: refreshToken,
       mode: "json"
     };
-
+  
     const response = await this.fetchFromDirectus('/auth/refresh', {
       method: 'POST',
-      body: JSON.stringify({payload}),
+      body: JSON.stringify(payload),
       headers: {
         'Content-Type': 'application/json',
       },
     });
-
+  
     if (response && response.data && response.data.access_token && response.data.refresh_token) {
       GlobalService.token = response.data.access_token;
       GlobalService.refreshToken = response.data.refresh_token;
@@ -67,6 +68,7 @@ export class DirectusService {
       );
     }
   }
+  
 
   async getItems(collection: string): Promise<any> {
     return this.fetchFromDirectus(`/items/${collection}`);
@@ -91,9 +93,18 @@ export class DirectusService {
   }
 
   async deleteItem(collection: string, id: number): Promise<any> {
-    return this.fetchFromDirectus(`/items/${collection}/${id}`, {
-      method: 'DELETE',
-    });
+    try {
+      const response = await this.fetchFromDirectus(`/items/${collection}/${id}`, {
+        method: 'DELETE',
+      });
+
+      return response;
+    } catch (error) {
+      throw new HttpException(
+        `Error deleting item from Directus: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async uploadFile(file: MulterFile): Promise<any> {
@@ -148,7 +159,7 @@ export class DirectusService {
     return Buffer.from(await response.arrayBuffer());
   }
 
-  async fetchFromDirectus(endpoint: string, options: RequestInit = {}) {
+  async fetchFromDirectus(endpoint: string, options: RequestInit = {}, retry = true): Promise<any> {
     if (GlobalService.token !== null) {
       options.headers = {
         ...options.headers,
@@ -166,12 +177,36 @@ export class DirectusService {
     const responseText = await response.text();
 
     if (!response.ok) {
+      if (response.status === 401 && retry) {
+        
+        try {
+          await this.refreshToken(GlobalService.refreshToken);
+          return this.fetchFromDirectus(endpoint, options, false); 
+        } catch (refreshError) {
+          throw new HttpException(
+            `Error refreshing token: ${refreshError.message}`,
+            HttpStatus.UNAUTHORIZED,
+          );
+        }
+      }
       throw new HttpException(
         `Error fetching from Directus: ${response.statusText} - ${responseText}`,
         response.status,
       );
     }
 
-    return JSON.parse(responseText);
+    if (!responseText) {
+      return {};
+    }
+
+    try {
+      return JSON.parse(responseText);
+    } catch (error) {
+      console.error(`Error parsing JSON from Directus at ${endpoint}: ${responseText}`);
+      throw new HttpException(
+        `Error parsing JSON from Directus at ${endpoint}: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

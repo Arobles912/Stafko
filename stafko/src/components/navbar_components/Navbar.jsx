@@ -77,7 +77,7 @@ export default function Navbar({
         {addCustomerText}
       </button>
       
-      <SearchBar setSearchTerm={setSearchTerm} />
+      <SearchBar setSearchTerm={setSearchTerm} searchBarClass="search-bar-input" />
 
       <div className="right-side-div">
         <img

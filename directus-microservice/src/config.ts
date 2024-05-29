@@ -19,7 +19,7 @@ interface Config {
 
 const config: Config = {
   dbType: "postgres",
-  dbHost: process.env.DB_HOST || '172.26.0.2', 
+  dbHost: process.env.DB_HOST || '172.26.0.3', 
   dbPort: parseInt(process.env.DB_PORT || '5432', 10), 
   dbUsername: process.env.DB_USERNAME || 'directus',
   dbPassword: process.env.DB_PASSWORD || 'directus', 

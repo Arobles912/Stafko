@@ -4,19 +4,15 @@ export async function updateTokens({
   setAccessToken
 }) {
   try {
-    const payload = {
-      refresh_token: refreshToken,
-      mode: "json"
-    };
 
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_DIRECTUS}/auth/refresh`,
+      `${import.meta.env.VITE_BACKEND_URL}/auth/refresh`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({refreshToken}),
       }
     );
 
