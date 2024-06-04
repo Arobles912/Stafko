@@ -96,17 +96,19 @@ export default function ProjectCardView({ project }) {
         link.click();
         document.body.removeChild(link);
       } else {
-        setError("No se pudo obtener la URL del archivo.");
-        throw new Error("No se pudo obtener la URL del archivo.");
+        setError("File url coludn't be fetched.");
+        throw new Error("File url coludn't be fetched.");
       }
     } catch (error) {
-      console.error("Error al descargar el archivo:", error);
+      console.error("Error downloading the file:", error);
     }
   }
 
   useEffect(() => {
-    const timerState = localStorage.getItem("timerstate");
-    if (timerState === "active") {
+    const timerState = sessionStorage.getItem("timerstate");
+    const projectId = project.project.project_id.toString();
+    const storedProjectId = sessionStorage.getItem("storedProjectId");
+    if (timerState === "active" && storedProjectId === projectId) {
       getActiveTimer().then((elapsedTimeInSeconds) => {
         if (elapsedTimeInSeconds > 0) {
           setTimer(1);
@@ -126,10 +128,11 @@ export default function ProjectCardView({ project }) {
   }, [timer]);
 
   const handleStartTimer = () => {
-    const activeTimer = localStorage.getItem("timerstate");
+    const activeTimer = sessionStorage.getItem("timerstate");
+    sessionStorage.setItem("storedProjectId", project.project.project_id);
     if (activeTimer !== "active") {
       startTimer(project, setTimer, setTime, username);
-      localStorage.setItem("timerstate", "active");
+      sessionStorage.setItem("timerstate", "active");
     } else {
       console.log("A timer is already running.");
     }
@@ -137,7 +140,8 @@ export default function ProjectCardView({ project }) {
 
   const handleStopTimer = async () => {
     stopTimer(timer, setTimer, setTime);
-    localStorage.removeItem("timerstate");
+    sessionStorage.removeItem("timerstate");
+    sessionStorage.removeItem("storedProjectId");
     const timeInMilliseconds = time * 1000;
     setMilliseconds(timeInMilliseconds);
     await updateTotalTime({

@@ -26,8 +26,6 @@ export default function Home({ setIsLoggedIn }) {
     if (username && accessToken) {
       fetchProjects({ username, setProjects });
     }
-    console.log(localStorage.getItem("refreshToken"));
-    console.log(localStorage.getItem("accessToken"));
   }, [username, accessToken]);
 
   useEffect(() => {

@@ -548,13 +548,13 @@ hr {
   }
 
   .save-button {
-    height: 35px;
-    width: 30%;
+    height: auto;
+    width: auto;
   }
 
   .delete-button {
-    height: 35px;
-    width: 30%;
+    height: auto;
+    width: auto;
   }
 }
 
@@ -649,11 +649,17 @@ hr {
     max-height: 300px;
   }
 
-  .edit-project-button-div button {
+
+  .edit-project-button{
     height: auto;
-    min-height: 35px;
     width: auto;
-    font-size: 20px;
+    font-size: 18px;
+  }
+
+  .count-time-button{
+    height: auto;
+    width: auto;
+    font-size: 18px;
   }
 
   .save-button {
@@ -672,6 +678,9 @@ hr {
 
   .mobile-hr {
     display: block;
+    width: calc(100% - 18px);
+    box-sizing: border-box;
+    margin: 20px, 5px;
     margin-top: 20px;
     margin-bottom: 20px;
   }

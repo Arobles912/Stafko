@@ -24,9 +24,6 @@ export async function updateTokens({
       localStorage.setItem("accessToken", data.data.access_token);
       localStorage.setItem("refreshToken", data.data.refresh_token);
       localStorage.setItem("lastRefreshTime", currentTime.toString());
-
-      console.log(localStorage.getItem("refreshToken"));
-      console.log(localStorage.getItem("accessToken"));
     } else {
       throw new Error(data.error);
     }

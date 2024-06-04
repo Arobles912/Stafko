@@ -42,8 +42,10 @@ export default function ProjectCardExtended({
   const username = localStorage.getItem("username");
 
   useEffect(() => {
-    const timerState = localStorage.getItem("timerstate");
-    if (timerState === "active") {
+    const timerState = sessionStorage.getItem("timerstate");
+    const projectId = project.project.project_id.toString();
+    const storedProjectId = sessionStorage.getItem("storedProjectId");
+    if (timerState === "active" && storedProjectId === projectId) {
       getActiveTimer().then((elapsedTimeInSeconds) => {
         if (elapsedTimeInSeconds > 0) {
           setTimer(1);
@@ -51,7 +53,7 @@ export default function ProjectCardExtended({
         }
       });
     }
-  }, []);
+  }, []);  
 
   useEffect(() => {
     if (timer !== null) {
@@ -74,10 +76,11 @@ export default function ProjectCardExtended({
   };
 
   const handleStartTimer = () => {
-    const activeTimer = localStorage.getItem("timerstate");
+    const activeTimer = sessionStorage.getItem("timerstate");
     if (activeTimer !== "active") {
       startTimer(project, setTimer, setTime, username);
-      localStorage.setItem("timerstate", "active");
+      sessionStorage.setItem("timerstate", "active");
+      sessionStorage.setItem("storedProjectId", project.project.project_id);
     } else {
       console.log("A timer is already running.");
     }
@@ -85,7 +88,8 @@ export default function ProjectCardExtended({
   
   const handleStopTimer = async () => {
     stopTimer(timer, setTimer, setTime);
-    localStorage.removeItem("timerstate");
+    sessionStorage.removeItem("timerstate");
+    sessionStorage.removeItem("storedProjectId");
     const timeInMilliseconds = time * 1000;
     setMilliseconds(timeInMilliseconds);
     await updateTotalTime({ milliseconds: timeInMilliseconds, username, project });
